@@ -4,9 +4,9 @@
     <Version>1.0.0</Version>
     <PackageVersion>1.0.0</PackageVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Arragro.Common</AssemblyName>
-    <PackageId>Arragro.Common</PackageId>
-    <Title>Arragro Common</Title>
+    <AssemblyName>Arragro.Core.Common</AssemblyName>
+    <PackageId>Arragro.Core.Common</PackageId>
+    <Title>Arragro Core Common</Title>
     <Copyright>Arragro 2017 (c) Arragro Ltd.</Copyright>
     <Description>Core library for Arragro for caching, business rules, services, DDD.</Description>
     <PackageTags>dotnet core netstandard</PackageTags>

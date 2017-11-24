@@ -4,9 +4,9 @@
     <Version>1.0.0</Version>
     <PackageVersion>1.0.0</PackageVersion>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <AssemblyName>Arragro.EntityFrameworkCore</AssemblyName>
-    <PackageId>Arragro.EntityFrameworkCore</PackageId>
-    <Title>Arragro EntityFrameworkCore</Title>
+    <AssemblyName>Arragro.Core.EntityFrameworkCore</AssemblyName>
+    <PackageId>Arragro.Core.EntityFrameworkCore</PackageId>
+    <Title>Arragro Core EntityFrameworkCore</Title>
     <Copyright>Arragro 2017 (c) Arragro Ltd.</Copyright>
     <Description>Core EFCore library for Arragro for Repository functionality and BaseContext.</Description>
     <PackageTags>dotnet core netstandard ef</PackageTags>
