@@ -1,0 +1,107 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2008
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{20754D8E-F79C-4F5D-B055-DDDE4C07723D}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
+		change-log.md = change-log.md
+		Readme.md = Readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{673557DB-A079-469B-AD62-BE5741F71865}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		Readme.md = Readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{89DA5227-7BAF-4778-9166-81D6D7FB7224}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Common", "src\Arragro.Core.Common\Arragro.Core.Common.csproj", "{0C03CE78-3696-42E6-8E59-900592D4E583}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "providers", "providers", "{D03E4D11-AE80-42FB-9896-DAC7C09F5146}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Providers.ImageMagickProvider", "providers\Arragro.Providers.ImageMagickProvider\Arragro.Providers.ImageMagickProvider.csproj", "{CB95C43F-F322-4D73-B72A-EB5EB9746328}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Providers.InMemoryStorageProvider", "providers\Arragro.Providers.InMemoryStorageProvider\Arragro.Providers.InMemoryStorageProvider.csproj", "{A9ABD117-5FFF-4EFB-80C4-386A7C75BF06}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Providers.SendgridEmailProvider", "providers\Arragro.Providers.SendgridEmailProvider\Arragro.Providers.SendgridEmailProvider.csproj", "{5A7DC02A-032E-4A6A-A071-C134ABC3CFC4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Providers.MailKitEmailProvider", "providers\Arragro.Providers.MailKitEmailProvider\Arragro.Providers.MailKitEmailProvider.csproj", "{BAAE6A96-6477-435C-A72C-EF834C78FDEF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Providers.AzureStorageProvider", "providers\Arragro.Providers.AzureStorageProvider\Arragro.Providers.AzureStorageProvider.csproj", "{E9913029-F1E3-4354-81D1-23CAB537F3EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.EntityFrameworkCore", "src\Arragro.Core.EntityFrameworkCore\Arragro.Core.EntityFrameworkCore.csproj", "{FF7A5E69-2128-443F-AC22-AC3B2ECD3A91}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.TestBase", "tests\Arragro.TestBase\Arragro.TestBase.csproj", "{5E39F651-E011-4EF1-9367-E4BCDD353D8B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Common.Tests", "tests\Arragro.Core.Common.Tests\Arragro.Core.Common.Tests.csproj", "{84539739-395F-45AD-B360-8A51B29C6FBC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.EntityFrameworkCore.IntegrationTests", "tests\Arragro.Core.EntityFrameworkCore.IntegrationTests\Arragro.Core.EntityFrameworkCore.IntegrationTests.csproj", "{B5FD6B08-366E-41C6-ABB3-86E5CF789D18}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0C03CE78-3696-42E6-8E59-900592D4E583}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C03CE78-3696-42E6-8E59-900592D4E583}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C03CE78-3696-42E6-8E59-900592D4E583}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C03CE78-3696-42E6-8E59-900592D4E583}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB95C43F-F322-4D73-B72A-EB5EB9746328}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB95C43F-F322-4D73-B72A-EB5EB9746328}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB95C43F-F322-4D73-B72A-EB5EB9746328}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB95C43F-F322-4D73-B72A-EB5EB9746328}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9ABD117-5FFF-4EFB-80C4-386A7C75BF06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9ABD117-5FFF-4EFB-80C4-386A7C75BF06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9ABD117-5FFF-4EFB-80C4-386A7C75BF06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9ABD117-5FFF-4EFB-80C4-386A7C75BF06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A7DC02A-032E-4A6A-A071-C134ABC3CFC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A7DC02A-032E-4A6A-A071-C134ABC3CFC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A7DC02A-032E-4A6A-A071-C134ABC3CFC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A7DC02A-032E-4A6A-A071-C134ABC3CFC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAAE6A96-6477-435C-A72C-EF834C78FDEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAAE6A96-6477-435C-A72C-EF834C78FDEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAAE6A96-6477-435C-A72C-EF834C78FDEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAAE6A96-6477-435C-A72C-EF834C78FDEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9913029-F1E3-4354-81D1-23CAB537F3EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9913029-F1E3-4354-81D1-23CAB537F3EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9913029-F1E3-4354-81D1-23CAB537F3EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9913029-F1E3-4354-81D1-23CAB537F3EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF7A5E69-2128-443F-AC22-AC3B2ECD3A91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF7A5E69-2128-443F-AC22-AC3B2ECD3A91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF7A5E69-2128-443F-AC22-AC3B2ECD3A91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF7A5E69-2128-443F-AC22-AC3B2ECD3A91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E39F651-E011-4EF1-9367-E4BCDD353D8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E39F651-E011-4EF1-9367-E4BCDD353D8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E39F651-E011-4EF1-9367-E4BCDD353D8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E39F651-E011-4EF1-9367-E4BCDD353D8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84539739-395F-45AD-B360-8A51B29C6FBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84539739-395F-45AD-B360-8A51B29C6FBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84539739-395F-45AD-B360-8A51B29C6FBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84539739-395F-45AD-B360-8A51B29C6FBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5FD6B08-366E-41C6-ABB3-86E5CF789D18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5FD6B08-366E-41C6-ABB3-86E5CF789D18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5FD6B08-366E-41C6-ABB3-86E5CF789D18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5FD6B08-366E-41C6-ABB3-86E5CF789D18}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CB95C43F-F322-4D73-B72A-EB5EB9746328} = {D03E4D11-AE80-42FB-9896-DAC7C09F5146}
+		{A9ABD117-5FFF-4EFB-80C4-386A7C75BF06} = {D03E4D11-AE80-42FB-9896-DAC7C09F5146}
+		{5A7DC02A-032E-4A6A-A071-C134ABC3CFC4} = {D03E4D11-AE80-42FB-9896-DAC7C09F5146}
+		{BAAE6A96-6477-435C-A72C-EF834C78FDEF} = {D03E4D11-AE80-42FB-9896-DAC7C09F5146}
+		{E9913029-F1E3-4354-81D1-23CAB537F3EE} = {D03E4D11-AE80-42FB-9896-DAC7C09F5146}
+		{5E39F651-E011-4EF1-9367-E4BCDD353D8B} = {89DA5227-7BAF-4778-9166-81D6D7FB7224}
+		{84539739-395F-45AD-B360-8A51B29C6FBC} = {89DA5227-7BAF-4778-9166-81D6D7FB7224}
+		{B5FD6B08-366E-41C6-ABB3-86E5CF789D18} = {89DA5227-7BAF-4778-9166-81D6D7FB7224}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {05912F50-9A13-43DC-8B8C-1265FFEA0F3E}
+	EndGlobalSection
+EndGlobal

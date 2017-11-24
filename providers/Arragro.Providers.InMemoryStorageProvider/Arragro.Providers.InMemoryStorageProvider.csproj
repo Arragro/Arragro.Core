@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Arragro.Providers.InMemoryStorageProvider</AssemblyName>
+    <PackageId>Arragro.Providers.InMemoryStorageProvider</PackageId>
+    <Title>Arragro Providers In Memory Storage Provider</Title>
+    <Copyright>Arragro 2017 (c) Arragro Ltd.</Copyright>
+    <Description>Arragro provider for in memory storage provider.</Description>
+    <PackageTags>dotnet core netstandard storage</PackageTags>
+    <Authors>Mike Jewell,Reece Beardsall</Authors>
+    <PackageIconUrl>http://cdn.arragro.com/public/images/favicon.ico</PackageIconUrl>
+    <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/Arragro/Arragro</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Arragro/Arragro</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Arragro.Common" Version="2.0.0-alpha-build134" />
+    <PackageReference Include="DotNet.Glob" Version="1.6.9" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Arragro.Core.Common\Arragro.Core.Common.csproj" />
+  </ItemGroup>
+
+</Project>
