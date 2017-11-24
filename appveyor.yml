@@ -21,10 +21,10 @@
   dotnet_csproj:
     patch: true
     file: '**\*.csproj'
-    version: $(appveyor_build_version)
+    version: '{version}'
     package_version: '{version}'
-    assembly_version: $(appveyor_build_version)
-    file_version: $(appveyor_build_version)
+    assembly_version: '{version}'
+    file_version: '{version}'
     informational_version: '{version}'
   environment:
     # Don't report back to the mothership
