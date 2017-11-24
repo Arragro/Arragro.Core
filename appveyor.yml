@@ -48,7 +48,7 @@
     version: $(appveyor_build_version)
     package_version: '{version}'
     assembly_version: $(appveyor_build_version)
-    file_version: '{version}'
+    file_version: $(appveyor_build_version)
     informational_version: '{version}'
   test: on
   artifacts:  
