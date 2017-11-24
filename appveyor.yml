@@ -31,6 +31,8 @@
   - ps: >-
       $Env:LABEL
 
+      C:\Tools\nuget\nuget.exe update -self
+
       nuget sources update -Name nuget.org -Source https://api.nuget.org/v3/index.json;
 
       appveyor-retry dotnet restore -v Minimal;
@@ -40,8 +42,6 @@
       redis-64\tools\redis-server.exe --service-install;
 
       redis-64\tools\redis-server.exe --service-start;
-
-      C:\Tools\nuget\nuget.exe update -self
   dotnet_csproj:
     patch: true
     file: '**\*.csproj'
