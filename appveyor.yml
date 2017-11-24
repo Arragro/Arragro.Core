@@ -3,7 +3,7 @@
   branches:
     only:
       - /[Dd]ev/
-  version: 1.0.alpha-build{build}
+  version: 1.0.0-alpha-{build}
   configuration: Release
   image: Visual Studio 2017
   services:
@@ -22,7 +22,7 @@
     patch: true
     file: '**\*.csproj'
     version: $(appveyor_build_version)
-    package_version: $(appveyor_build_version)
+    package_version: '{version}'
     assembly_version: $(appveyor_build_version)
     file_version: $(appveyor_build_version)
     informational_version: '{version}'
