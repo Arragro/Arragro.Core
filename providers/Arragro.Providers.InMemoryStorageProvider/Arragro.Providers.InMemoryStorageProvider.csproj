@@ -19,7 +19,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Arragro.Common" Version="2.0.0-alpha-build134" />
     <PackageReference Include="DotNet.Glob" Version="1.6.9" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="2.0.0" />
   </ItemGroup>
