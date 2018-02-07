@@ -24,7 +24,8 @@ namespace Arragro.Providers.AzureStorageProvider
         public StorageProvider(
             IImageProvider imageProcessor,
             string storageConnectionString,
-            int cacheControlMaxAge = 0)
+            int cacheControlMaxAge = 0,
+            string assetsContainerName = "assets")
         {
             _imageService = imageProcessor;
             _storageConnectionString = storageConnectionString;
@@ -32,7 +33,7 @@ namespace Arragro.Providers.AzureStorageProvider
              _account = CloudStorageAccount.Parse(_storageConnectionString);
             _client = _account.CreateCloudBlobClient();
 
-            _assetContainer = _client.GetContainerReference("assets");
+            _assetContainer = _client.GetContainerReference(assetsContainerName);
             _assetContainer.CreateIfNotExistsAsync().Wait();
         }
 
