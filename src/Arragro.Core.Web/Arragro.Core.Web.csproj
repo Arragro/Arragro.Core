@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Version>1.0.0</Version>
     <PackageVersion>1.0.0</PackageVersion>
-    <TargetFrameworks>netcoreapp2.0;net462;net471</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net462;net471</TargetFrameworks>
     <AssemblyName>Arragro.Core.Web</AssemblyName>
     <PackageId>Arragro.Core.Web</PackageId>
     <Title>Arragro Core Web</Title>
