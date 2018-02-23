@@ -77,15 +77,21 @@ namespace Arragro.Providers.ImageMagickProvider
             {
                 var info = new MagickImageInfo(bytes);
 
-                if (info.Format != MagickFormat.Gif)
+                switch (info.Format)
                 {
-                    var result = ProcessImage(bytes, width, quality, asProgressiveJpeg);
-                    output = result.Bytes;
-                    mimeType = result.MimeType;
-                }
-                else
-                {
-                    output = ProcessGif(bytes, width, quality);
+                    case MagickFormat.Svg:
+                        output = bytes;
+                        break;
+                    case MagickFormat.Gif:
+                        output = ProcessGif(bytes, width, quality);
+                        if (output.Length > bytes.Length)
+                            output = bytes;
+                        break;
+                    default:
+                        var result = ProcessImage(bytes, width, quality, asProgressiveJpeg);
+                        output = result.Bytes;
+                        mimeType = result.MimeType;
+                        break;
                 }
             }
             catch (MagickException)
@@ -104,19 +110,21 @@ namespace Arragro.Providers.ImageMagickProvider
 
             try
             {
-                var info = new MagickImageInfo(bytes);
-
-                if (info.Format != MagickFormat.Gif)
+                var info = new MagickImageInfo(bytes); switch (info.Format)
                 {
-                    var result = ProcessImage(bytes, quality: quality, asProgressiveJpeg: asProgressiveJpeg);
-                    output = result.Bytes;
-                    mimeType = result.MimeType;
-                }
-                else
-                {
-                    output = ProcessGif(bytes, quality: quality);
-                    if (output.Length > bytes.Length)
+                    case MagickFormat.Svg:
                         output = bytes;
+                        break;
+                    case MagickFormat.Gif:
+                        output = ProcessGif(bytes, quality: quality);
+                        if (output.Length > bytes.Length)
+                            output = bytes;
+                        break;
+                    default:
+                        var result = ProcessImage(bytes, quality: quality, asProgressiveJpeg: asProgressiveJpeg);
+                        output = result.Bytes;
+                        mimeType = result.MimeType;
+                        break;
                 }
             }
             catch (MagickException)
