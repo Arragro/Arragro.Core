@@ -12,7 +12,7 @@ namespace Arragro.Core.Web.Http
             if (etag == ETag)
                 return true;
 
-            if (LastModified.HasValue && LastModified.Value <= lastModified )
+            if (LastModified.HasValue && LastModified.Value >= lastModified )
                 return true;
 
             return false;            
