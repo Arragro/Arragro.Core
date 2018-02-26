@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Arragro.Core.Web.Helpers
 {
-    public class GoogleReCaptcha
+    public class GoogleRecaptcha
     {
         public static bool Validate(string encodedResponse, string googleSecret)
         {
@@ -11,7 +11,7 @@ namespace Arragro.Core.Web.Helpers
 
             var googleReply = client.DownloadString($@"https://www.google.com/recaptcha/api/siteverify?secret={googleSecret}&response={encodedResponse}");
 
-            var captchaResponse = JsonConvert.DeserializeObject<ReCaptcha>(googleReply);
+            var captchaResponse = JsonConvert.DeserializeObject<GoogleRecaptcha>(googleReply);
 
             return captchaResponse.Success;
         }
