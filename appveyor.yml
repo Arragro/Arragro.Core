@@ -44,27 +44,29 @@
       nuget sources update -Name nuget.org -Source https://api.nuget.org/v3/index.json;
 
       appveyor-retry dotnet restore -v Minimal;
-
-      nuget install redis-64 -excludeversion;
-
-      redis-64\tools\redis-server.exe --service-install;
-
-      redis-64\tools\redis-server.exe --service-start;
+  build_script:
+  - dotnet build "src\Arragro.Core.Common" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+  - dotnet build "src\Arragro.Core.EntityFrameworkCore" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+  - dotnet build "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+  - dotnet build "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+  - dotnet build "providers\Arragro.Providers.InMemoryStorageProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+  - dotnet build "providers\Arragro.Providers.MailKitEmailProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+  - dotnet build "providers\Arragro.Providers.SendgridEmailProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+  after_build:
+    - dotnet pack "src\Arragro.Core.Common" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.EntityFrameworkCore" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.InMemoryStorageProvider" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.MailKitEmailProvider" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.SendgridEmailProvider" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+  test_script:
+  - dotnet test "tests\Arragro.Core.Common.Tests\Arragro.Core.Common.Tests.csproj" -c %CONFIGURATION%
+  - dotnet test "tests\Arragro.Core.EntityFrameworkCore.IntegrationTests\Arragro.Core.EntityFrameworkCore.IntegrationTests.csproj" -c %CONFIGURATION%
   test: on
-  build:
-    publish_nuget: true
-    publish_nuget_symbols: true
-    include_nuget_references: true
-    verbosity: minimal
-  artifacts:
-  - path: '**\Arragro.Providers.AzureStorageProvider.*.nupkg'
-  - path: '**\Arragro.Providers.ImageMagickProvider.*.nupkg'
-  - path: '**\Arragro.Providers.InMemoryStorageProvider.*.nupkg'
-  - path: '**\Arragro.Providers.MailKitEmailProvider.*.nupkg'
-  - path: '**\Arragro.Providers.SendgridEmailProvider.*.nupkg'
-  - path: '**\Arragro.Core.Common.*.nupkg'
-  - path: '**\Arragro.Core.EntityFrameworkCore.*.nupkg'
-  - path: '**\Arragro.Core.Web.*.nupkg'
+  artifacts:  
+    - path: .\artifacts\**\*.nupkg
+      name: NuGet
   deploy:
   - provider: NuGet
     api_key:
