@@ -60,8 +60,10 @@
   - provider: NuGet
     api_key:
       secure: F0ZPbEej7MlPRYAb43jRKMZdVDCWLEhfsgmx4o3YTSdcTKIGbOO92NL2LlHcjY1V
-    on:
-      branch: dev
+  - provider: NuGet
+    server: https://ci.appveyor.com/nuget/arragro
+    api_key:
+      secure: G6xs1WzP7PcuU8jd9MOD/MTiqHAOPuiuFTHPY5bZhHs=
   notifications:
   - provider: Slack
     incoming_webhook:
