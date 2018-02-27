@@ -47,6 +47,7 @@
   build_script:
   - dotnet build "src\Arragro.Core.Common" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "src\Arragro.Core.EntityFrameworkCore" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+  - dotnet build "src\Arragro.Core.Web" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.InMemoryStorageProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
@@ -55,6 +56,7 @@
   after_build:
     - dotnet pack "src\Arragro.Core.Common" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
     - dotnet pack "src\Arragro.Core.EntityFrameworkCore" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.Web" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
     - dotnet pack "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
     - dotnet pack "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
     - dotnet pack "providers\Arragro.Providers.InMemoryStorageProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
