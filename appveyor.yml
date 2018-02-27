@@ -57,14 +57,14 @@
     include_nuget_references: true
     verbosity: minimal
   artifacts:
-   - path: **\Arragro.Providers.AzureStorageProvider.*.nupkg
-   - path: **\Arragro.Providers.ImageMagickProvider.*.nupkg
-   - path: **\Arragro.Providers.InMemoryStorageProvider.*.nupkg
-   - path: **\Arragro.Providers.MailKitEmailProvider.*.nupkg
-   - path: **\Arragro.Providers.SendgridEmailProvider.*.nupkg
-   - path: **\Arragro.Core.Common.*.nupkg
-   - path: **\Arragro.Core.EntityFrameworkCore.*.nupkg
-   - path: **\Arragro.Core.Web.*.nupkg
+  - path: '**\Arragro.Providers.AzureStorageProvider.*.nupkg'
+  - path: '**\Arragro.Providers.ImageMagickProvider.*.nupkg'
+  - path: '**\Arragro.Providers.InMemoryStorageProvider.*.nupkg'
+  - path: '**\Arragro.Providers.MailKitEmailProvider.*.nupkg'
+  - path: '**\Arragro.Providers.SendgridEmailProvider.*.nupkg'
+  - path: '**\Arragro.Core.Common.*.nupkg'
+  - path: '**\Arragro.Core.EntityFrameworkCore.*.nupkg'
+  - path: '**\Arragro.Core.Web.*.nupkg'
   deploy:
   - provider: NuGet
     api_key:
