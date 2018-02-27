@@ -53,13 +53,13 @@
   - dotnet build "providers\Arragro.Providers.MailKitEmailProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.SendgridEmailProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   after_build:
-    - dotnet pack "src\Arragro.Core.Common" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "src\Arragro.Core.EntityFrameworkCore" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.InMemoryStorageProvider" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.MailKitEmailProvider" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.SendgridEmailProvider" -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.Common" -c %CONFIGURATION% --no-build --version-suffix --include-symbols %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.EntityFrameworkCore" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.InMemoryStorageProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.MailKitEmailProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.SendgridEmailProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
   test_script:
   - dotnet test "tests\Arragro.Core.Common.Tests\Arragro.Core.Common.Tests.csproj" -c %CONFIGURATION%
   - dotnet test "tests\Arragro.Core.EntityFrameworkCore.IntegrationTests\Arragro.Core.EntityFrameworkCore.IntegrationTests.csproj" -c %CONFIGURATION%
