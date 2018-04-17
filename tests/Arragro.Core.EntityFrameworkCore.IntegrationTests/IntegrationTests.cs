@@ -9,7 +9,7 @@ namespace Arragro.Core.EntityFrameworkCore.IntegrationTests
 {
     public class IntegrationTests
     {
-        private readonly DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder<FooContext>().UseInMemoryDatabase();
+        private readonly DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder<FooContext>().UseInMemoryDatabase("IntegrationTests");
 
         private void WithDbContext(Action<FooContext> action)
         {
@@ -29,7 +29,7 @@ namespace Arragro.Core.EntityFrameworkCore.IntegrationTests
 
                     var modelFoo = x.ModelFoos.Single(y => y.Name == "Test 2");
                     Assert.Equal("Test 2", modelFoo.Name);
-                    Assert.NotSame(default(int), modelFoo.Id);
+                    Assert.NotEqual(default(int), modelFoo.Id);
                 });
         }
 
@@ -44,7 +44,7 @@ namespace Arragro.Core.EntityFrameworkCore.IntegrationTests
                 var modelFoo = modelFooService.ValidateAndInsertOrUpdate(new ModelFoo { Name = "Test 1" });
                 modelFooService.SaveChanges();
 
-                Assert.NotSame(default(int), modelFoo);
+                Assert.NotEqual(default(int), modelFoo.Id);
             }
         }
 

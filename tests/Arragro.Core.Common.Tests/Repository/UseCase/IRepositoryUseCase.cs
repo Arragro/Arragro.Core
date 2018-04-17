@@ -18,14 +18,14 @@ namespace Arragro.Core.Common.Tests.Repository.UseCase
         public void RepositoryUseCaseMoq()
         {
             var modelFooRepository = MockHelper.GetMockRepository(ModelFoos);
-            Assert.Equal(modelFooRepository.Find(1).Name, "Test 1");
-            Assert.Equal(modelFooRepository.Find(2).Name, "Test 2");
+            Assert.Equal("Test 1", modelFooRepository.Find(1).Name);
+            Assert.Equal("Test 2", modelFooRepository.Find(2).Name);
             modelFooRepository.InsertOrUpdate(new ModelFoo { Name = "Test 3" }, true);
-            Assert.Equal(modelFooRepository.Find(3).Name, "Test 3");
+            Assert.Equal("Test 3", modelFooRepository.Find(3).Name);
             modelFooRepository.InsertOrUpdate(new ModelFoo { Id = 3, Name = "Testy" }, false);
-            Assert.Equal(modelFooRepository.All().Count(), 3);
+            Assert.Equal(3, modelFooRepository.All().Count());
             modelFooRepository.Delete(3);
-            Assert.Equal(modelFooRepository.All().Count(), 2);
+            Assert.Equal(2, modelFooRepository.All().Count());
         }
     }
 }
