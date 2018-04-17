@@ -33,7 +33,7 @@ namespace Arragro.Core.Common.Tests.BusinessRules.UseCases
                     }
                     catch (RulesException<ModelFoo> ex)
                     {
-                        Assert.Equal(1, ex.Errors.Count());
+                        Assert.Single(ex.Errors);
                         Assert.Equal(ModelFooService.DuplicateName, ex.Errors[0].Message);
                         throw;
                     }
@@ -49,7 +49,7 @@ namespace Arragro.Core.Common.Tests.BusinessRules.UseCases
                     }
                     catch (RulesException<ModelFoo> ex)
                     {
-                        Assert.Equal(1, ex.Errors.Count());
+                        Assert.Single(ex.Errors);
                         Assert.Equal(ModelFooService.RequiredName, ex.Errors[0].Message);
                         throw;
                     }
@@ -65,7 +65,7 @@ namespace Arragro.Core.Common.Tests.BusinessRules.UseCases
                     }
                     catch (RulesException<ModelFoo> ex)
                     {
-                        Assert.Equal(1, ex.Errors.Count());
+                        Assert.Single(ex.Errors);
                         Assert.Equal(ModelFooService.RangeLengthName, ex.Errors[0].Message);
                         throw;
                     }
@@ -98,7 +98,7 @@ namespace Arragro.Core.Common.Tests.BusinessRules.UseCases
                     }
                     catch (RulesException<ModelFoo> ex)
                     {
-                        Assert.Equal(1, ex.Errors.Count());
+                        Assert.Single(ex.Errors);
                         Assert.True(ex.ContainsErrorForProperty("Name"));
                         throw;
                     }

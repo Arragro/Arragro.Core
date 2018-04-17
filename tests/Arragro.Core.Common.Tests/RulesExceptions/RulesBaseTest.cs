@@ -34,7 +34,7 @@ namespace Arragro.Core.Common.Tests.RulesExceptions
             foo.ErrorForModel("Test1");
             foo.ErrorForModel("Test2");
 
-            Assert.Equal(foo.ErrorMessages.Count, 2);
+            Assert.Equal(2, foo.ErrorMessages.Count);
         }
     }
 }

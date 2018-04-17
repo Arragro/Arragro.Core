@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Common.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.EntityFrameworkCore.IntegrationTests", "tests\Arragro.Core.EntityFrameworkCore.IntegrationTests\Arragro.Core.EntityFrameworkCore.IntegrationTests.csproj", "{B5FD6B08-366E-41C6-ABB3-86E5CF789D18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arragro.Core.Web", "src\Arragro.Core.Web\Arragro.Core.Web.csproj", "{54582265-3B3F-49FF-8B84-CE01012B501C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Web", "src\Arragro.Core.Web\Arragro.Core.Web.csproj", "{54582265-3B3F-49FF-8B84-CE01012B501C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
