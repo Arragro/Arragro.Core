@@ -31,7 +31,7 @@
     DOTNET_CLI_TELEMETRY_OPTOUT: 1
     appveyor_build_version:  1.0.{build}
   init:
-  - ps: $Env:LABEL = "alpha-build" + $Env:APPVEYOR_BUILD_NUMBER
+  - ps: $Env:LABEL = "alpha-" + $Env:APPVEYOR_BUILD_NUMBER
   - ps: $Env:LABEL
   - ps: $Env:appveyor_build_version = "1.0." + $Env:APPVEYOR_BUILD_NUMBER
   - ps: $Env:appveyor_build_version
