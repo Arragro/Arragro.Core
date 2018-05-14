@@ -30,16 +30,11 @@
     # Don't report back to the mothership
     DOTNET_CLI_TELEMETRY_OPTOUT: 1
     appveyor_build_version:  1.0.{build}
-    DOCKER_ARRAGRO_REGISTRY_USERNAME:
-        secure: tycjUbu31tqMG9SH2uSi4g==
-    DOCKER_ARRAGRO_REGISTRY_PASSWORD:
-        secure: q1OdfufqyMQatidvpAYmqvTXy+T6QsB1ZEXsCDoOUUs=
   init:
   - ps: $Env:LABEL = "alpha-" + $Env:APPVEYOR_BUILD_NUMBER
   - ps: $Env:LABEL
   - ps: $Env:appveyor_build_version = "1.0." + $Env:APPVEYOR_BUILD_NUMBER
   - ps: $Env:appveyor_build_version
-  - ps: docker login docker.arragro.com -p $Env:DOCKER_ARRAGRO_REGISTRY_PASSWORD -u $Env:DOCKER_ARRAGRO_REGISTRY_USERNAME
   before_build:
   - ps: >-
       $Env:LABEL
@@ -70,10 +65,8 @@
     - dotnet pack "providers\Arragro.Providers.MailKitEmailProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
     - dotnet pack "providers\Arragro.Providers.SendgridEmailProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
   test_script:
-  - docker run -p 3000:3000 docker.arragro.com/imageservice:v0.0.3-alpha
   - dotnet test "tests\Arragro.Core.Common.Tests\Arragro.Core.Common.Tests.csproj" -c %CONFIGURATION%
   - dotnet test "tests\Arragro.Core.EntityFrameworkCore.IntegrationTests\Arragro.Core.EntityFrameworkCore.IntegrationTests.csproj" -c %CONFIGURATION%
-  - dotnet test "tests\Arragro.Providers.ImageServiceProvider.IntegrationTests\Arragro.Providers.ImageServiceProvider.IntegrationTests.csproj" -c %CONFIGURATION%
   test: on
   artifacts:  
     - path: .\artifacts\**\*.nupkg
