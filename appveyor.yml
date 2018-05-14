@@ -31,9 +31,9 @@
     DOTNET_CLI_TELEMETRY_OPTOUT: 1
     appveyor_build_version:  1.0.{build}
     DOCKER_ARRAGRO_REGISTRY_USERNAME:
-        secret: tycjUbu31tqMG9SH2uSi4g==
+        secure: tycjUbu31tqMG9SH2uSi4g==
     DOCKER_ARRAGRO_REGISTRY_PASSWORD:
-        secret: q1OdfufqyMQatidvpAYmqvTXy+T6QsB1ZEXsCDoOUUs=
+        secure: q1OdfufqyMQatidvpAYmqvTXy+T6QsB1ZEXsCDoOUUs=
   init:
   - ps: $Env:LABEL = "alpha-" + $Env:APPVEYOR_BUILD_NUMBER
   - ps: $Env:LABEL
