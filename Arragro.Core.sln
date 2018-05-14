@@ -41,7 +41,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Common.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.EntityFrameworkCore.IntegrationTests", "tests\Arragro.Core.EntityFrameworkCore.IntegrationTests\Arragro.Core.EntityFrameworkCore.IntegrationTests.csproj", "{B5FD6B08-366E-41C6-ABB3-86E5CF789D18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arragro.Core.Web", "src\Arragro.Core.Web\Arragro.Core.Web.csproj", "{54582265-3B3F-49FF-8B84-CE01012B501C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Web", "src\Arragro.Core.Web\Arragro.Core.Web.csproj", "{54582265-3B3F-49FF-8B84-CE01012B501C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Providers.ImageServiceProvider.IntegrationTests", "tests\Arragro.Providers.ImageServiceProvider.IntegrationTests\Arragro.Providers.ImageServiceProvider.IntegrationTests.csproj", "{C4D8F6A0-852E-4ACA-B434-7A74E765A7C0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Providers.ImageServiceProvider", "providers\Arragro.Providers.ImageServiceProvider\Arragro.Providers.ImageServiceProvider.csproj", "{7459B4BD-9DC2-4408-BA83-DB946269C254}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +97,14 @@ Global
 		{54582265-3B3F-49FF-8B84-CE01012B501C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54582265-3B3F-49FF-8B84-CE01012B501C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54582265-3B3F-49FF-8B84-CE01012B501C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4D8F6A0-852E-4ACA-B434-7A74E765A7C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4D8F6A0-852E-4ACA-B434-7A74E765A7C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4D8F6A0-852E-4ACA-B434-7A74E765A7C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4D8F6A0-852E-4ACA-B434-7A74E765A7C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7459B4BD-9DC2-4408-BA83-DB946269C254}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7459B4BD-9DC2-4408-BA83-DB946269C254}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7459B4BD-9DC2-4408-BA83-DB946269C254}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7459B4BD-9DC2-4408-BA83-DB946269C254}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +118,8 @@ Global
 		{5E39F651-E011-4EF1-9367-E4BCDD353D8B} = {89DA5227-7BAF-4778-9166-81D6D7FB7224}
 		{84539739-395F-45AD-B360-8A51B29C6FBC} = {89DA5227-7BAF-4778-9166-81D6D7FB7224}
 		{B5FD6B08-366E-41C6-ABB3-86E5CF789D18} = {89DA5227-7BAF-4778-9166-81D6D7FB7224}
+		{C4D8F6A0-852E-4ACA-B434-7A74E765A7C0} = {89DA5227-7BAF-4778-9166-81D6D7FB7224}
+		{7459B4BD-9DC2-4408-BA83-DB946269C254} = {D03E4D11-AE80-42FB-9896-DAC7C09F5146}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {05912F50-9A13-43DC-8B8C-1265FFEA0F3E}

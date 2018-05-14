@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  
   <PropertyGroup>
     <Version>1.0.0</Version>
     <PackageVersion>1.0.0</PackageVersion>
     <TargetFrameworks>netstandard2.0;net462;net471</TargetFrameworks>
-    <AssemblyName>Arragro.Providers.AzureStorageProvider</AssemblyName>
-    <PackageId>Arragro.Providers.AzureStorageProvider</PackageId>
-    <Title>Arragro Providers Azure Storage Provider</Title>
+    <AssemblyName>Arragro.Providers.ImageServiceProvider</AssemblyName>
+    <PackageId>Arragro.Providers.ImageServiceProvider</PackageId>
+    <Title>Arragro Providers Azure Image Service Provider</Title>
     <Copyright>Arragro 2017 (c) Arragro Ltd.</Copyright>
-    <Description>Arragro provider for Storage (Azure).</Description>
-    <PackageTags>dotnet core netstandard storage azure</PackageTags>
+    <Description>Arragro provider for the Arragro Image Service.</Description>
+    <PackageTags>dotnet core netstandard image processing service</PackageTags>
     <Authors>Mike Jewell,Reece Beardsall</Authors>
     <PackageIconUrl>http://cdn.arragro.com/public/images/favicon.ico</PackageIconUrl>
     <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
@@ -18,13 +18,9 @@
     <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="WindowsAzure.Storage" Version="9.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Arragro.Core.Common\Arragro.Core.Common.csproj" />

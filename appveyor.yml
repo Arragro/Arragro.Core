@@ -50,6 +50,7 @@
   - dotnet build "src\Arragro.Core.Web" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+  - dotnet build "providers\Arragro.Providers.ImageServiceProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.InMemoryStorageProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.MailKitEmailProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.SendgridEmailProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%

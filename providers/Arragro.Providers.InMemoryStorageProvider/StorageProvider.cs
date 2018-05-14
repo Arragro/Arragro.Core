@@ -163,9 +163,9 @@ namespace Arragro.Providers.InMemoryStorageProvider
             var fileInfo = _provider.GetFileInfo(fileName);
             var bytes = await GetImageBytes(fileInfo);
 
-            var imageResult = _imageService.GetImage(bytes, width, quality, asProgressive);
+            var imageResult = await _imageService.GetImage(bytes, width, quality, asProgressive);
             var uri = await Upload(folderId, newFileId, imageResult.Bytes, "");
-            imageResult = _imageService.GetImage(bytes, 250, 60, true);
+            imageResult = await _imageService.GetImage(bytes, 250, 60, true);
             var thumbnailUri = await Upload(folderId, newFileId, imageResult.Bytes, "", true);
 
             return new CreateImageFromImageResult
