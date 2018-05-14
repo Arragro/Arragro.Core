@@ -18,10 +18,6 @@
     <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\src\Arragro.Core.Common\Arragro.Core.Common.csproj" />
   </ItemGroup>
