@@ -18,6 +18,7 @@
     <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
   </PropertyGroup>
 
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.0-rc1-final" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.0-rc1-final" />
