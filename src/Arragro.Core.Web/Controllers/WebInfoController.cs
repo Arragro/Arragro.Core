@@ -1,4 +1,5 @@
 ﻿using Arragro.Core.Common.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Runtime.InteropServices;
 namespace Arragro.Core.Web.Controllers
 {
     [Route("web-info")]
+    [AllowAnonymous]
     public class WebInfoController : Controller
     {
         private static DateTime _startupTime = DateTime.UtcNow;
