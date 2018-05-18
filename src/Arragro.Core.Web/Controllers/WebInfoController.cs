@@ -27,9 +27,8 @@ namespace Arragro.Core.Web.Controllers
         {
             var interfaces = 
                 NetworkInterface.GetAllNetworkInterfaces()
-                    .OrderByDescending(c => c.Speed)
                     .Where(c => c.NetworkInterfaceType != NetworkInterfaceType.Loopback &&
-                                         c.OperationalStatus == OperationalStatus.Up);
+                                c.OperationalStatus == OperationalStatus.Up);
 
             if (interfaces.Any())
             {
