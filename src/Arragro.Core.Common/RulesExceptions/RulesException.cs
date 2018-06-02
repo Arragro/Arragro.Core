@@ -15,6 +15,8 @@ namespace Arragro.Core.Common.RulesExceptions
         protected readonly Expression<Func<object, object>> ThisObject = x => x;
         protected readonly Type Type;
         public string Prefix { get; set; } = "";
+        public bool IsEnumerable { get; set; } = false;
+
 
         protected RulesException(Type type)
         {
@@ -115,9 +117,17 @@ namespace Arragro.Core.Common.RulesExceptions
             return output.ToString();
         }
 
-        public IDictionary<string, object> GetErrorDictionary()
+        public IDictionary<string, List<object>> GetErrorDictionary()
         {
-            return new Dictionary<string, object>(Errors.Select(x => x.KeyValuePair).ToDictionary(x => x.Key, x => x.Value));
+            var dict = new Dictionary<string, List<object>>();
+            foreach (var error in Errors)
+            {
+                if (dict.ContainsKey(error.KeyValuePair.Key))
+                    dict[error.KeyValuePair.Key].Add(error.KeyValuePair.Value);
+                else
+                    dict.Add(error.KeyValuePair.Key, new List<object> { error.KeyValuePair.Value });
+            }
+            return dict;
         }
     }
 

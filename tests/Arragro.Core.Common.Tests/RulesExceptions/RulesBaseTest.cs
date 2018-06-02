@@ -38,20 +38,45 @@ namespace Arragro.Core.Common.Tests.RulesExceptions
             Assert.Equal(2, foo.ErrorMessages.Count);
         }
 
-        public class Else : RulesBase<Else>, IRulesBase
+        public class RulesBaseParams
         {
-            public string Value { get; set; }
+            public bool ThrowException { get; set; }
+        }
 
-            public void Validate(bool throwException = true)
+        public class Again : RulesBase<Again>, IRulesBase<RulesBaseParams>
+        {
+            public string Bar { get; set; }
+
+            public void Validate(RulesBaseParams parameters)
             {
                 ValidateModelPropertiesAndBuildRulesException(this);
 
-                if (string.IsNullOrEmpty(Value))
+                if (string.IsNullOrEmpty(Bar))
                 {
-                    RulesException.ErrorFor(x => x.Value, "Please supply a Value");
+                    RulesException.ErrorFor(x => x.Bar, "Please supply a Bar");
                 }
 
-                if (throwException)
+                if (parameters.ThrowException)
+                    RulesException.ThrowException();
+            }
+        }
+
+        public class Else : RulesBase<Else>, IRulesBase<RulesBaseParams>
+        {
+            public string Foo { get; set; }
+
+            public Again Again { get; set; } = new Again();
+
+            public void Validate(RulesBaseParams parameters)
+            {
+                ValidateModelPropertiesAndBuildRulesException(this);
+
+                if (string.IsNullOrEmpty(Foo))
+                {
+                    RulesException.ErrorFor(x => x.Foo, "Please supply a Foo");
+                }
+
+                if (parameters.ThrowException)
                     RulesException.ThrowException();
             }
         }
@@ -66,21 +91,13 @@ namespace Arragro.Core.Common.Tests.RulesExceptions
 
             public void Validate()
             {
-                var rulesExceptionCollection = new RulesExceptionCollection();
                 ValidateModelPropertiesAndBuildRulesException(this);
-                rulesExceptionCollection.RulesExceptions.Add(RulesException);
+                var parameters = new RulesBaseParams { ThrowException = false };
 
-                Else.Validate(false);
-                rulesExceptionCollection.RulesExceptions.Add(Else.RulesException);
+                RulesException.ErrorFor(x => x.Value, "This is a fake error");
 
-                for (var i = 0; i < Elses.Count; i++)
-                {
-                    var e = Elses[i];
-                    e.Validate(false);
-                    e.RulesException.Prefix = $"Elses[{i}]";
-                    rulesExceptionCollection.RulesExceptions.Add(e.RulesException);
-                }
-                
+                var rulesExceptionCollection = ValidateModelPropertiesAndBuildRulesExceptionCollection<RulesBaseParams>(this, parameters);
+                                
                 rulesExceptionCollection.ThrowException();
             }
         }
@@ -98,7 +115,7 @@ namespace Arragro.Core.Common.Tests.RulesExceptions
                 }
                 catch (RulesExceptionCollection ex)
                 {
-                    Assert.Equal(3, ex.RulesExceptions.Count);
+                    Assert.Equal(5, ex.RulesExceptions.Count);
                     var exceptionDto = ex.GetRulesExceptionDto();
                     throw;
                 }

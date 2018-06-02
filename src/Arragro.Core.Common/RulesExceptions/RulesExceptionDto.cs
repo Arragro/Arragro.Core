@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -6,13 +7,23 @@ namespace Arragro.Core.Common.RulesExceptions
 {
     public class RulesExceptionDto
     {
-        public IDictionary<string, object> Errors { get; protected set; }
+        public IDictionary<string, List<object>> Errors { get; protected set; }
         public List<string> ErrorMessages { get; protected set; }
 
         public RulesExceptionDto()
         {
-            Errors = new Dictionary<string, object>();
+            Errors = new Dictionary<string, List<object>>();
             ErrorMessages = new List<string>();
+        }
+
+        private string CamelCase(string value)
+        {
+            var split = value.Split('.');
+            for (var i = 0; i < split.Length; i++)
+            {
+                split[i] = Char.ToLowerInvariant(split[i][0]) + split[i].Substring(1);
+            }
+            return String.Join(".", split);
         }
 
         protected void ProcessDictionaries(IEnumerable<RulesException> rulesExceptions)
@@ -22,18 +33,9 @@ namespace Arragro.Core.Common.RulesExceptions
                 var errors = rulesException.GetErrorDictionary().ToList();
                 foreach (var error in errors)
                 {
-                    object value;
-                    if (Errors.TryGetValue(error.Key, out value))
-                    {
-                        if (string.IsNullOrEmpty(rulesException.Prefix))
-                            Errors.Add($"{rulesException.TypeName}.{error.Key}", error.Value);
-                        else
-                            Errors.Add($"{rulesException.Prefix}.{rulesException.TypeName}.{error.Key}", error.Value);
-                    }
-                    else
-                        Errors.Add(error.Key, error.Value);
+                    string key = string.IsNullOrEmpty(rulesException.Prefix) ? CamelCase(error.Key) : $"{CamelCase(rulesException.Prefix)}.{CamelCase(error.Key)}";
+                    Errors.Add(key, error.Value);
                 }
-
             }
         }
 
