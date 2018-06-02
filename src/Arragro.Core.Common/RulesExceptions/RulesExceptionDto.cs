@@ -15,7 +15,7 @@ namespace Arragro.Core.Common.RulesExceptions
             ErrorMessages = new List<string>();
         }
 
-        protected void processDictionaries(IEnumerable<RulesException> rulesExceptions)
+        protected void ProcessDictionaries(IEnumerable<RulesException> rulesExceptions)
         {
             foreach (var rulesException in rulesExceptions)
             {
@@ -25,7 +25,10 @@ namespace Arragro.Core.Common.RulesExceptions
                     object value;
                     if (Errors.TryGetValue(error.Key, out value))
                     {
-                        Errors.Add($"{rulesException.TypeName}.{error.Key}", error.Value);
+                        if (string.IsNullOrEmpty(rulesException.Prefix))
+                            Errors.Add($"{rulesException.TypeName}.{error.Key}", error.Value);
+                        else
+                            Errors.Add($"{rulesException.Prefix}.{rulesException.TypeName}.{error.Key}", error.Value);
                     }
                     else
                         Errors.Add(error.Key, error.Value);
@@ -53,7 +56,7 @@ namespace Arragro.Core.Common.RulesExceptions
 
         public RulesExceptionDto(IEnumerable<RulesException> rulesExceptions) : this()
         {
-            processDictionaries(rulesExceptions);
+            ProcessDictionaries(rulesExceptions);
             rulesExceptions.SelectMany(x => x.ErrorMessages).ToList().ForEach(x => ErrorMessages.Add(x));
         }
     }

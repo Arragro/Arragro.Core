@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Xunit;
 
@@ -34,7 +35,74 @@ namespace Arragro.Core.Common.Tests.RulesExceptions
             foo.ErrorForModel("Test1");
             foo.ErrorForModel("Test2");
 
-            Assert.Equal(foo.ErrorMessages.Count, 2);
+            Assert.Equal(2, foo.ErrorMessages.Count);
+        }
+
+        public class Else : RulesBase<Else>, IRulesBase
+        {
+            public string Value { get; set; }
+
+            public void Validate(bool throwException = true)
+            {
+                ValidateModelPropertiesAndBuildRulesException(this);
+
+                if (string.IsNullOrEmpty(Value))
+                {
+                    RulesException.ErrorFor(x => x.Value, "Please supply a Value");
+                }
+
+                if (throwException)
+                    RulesException.ThrowException();
+            }
+        }
+
+        public class Something : RulesBase<Something>
+        {
+            [Required]
+            [MaxLength(10)]
+            public string Value { get; set; }
+            public Else Else { get; set; } = new Else();
+            public List<Else> Elses { get; set; } = new List<Else>();
+
+            public void Validate()
+            {
+                var rulesExceptionCollection = new RulesExceptionCollection();
+                ValidateModelPropertiesAndBuildRulesException(this);
+                rulesExceptionCollection.RulesExceptions.Add(RulesException);
+
+                Else.Validate(false);
+                rulesExceptionCollection.RulesExceptions.Add(Else.RulesException);
+
+                for (var i = 0; i < Elses.Count; i++)
+                {
+                    var e = Elses[i];
+                    e.Validate(false);
+                    e.RulesException.Prefix = $"Elses[{i}]";
+                    rulesExceptionCollection.RulesExceptions.Add(e.RulesException);
+                }
+                
+                rulesExceptionCollection.ThrowException();
+            }
+        }
+
+        [Fact]
+        public void validate_fail_no_value()
+        {
+            Assert.Throws<RulesExceptionCollection>(() =>
+            {
+                try
+                {
+                    var something = new Something();
+                    something.Elses.Add(new Else());
+                    something.Validate();
+                }
+                catch (RulesExceptionCollection ex)
+                {
+                    Assert.Equal(3, ex.RulesExceptions.Count);
+                    var exceptionDto = ex.GetRulesExceptionDto();
+                    throw;
+                }
+            });
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Arragro.Core.Common.RulesExceptions
         public readonly IList<string> ErrorMessages = new List<string>();
         protected readonly Expression<Func<object, object>> ThisObject = x => x;
         protected readonly Type Type;
+        public string Prefix { get; set; } = "";
 
         protected RulesException(Type type)
         {
@@ -136,11 +137,6 @@ namespace Arragro.Core.Common.RulesExceptions
         {
             var propertyError = new RuleViolation { Property = property, Message = message, Prefix = prefix };
             Errors.Add(propertyError);
-
-            if (string.IsNullOrEmpty(prefix))
-                ErrorMessages.Add($"{propertyError.GetPropertyPath()} - {propertyError.Message}");
-            else
-                ErrorMessages.Add($"{propertyError.Prefix} - {propertyError.GetPropertyPath()} - {propertyError.Message}");
         }
 
         public void ErrorsForValidationResults(IEnumerable<ValidationResult> validationResults)
