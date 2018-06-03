@@ -17,7 +17,7 @@ namespace Arragro.Core.Common.Tests.Helpers.UnitTests
         [Fact]
         public void test_the_enum_description_returns()
         {
-            Assert.Equal(TestEnum.Test.GetDescription(), "This is my description");
+            Assert.Equal("This is my description", TestEnum.Test.GetDescription());
         }
 
         [Fact]

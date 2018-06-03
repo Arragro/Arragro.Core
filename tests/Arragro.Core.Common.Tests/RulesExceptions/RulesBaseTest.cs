@@ -4,6 +4,7 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 using Xunit;
 
@@ -67,7 +68,7 @@ namespace Arragro.Core.Common.Tests.RulesExceptions
 
             public Again Again { get; set; } = new Again();
 
-            public List<Again> Agains { get; set; } = new List<Again>();
+            public List<Again> Against { get; set; } = new List<Again>();
 
             public void Validate(RulesBaseParams parameters)
             {
@@ -96,6 +97,7 @@ namespace Arragro.Core.Common.Tests.RulesExceptions
                 ValidateModelPropertiesAndBuildRulesException(this);
                 var parameters = new RulesBaseParams { ThrowException = false };
 
+                RulesException.ErrorMessages.Add("This is a fake error message");
                 RulesException.ErrorFor(x => x.Value, "This is a fake error");
 
                 var rulesExceptionCollection = ValidateModelPropertiesAndBuildRulesExceptionCollection<RulesBaseParams>(this, parameters);
@@ -112,13 +114,23 @@ namespace Arragro.Core.Common.Tests.RulesExceptions
                 try
                 {
                     var something = new Something();
-                    something.Elses.Add(new Else { Agains = new List<Again> { new Again() } });
+                    something.Elses.Add(new Else { Against = new List<Again> { new Again() } });
                     something.Validate();
                 }
                 catch (RulesExceptionCollection ex)
                 {
+                    var somethingRulesException = ex.RulesExceptions.Single(x => x.TypeName == typeof(Something).Name);
+                    Assert.Single(somethingRulesException.ErrorMessages);
                     Assert.Equal(6, ex.RulesExceptions.Count);
                     var exceptionDto = ex.GetRulesExceptionDto();
+
+                    Assert.Single(exceptionDto.ErrorMessages);
+                    Assert.Equal(3, exceptionDto.Errors.Count);
+                    Assert.Single(exceptionDto.RulesExceptionListContainers);
+                    Assert.Equal(3, exceptionDto.RulesExceptionListContainers[0].RulesExceptionListContainers.Count);
+                    Assert.Single(exceptionDto.RulesExceptionListContainers[0].RulesExceptionListContainers.Where(x => x.IsRoot));
+                    Assert.Single(exceptionDto.RulesExceptionListContainers[0].RulesExceptionListContainers.Single(x => x.IsRoot).RulesExceptionListContainers);
+
                     throw;
                 }
             });

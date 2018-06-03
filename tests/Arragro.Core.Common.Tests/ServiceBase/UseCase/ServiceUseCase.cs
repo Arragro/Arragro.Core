@@ -34,7 +34,7 @@ namespace Arragro.Core.Common.Tests.Services.UseCase
                     }
                     catch (RulesException<ModelFoo> ex)
                     {
-                        Assert.Equal(1, ex.Errors.Count());
+                        Assert.Single(ex.Errors);
                         Assert.Equal(ModelFooService.RequiredName, ex.Errors[0].Message);
                         throw;
                     }

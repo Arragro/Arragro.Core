@@ -5,30 +5,6 @@ using System.Text;
 
 namespace Arragro.Core.Common.RulesExceptions
 {
-    public class RulesExceptionListContainer
-    {
-        public string Key { get; set; }
-        public string PropertyName { get; set; }
-        public int? Index { get; set; }
-        public List<RulesExceptionListContainer> RulesExceptionListContainers { get; set; }
-
-        public string KeyIndex
-        {
-            get
-            {
-                return Char.ToLowerInvariant(PropertyName[0]) + PropertyName.Substring(1) + (Index.HasValue ? $"[{Index}]" : "");
-            }
-        }
-
-        public RulesExceptionListContainer(string key, RulesException rulesException)
-        {
-            Key = key;
-            PropertyName = rulesException.PropertyName;
-            Index = rulesException.Index;
-            RulesExceptionListContainers = new List<RulesExceptionListContainer>();
-        }
-    }
-
     public class RulesExceptionDto
     {
         public IDictionary<string, List<object>> Errors { get; protected set; }
@@ -52,20 +28,20 @@ namespace Arragro.Core.Common.RulesExceptions
             return String.Join(".", split);
         }
 
-        private RulesExceptionListContainer FindRulesExceptionListContainer(string[] keySplit, int index, RulesException rulesException, List<RulesExceptionListContainer> rulesExceptionListContainers)
+        private RulesExceptionListContainer FindRulesExceptionListContainer(string[] keySplit, int index, KeyValuePair<string, List<object>> error, RulesException rulesException, List<RulesExceptionListContainer> rulesExceptionListContainers)
         {
             var rulesExceptionListContainer = rulesExceptionListContainers.SingleOrDefault(x => x.KeyIndex == keySplit[index] || (x.Key == "" && x.KeyIndex == keySplit[index]));
             if (rulesExceptionListContainer != null && rulesExceptionListContainer.Index.HasValue)
             {
                 var nextIndex = index + 1;
-                var findRulesExceptionListContainer = FindRulesExceptionListContainer(keySplit, nextIndex, rulesException, rulesExceptionListContainer.RulesExceptionListContainers);
+                var findRulesExceptionListContainer = FindRulesExceptionListContainer(keySplit, nextIndex, error, rulesException, rulesExceptionListContainer.RulesExceptionListContainers);
                 if (findRulesExceptionListContainer != null)
                     return findRulesExceptionListContainer;
                 else if (keySplit[nextIndex].EndsWith("]"))
                 {
-                    var newRulesExceptionListContainers = new RulesExceptionListContainer("", rulesException);
+                    var newRulesExceptionListContainers = new RulesExceptionListContainer(rulesException);
                     rulesExceptionListContainer.RulesExceptionListContainers.Add(newRulesExceptionListContainers);
-                    findRulesExceptionListContainer = FindRulesExceptionListContainer(keySplit, nextIndex, rulesException, rulesExceptionListContainer.RulesExceptionListContainers);
+                    findRulesExceptionListContainer = FindRulesExceptionListContainer(keySplit, nextIndex, error, rulesException, rulesExceptionListContainer.RulesExceptionListContainers);
                     if (findRulesExceptionListContainer != null)
                         return findRulesExceptionListContainer;
                 }
@@ -73,18 +49,18 @@ namespace Arragro.Core.Common.RulesExceptions
             return rulesExceptionListContainer;
         }
 
-        private void FindAndAddRulesExceptionListContainer(string key, string[] keySplit, RulesException rulesException)
+        private void FindAndAddRulesExceptionListContainer(string key, string[] keySplit, KeyValuePair<string, List<object>> error, RulesException rulesException)
         {
-            var rulesExceptionListContainer = FindRulesExceptionListContainer(keySplit, 0, rulesException, RulesExceptionListContainers);
+            var rulesExceptionListContainer = FindRulesExceptionListContainer(keySplit, 0, error, rulesException, RulesExceptionListContainers);
             if (rulesExceptionListContainer == null)
             {
-                var newRulesExceptionListContainers = new RulesExceptionListContainer("", rulesException);
-                newRulesExceptionListContainers.RulesExceptionListContainers.Add(new RulesExceptionListContainer(key, rulesException));
+                var newRulesExceptionListContainers = new RulesExceptionListContainer(rulesException);
+                newRulesExceptionListContainers.RulesExceptionListContainers.Add(new RulesExceptionListContainer(key, error, rulesException));
                 RulesExceptionListContainers.Add(newRulesExceptionListContainers);
             }
             else
             {
-                rulesExceptionListContainer.RulesExceptionListContainers.Add(new RulesExceptionListContainer(key, rulesException));
+                rulesExceptionListContainer.RulesExceptionListContainers.Add(new RulesExceptionListContainer(key, error, rulesException));
             }
         }
 
@@ -97,15 +73,15 @@ namespace Arragro.Core.Common.RulesExceptions
             }
             else if (rulesException.IsEnumerable && keySplit.Count(x => x.EndsWith("]")) == 1)
             {
-                FindAndAddRulesExceptionListContainer(key, keySplit, rulesException);
+                FindAndAddRulesExceptionListContainer(key, keySplit, error, rulesException);
             }
             else if ((!rulesException.IsEnumerable && keySplit.Any(x => x.EndsWith("]"))) ||
                      keySplit.Count(x => x.EndsWith("]")) > 1)
             {
-                FindAndAddRulesExceptionListContainer(key, keySplit, rulesException);
+                FindAndAddRulesExceptionListContainer(key, keySplit, error, rulesException);
             }
             else
-                RulesExceptionListContainers.Add(new RulesExceptionListContainer(key, rulesException));
+                RulesExceptionListContainers.Add(new RulesExceptionListContainer(key, error, rulesException));
         }
 
         protected void ProcessDictionaries(IEnumerable<RulesException> rulesExceptions)

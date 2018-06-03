@@ -10,7 +10,7 @@ namespace Arragro.Core.Common.Tests.CacheProvider.UnitTests
         [Fact]
         public void TestCacheProviderDefaultsToMemoryCacheProvider()
         {
-            Assert.Equal(CacheProviderManager.CacheProvider.GetType(), typeof(MemoryCacheProvider));
+            Assert.Equal(typeof(MemoryCacheProvider), CacheProviderManager.CacheProvider.GetType());
         }
 
         [Fact]
