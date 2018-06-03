@@ -9,7 +9,7 @@ namespace Arragro.Core.Common.RulesExceptions
     {
         public IDictionary<string, List<object>> Errors { get; protected set; }
         public List<string> ErrorMessages { get; protected set; }
-        public List<RulesExceptionListContainer> RulesExceptionListContainers { get; private set; }
+        public List<RulesExceptionListContainer> RulesExceptionListContainers { get; protected set; }
 
         public RulesExceptionDto()
         {
