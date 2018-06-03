@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\ArragroCMSLogo.svg" />
+    <None Remove="Resources\bear-hands.jpg" />
+    <None Remove="Resources\gold.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ArragroCMSLogo.svg" />
+    <EmbeddedResource Include="Resources\bear-hands.jpg" />
+    <EmbeddedResource Include="Resources\gold.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\providers\Arragro.Providers.ImageServiceProvider\Arragro.Providers.ImageServiceProvider.csproj" />
+  </ItemGroup>
+
+</Project>

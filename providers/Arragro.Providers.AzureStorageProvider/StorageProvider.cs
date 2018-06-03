@@ -199,10 +199,10 @@ namespace Arragro.Providers.AzureStorageProvider
                         bytes = ms.ToArray();
                     }
 
-                    var imageResult = _imageService.GetImage(bytes, width, quality, asProgressive);
+                    var imageResult = await _imageService.GetImage(bytes, width, quality, asProgressive);
                     var uri = await Upload(folderId, newFileId, imageResult.Bytes, blob.Properties.ContentType);
-                    imageResult = _imageService.GetImage(bytes, 250, 60, true);
-                    var thumbnailUri = await Upload(folderId, newFileId, imageResult.Bytes, blob.Properties.ContentType, true);
+                    var thumbNailImageResult = await _imageService.GetImage(bytes, 250, 60, true);
+                    var thumbnailUri = await Upload(folderId, newFileId, thumbNailImageResult.Bytes, blob.Properties.ContentType, true);
 
                     return new CreateImageFromImageResult
                     {
