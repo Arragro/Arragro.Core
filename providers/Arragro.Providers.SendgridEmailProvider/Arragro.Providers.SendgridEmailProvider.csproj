@@ -14,8 +14,8 @@
     <PackageIconUrl>http://cdn.arragro.com/public/images/favicon.ico</PackageIconUrl>
     <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/Arragro/Arragro</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/Arragro/Arragro</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Arragro/Arragro.Core</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>

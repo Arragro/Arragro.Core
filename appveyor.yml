@@ -5,7 +5,7 @@
       - /[Dd]ev/
   version: 1.0.0-alpha-{build}
   configuration: Release
-  image: Visual Studio 2017
+  image: Visual Studio 2017 Preview
   services:
     - mssql2016
   nuget:
@@ -50,6 +50,7 @@
   - dotnet build "src\Arragro.Core.Web" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+  - dotnet build "providers\Arragro.Providers.ImageServiceProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.InMemoryStorageProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.MailKitEmailProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.SendgridEmailProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
@@ -59,6 +60,7 @@
     - dotnet pack "src\Arragro.Core.Web" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
     - dotnet pack "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
     - dotnet pack "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.ImageServiceProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
     - dotnet pack "providers\Arragro.Providers.InMemoryStorageProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
     - dotnet pack "providers\Arragro.Providers.MailKitEmailProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
     - dotnet pack "providers\Arragro.Providers.SendgridEmailProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts

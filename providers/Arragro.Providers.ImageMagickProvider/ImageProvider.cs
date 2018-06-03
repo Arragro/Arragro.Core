@@ -2,6 +2,7 @@
 using Arragro.Core.Common.Models;
 using ImageMagick;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Arragro.Providers.ImageMagickProvider
 {
@@ -17,7 +18,7 @@ namespace Arragro.Providers.ImageMagickProvider
                 MimeType = string.Empty;
             }
         }
-
+        
         private ProcessImageResult ProcessImage(byte[] bytes, int? width = null, int quality = 80, bool asProgressiveJpeg = false)
         {
             var processImageResult = new ProcessImageResult();
@@ -68,7 +69,7 @@ namespace Arragro.Providers.ImageMagickProvider
             return output;
         }
 
-        public ImageProcessResult GetImage(byte[] bytes, int width, int quality = 80, bool asProgressiveJpeg = false)
+        public async Task<ImageProcessResult> GetImage(byte[] bytes, int width, int quality = 80, bool asProgressiveJpeg = false)
         {
             byte[] output;
             string mimeType = string.Empty;
@@ -100,10 +101,11 @@ namespace Arragro.Providers.ImageMagickProvider
             }
 
             var newImageInfo = new MagickImageInfo(output);
-            return new ImageProcessResult { Bytes = output, IsImage = true, Width = newImageInfo.Width, Height = newImageInfo.Height, Size = output.Length, MimeType = mimeType };
+            var task = Task.Run(() => new ImageProcessResult { Bytes = output, IsImage = true, Width = newImageInfo.Width, Height = newImageInfo.Height, Size = output.Length, MimeType = mimeType });
+            return await task;
         }
 
-        public ImageProcessResult GetImage(byte[] bytes, int quality, bool asProgressiveJpeg = false)
+        public async Task<ImageProcessResult> GetImage(byte[] bytes, int quality, bool asProgressiveJpeg = false)
         {
             byte[] output;
             string mimeType = string.Empty;
@@ -133,7 +135,8 @@ namespace Arragro.Providers.ImageMagickProvider
             }
 
             var newImageInfo = new MagickImageInfo(output);
-            return new ImageProcessResult { Bytes = output, IsImage = true, Width = newImageInfo.Width, Height = newImageInfo.Height, Size = output.Length, MimeType = mimeType };
+            var task = Task.Run(() => new ImageProcessResult { Bytes = output, IsImage = true, Width = newImageInfo.Width, Height = newImageInfo.Height, Size = output.Length, MimeType = mimeType });
+            return await task;
         }
     }
 }
