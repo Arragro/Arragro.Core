@@ -67,6 +67,7 @@ namespace Arragro.Core.Common.RulesExceptions
                         rulesException.Prefix = iRbsPrefix;
                         rulesException.IsEnumerable = true;
                         rulesException.PropertyName = rbs.Name;
+                        rulesException.Index = i;
 
                         rulesExceptionCollection.RulesExceptions.Add(rulesException);
                         ValidateModelPropertiesAndBuildRulesExceptionCollection<TParameterType>(e, parameterType, iRbsPrefix, rulesExceptionCollection);

@@ -67,6 +67,8 @@ namespace Arragro.Core.Common.Tests.RulesExceptions
 
             public Again Again { get; set; } = new Again();
 
+            public List<Again> Agains { get; set; } = new List<Again>();
+
             public void Validate(RulesBaseParams parameters)
             {
                 ValidateModelPropertiesAndBuildRulesException(this);
@@ -110,12 +112,12 @@ namespace Arragro.Core.Common.Tests.RulesExceptions
                 try
                 {
                     var something = new Something();
-                    something.Elses.Add(new Else());
+                    something.Elses.Add(new Else { Agains = new List<Again> { new Again() } });
                     something.Validate();
                 }
                 catch (RulesExceptionCollection ex)
                 {
-                    Assert.Equal(5, ex.RulesExceptions.Count);
+                    Assert.Equal(6, ex.RulesExceptions.Count);
                     var exceptionDto = ex.GetRulesExceptionDto();
                     throw;
                 }
