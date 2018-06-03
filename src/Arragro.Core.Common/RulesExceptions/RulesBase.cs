@@ -44,6 +44,7 @@ namespace Arragro.Core.Common.RulesExceptions
                     rb.PropertyType.GetInterface(typeof(IRulesBase<TParameterType>).Name).GetMethod("Validate").Invoke(value, new object[] { parameterType });
                     var rulesException = rb.PropertyType.BaseType.GetRuntimeField("RulesException").GetValue(value) as RulesException;
                     rulesException.Prefix = rbPrefix;
+                    rulesException.PropertyName = rb.Name;
                     rulesExceptionCollection.RulesExceptions.Add(rulesException);
 
                     ValidateModelPropertiesAndBuildRulesExceptionCollection<TParameterType>(value, parameterType, rbPrefix, rulesExceptionCollection);
@@ -65,6 +66,7 @@ namespace Arragro.Core.Common.RulesExceptions
                         var rulesException = enumerableType.BaseType.GetRuntimeField("RulesException").GetValue(e) as RulesException;
                         rulesException.Prefix = iRbsPrefix;
                         rulesException.IsEnumerable = true;
+                        rulesException.PropertyName = rbs.Name;
 
                         rulesExceptionCollection.RulesExceptions.Add(rulesException);
                         ValidateModelPropertiesAndBuildRulesExceptionCollection<TParameterType>(e, parameterType, iRbsPrefix, rulesExceptionCollection);

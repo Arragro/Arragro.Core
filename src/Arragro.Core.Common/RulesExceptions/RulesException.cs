@@ -16,6 +16,7 @@ namespace Arragro.Core.Common.RulesExceptions
         protected readonly Type Type;
         public string Prefix { get; set; } = "";
         public bool IsEnumerable { get; set; } = false;
+        public string PropertyName { get; set; }
 
 
         protected RulesException(Type type)

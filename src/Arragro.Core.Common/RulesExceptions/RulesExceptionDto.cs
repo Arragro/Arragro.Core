@@ -5,6 +5,14 @@ using System.Text;
 
 namespace Arragro.Core.Common.RulesExceptions
 {
+    public class RulesExceptionListContainer
+    {
+        public string PropertyName { get; set; }
+        public int Index { get; set; }
+        public string Path { get; set; }
+        public List<RulesExceptionListContainer> RulesExceptionListContainers { get; set; } = null;
+    }
+
     public class RulesExceptionDto
     {
         public IDictionary<string, List<object>> Errors { get; protected set; }
