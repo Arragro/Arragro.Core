@@ -127,9 +127,10 @@ namespace Arragro.Core.Common.Tests.RulesExceptions
                     Assert.Single(exceptionDto.ErrorMessages);
                     Assert.Equal(3, exceptionDto.Errors.Count);
                     Assert.Single(exceptionDto.RulesExceptionListContainers);
-                    Assert.Equal(3, exceptionDto.RulesExceptionListContainers[0].RulesExceptionListContainers.Count);
+                    Assert.Single(exceptionDto.RulesExceptionListContainers[0].RulesExceptionListContainers);
+                    Assert.Equal(2, exceptionDto.RulesExceptionListContainers[0].Errors.Count());
                     Assert.Single(exceptionDto.RulesExceptionListContainers[0].RulesExceptionListContainers.Where(x => x.IsRoot));
-                    Assert.Single(exceptionDto.RulesExceptionListContainers[0].RulesExceptionListContainers.Single(x => x.IsRoot).RulesExceptionListContainers);
+                    Assert.Single(exceptionDto.RulesExceptionListContainers[0].RulesExceptionListContainers.Single(x => x.IsRoot).Errors);
 
                     throw;
                 }

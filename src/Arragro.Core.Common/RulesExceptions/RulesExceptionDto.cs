@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Arragro.Core.Common.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,15 +19,7 @@ namespace Arragro.Core.Common.RulesExceptions
             RulesExceptionListContainers = new List<RulesExceptionListContainer>();
         }
 
-        private string CamelCase(string value)
-        {
-            var split = value.Split('.');
-            for (var i = 0; i < split.Length; i++)
-            {
-                split[i] = Char.ToLowerInvariant(split[i][0]) + split[i].Substring(1);
-            }
-            return String.Join(".", split);
-        }
+
 
         private RulesExceptionListContainer FindRulesExceptionListContainer(string[] keySplit, int index, KeyValuePair<string, List<object>> error, RulesException rulesException, List<RulesExceptionListContainer> rulesExceptionListContainers)
         {
@@ -55,12 +48,12 @@ namespace Arragro.Core.Common.RulesExceptions
             if (rulesExceptionListContainer == null)
             {
                 var newRulesExceptionListContainers = new RulesExceptionListContainer(rulesException);
-                newRulesExceptionListContainers.RulesExceptionListContainers.Add(new RulesExceptionListContainer(key, error, rulesException));
+                newRulesExceptionListContainers.AddError(error);
                 RulesExceptionListContainers.Add(newRulesExceptionListContainers);
             }
             else
             {
-                rulesExceptionListContainer.RulesExceptionListContainers.Add(new RulesExceptionListContainer(key, error, rulesException));
+                rulesExceptionListContainer.AddError(new KeyValuePair<string, List<object>>(key.Replace(rulesExceptionListContainer.KeyIndex + ".", ""), error.Value));
             }
         }
 
@@ -91,7 +84,7 @@ namespace Arragro.Core.Common.RulesExceptions
                 var errors = rulesException.GetErrorDictionary().ToList();
                 foreach (var error in errors)
                 {
-                    string key = string.IsNullOrEmpty(rulesException.Prefix) ? CamelCase(error.Key) : $"{CamelCase(rulesException.Prefix)}.{CamelCase(error.Key)}";
+                    string key = string.IsNullOrEmpty(rulesException.Prefix) ? error.Key.ToCamelCaseFromDotNotation() : $"{rulesException.Prefix.ToCamelCaseFromDotNotation()}.{error.Key.ToCamelCaseFromDotNotation()}";
 
                     ProcessEnumerableRulesException(key, error, rulesException);
                 }
