@@ -26,16 +26,16 @@ namespace Arragro.Core.EntityFrameworkCore
             get { return BaseContext.Set<TEntity>(); }
         }
         
-        public TEntity Find(object[] ids)
+        public TEntity Find(params object[] ids)
         {
             // Turn the HashTable of models into a Queryable
             return DbSet.Find(ids);
         }
 
-        public async Task<TEntity> FindAsync(object[] ids, CancellationToken token = default(CancellationToken))
+        public async Task<TEntity> FindAsync(params object[] ids)
         {
             // Turn the HashTable of models into a Queryable
-            return await DbSet.FindAsync(ids, token);
+            return await DbSet.FindAsync(ids);
         }
 
         public TEntity Delete(object[] ids)

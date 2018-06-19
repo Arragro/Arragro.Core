@@ -2,6 +2,8 @@
 using Arragro.Core.Common.Interfaces;
 using Arragro.Core.Common.Repository;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Arragro.Core.Common.ServiceBase
 {
@@ -16,6 +18,11 @@ namespace Arragro.Core.Common.ServiceBase
         public TModel Find(params object[] ids)
         {
             return Repository.Find(ids);
+        }
+
+        public async Task<TModel> FindAsync(params object[] ids)
+        {
+            return await Repository.FindAsync(ids);
         }
 
         protected abstract void ValidateModelRules(TModel model);
