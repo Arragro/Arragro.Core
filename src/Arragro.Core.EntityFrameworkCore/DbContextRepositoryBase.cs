@@ -78,20 +78,29 @@ namespace Arragro.Core.EntityFrameworkCore
             }
         }
 
-        public int SaveChanges()
+        private void SetAllEntryiesDetached()
+        {
+
+            foreach (EntityEntry entityEntry in BaseContext.ChangeTracker.Entries().ToArray())
+            {
+                if (entityEntry.Entity != null)
+                {
+                    entityEntry.State = EntityState.Detached;
+                }
+            }
+        }
+
+        private int SaveChanges(bool? acceptAllChangesOnSuccess)
         {
             try
             {
-                var result = BaseContext.SaveChanges();
-                
-                foreach (EntityEntry entityEntry in BaseContext.ChangeTracker.Entries().ToArray())
-                {
-                    if (entityEntry.Entity != null)
-                    {
-                        entityEntry.State = EntityState.Detached;
-                    }
-                }
+                int result;
+                if (acceptAllChangesOnSuccess.HasValue)
+                    result = BaseContext.SaveChanges(acceptAllChangesOnSuccess.Value);
+                else
+                    result = BaseContext.SaveChanges();
 
+                SetAllEntryiesDetached();
                 return result;
             }
             catch (Exception ex)
@@ -99,6 +108,46 @@ namespace Arragro.Core.EntityFrameworkCore
                 var innerEx = ex.InnerException;
                 throw;
             }
+        }
+
+        public int SaveChanges()
+        {
+            return SaveChanges(null);
+        }
+
+        public int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            return SaveChanges(acceptAllChangesOnSuccess);
+        }
+        
+        private async Task<int> SaveChangesAsync(bool? acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            try
+            {
+                int result;
+                if (acceptAllChangesOnSuccess.HasValue)
+                    result = await BaseContext.SaveChangesAsync(acceptAllChangesOnSuccess.Value, cancellationToken);
+                else
+                    result = await BaseContext.SaveChangesAsync(cancellationToken);
+
+                SetAllEntryiesDetached();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var innerEx = ex.InnerException;
+                throw;
+            }
+        }
+
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await SaveChangesAsync(null, cancellationToken);
+        }
+
+        public async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
         public void Dispose()

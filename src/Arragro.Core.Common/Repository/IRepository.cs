@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Arragro.Core.Common.Repository
 {
@@ -10,5 +12,8 @@ namespace Arragro.Core.Common.Repository
         IQueryable<TModel> AllNoTracking();
         TModel InsertOrUpdate(TModel model, bool add);
         int SaveChanges();
+        int SaveChanges(bool acceptAllChangesOnSuccess);
+        Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken));
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
     }
 }
