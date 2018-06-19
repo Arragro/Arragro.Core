@@ -1,9 +1,8 @@
-﻿using Arragro.Core.Common.Helpers;
-using Arragro.Core.Common.Repository;
+﻿using Arragro.Core.Common.Repository;
 using Arragro.Core.Common.RulesExceptions;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Arragro.Core.Common.BusinessRules
 {
@@ -23,6 +22,21 @@ namespace Arragro.Core.Common.BusinessRules
         public int SaveChanges()
         {
             return Repository.SaveChanges();
+        }
+
+        public int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            return Repository.SaveChanges(acceptAllChangesOnSuccess);
+        }
+
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await Repository.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await Repository.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
     }
 }
