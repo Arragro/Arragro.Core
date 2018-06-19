@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Arragro.Core.EntityFrameworkCore
 {
@@ -12,29 +14,39 @@ namespace Arragro.Core.EntityFrameworkCore
         IDbContextRepositoryBase<TEntity>, 
         IRepository<TEntity> where TEntity : class
     {
-        private readonly IBaseContext _baseContext;
-
-        public IBaseContext BaseContext { get { return _baseContext; } }
+        public IBaseContext BaseContext { get; private set; }
 
         public DbContextRepositoryBase(IBaseContext baseContext)
         {
-            _baseContext = baseContext;
+            BaseContext = baseContext;
         }
 
         protected DbSet<TEntity> DbSet
         {
-            get { return _baseContext.Set<TEntity>(); }
+            get { return BaseContext.Set<TEntity>(); }
         }
         
-        public TEntity Find(params object[] ids)
+        public TEntity Find(object[] ids)
         {
             // Turn the HashTable of models into a Queryable
             return DbSet.Find(ids);
         }
 
-        public TEntity Delete(params object[] ids)
+        public async Task<TEntity> FindAsync(object[] ids, CancellationToken token = default(CancellationToken))
+        {
+            // Turn the HashTable of models into a Queryable
+            return await DbSet.FindAsync(ids, token);
+        }
+
+        public TEntity Delete(object[] ids)
         {
             var entity = Find(ids);
+            return DbSet.Remove(entity).Entity;
+        }
+
+        public async Task<TEntity> DeleteAsync(object[] ids, CancellationToken token = default(CancellationToken))
+        {
+            var entity = await FindAsync(ids, token);
             return DbSet.Remove(entity).Entity;
         }
 
@@ -61,7 +73,7 @@ namespace Arragro.Core.EntityFrameworkCore
             }
             else
             {
-                _baseContext.SetModified(model);
+                BaseContext.SetModified(model);
                 return model;
             }
         }
@@ -70,9 +82,9 @@ namespace Arragro.Core.EntityFrameworkCore
         {
             try
             {
-                var result = _baseContext.SaveChanges();
+                var result = BaseContext.SaveChanges();
                 
-                foreach (EntityEntry entityEntry in _baseContext.ChangeTracker.Entries().ToArray())
+                foreach (EntityEntry entityEntry in BaseContext.ChangeTracker.Entries().ToArray())
                 {
                     if (entityEntry.Entity != null)
                     {
@@ -91,7 +103,7 @@ namespace Arragro.Core.EntityFrameworkCore
 
         public void Dispose()
         {
-            _baseContext.Dispose();
+            BaseContext.Dispose();
         }
     }
 }
