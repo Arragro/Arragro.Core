@@ -17,9 +17,11 @@ namespace Arragro.Core.Web.Extensions
         {
             var dataProtection = services.AddDataProtection();
 
-            if (baseSettings.DataProtectionSettings.DataProtectionStorage == DataProtectionStorage.Redis &&
-                !string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.RedisConnection))
+            if (baseSettings.DataProtectionSettings.DataProtectionStorage == DataProtectionStorage.Redis)
             {
+                if (string.IsNullOrEmpty(baseSettings.DataProtectionSettings.RedisConnection))
+                    throw new ArgumentNullException("BaseSettings.DataProtectionSettings.RedisConnection", "You need to supply a connection string for redis");
+
                 var redis = ConnectionMultiplexer.Connect(baseSettings.DataProtectionSettings.RedisConnection);
 
                 dataProtection.PersistKeysToRedis(redis, "DataProtection-Keys");
