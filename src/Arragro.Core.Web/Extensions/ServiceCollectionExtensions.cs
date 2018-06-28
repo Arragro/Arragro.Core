@@ -17,6 +17,20 @@ namespace Arragro.Core.Web.Extensions
         {
             var dataProtection = services.AddDataProtection();
 
+            if (baseSettings.DataProtectionSettings.DataProtectionStorage == DataProtectionStorage.Redis &&
+                !string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.RedisConnection))
+            {
+                var redis = ConnectionMultiplexer.Connect(baseSettings.DataProtectionSettings.RedisConnection);
+
+                dataProtection.PersistKeysToRedis(redis, "DataProtection-Keys");
+            }
+
+            if (baseSettings.DataProtectionSettings.DataProtectionStorage == DataProtectionStorage.FileSystem &&
+                !string.IsNullOrEmpty(baseSettings.DataProtectionSettings.DataProtectionStoragePath))
+            {
+                dataProtection.PersistKeysToFileSystem(new DirectoryInfo(baseSettings.DataProtectionSettings.DataProtectionStoragePath));
+            }
+
             if (baseSettings.DataProtectionSettings.UseX509 &&
                 !string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.CertBase64) &&
                 !string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.Password))
@@ -40,20 +54,6 @@ namespace Arragro.Core.Web.Extensions
                 X509Certificate2 x509Cert = new X509Certificate2(bytes, baseSettings.DataProtectionSettings.Password);
 
                 dataProtection.ProtectKeysWithCertificate(x509Cert);
-            }
-
-            if (baseSettings.DataProtectionSettings.DataProtectionStorage == DataProtectionStorage.Redis &&
-                !string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.RedisConnection))
-            {
-                var redis = ConnectionMultiplexer.Connect(baseSettings.DataProtectionSettings.RedisConnection);
-
-                dataProtection.PersistKeysToRedis(redis, "DataProtection-Keys");
-            }
-
-            if (baseSettings.DataProtectionSettings.DataProtectionStorage == DataProtectionStorage.FileSystem &&
-                !string.IsNullOrEmpty(baseSettings.DataProtectionSettings.DataProtectionStoragePath))
-            {
-                dataProtection.PersistKeysToFileSystem(new DirectoryInfo(baseSettings.DataProtectionSettings.DataProtectionStoragePath));
             }
 
             return services;
