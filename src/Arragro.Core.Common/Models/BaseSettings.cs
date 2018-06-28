@@ -15,6 +15,10 @@ namespace Arragro.Core.Common.Models
     public class DataProtectionSettings
     {
         /// <summary>
+        /// Determines if DataProtection is enabled
+        /// </summary>
+        public bool UseDataProtection { get; set; } = false;
+        /// <summary>
         /// Determines if X509 cert is to be used, required for multi instance apps, replaces machine key
         /// </summary>
         public bool UseX509 { get; set; } = false;
