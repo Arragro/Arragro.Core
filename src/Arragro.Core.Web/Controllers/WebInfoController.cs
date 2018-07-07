@@ -1,4 +1,5 @@
-﻿using Arragro.Core.Common.Models;
+﻿using Arragro.Core.Common.Interfaces;
+using Arragro.Core.Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,10 +18,15 @@ namespace Arragro.Core.Web.Controllers
     {
         private static DateTime _startupTime = DateTime.UtcNow;
         private readonly BaseSettings _baseSettings;
+        private readonly IAllDbContextMigrationsApplied _allDbContextMigrationsApplied;
+        private bool _migrationsAppliedNoMoreTests = false;
 
-        public WebInfoController(BaseSettings baseSettings)
+        public WebInfoController(
+            BaseSettings baseSettings,
+            IAllDbContextMigrationsApplied allDbContextMigrationsApplied)
         {
             _baseSettings = baseSettings;
+            _allDbContextMigrationsApplied = allDbContextMigrationsApplied;
         }
 
         private IEnumerable<dynamic> GetIpAddress()
@@ -62,6 +68,19 @@ namespace Arragro.Core.Web.Controllers
                 _baseSettings.WebInfoSettings.Secret != Guid.Empty &&
                 _baseSettings.WebInfoSettings.Secret == secret)
             {
+                if (!_migrationsAppliedNoMoreTests)
+                {
+                    var results = _allDbContextMigrationsApplied.TestDbContextsMigrated();
+                    if (results.Any(x => !x.Migrated))
+                    {
+                        return new ConflictResult();
+                    }
+                    else
+                    {
+                        _migrationsAppliedNoMoreTests = true;
+                    }
+                }
+
                 return Json(
                 new {
                     AssemblyVersion = typeof(RuntimeEnvironment).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version,
