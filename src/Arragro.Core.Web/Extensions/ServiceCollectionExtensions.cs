@@ -17,11 +17,15 @@ namespace Arragro.Core.Web.Extensions
         {
             if (baseSettings.DataProtectionSettings.UseDataProtection)
             {
+                if (string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.ApplicationName))
+                    throw new ArgumentNullException("ApplicationName", "You must supply an ApplicationName in DataProtectionSettings");
+
                 var dataProtection = services.AddDataProtection();
+                dataProtection.SetApplicationName(baseSettings.DataProtectionSettings.ApplicationName);
 
                 if (baseSettings.DataProtectionSettings.DataProtectionStorage == DataProtectionStorage.Redis)
                 {
-                    if (string.IsNullOrEmpty(baseSettings.DataProtectionSettings.RedisConnection))
+                    if (string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.RedisConnection))
                         throw new ArgumentNullException("BaseSettings.DataProtectionSettings.RedisConnection", "You need to supply a connection string for redis");
 
                     var redis = ConnectionMultiplexer.Connect(baseSettings.DataProtectionSettings.RedisConnection);
@@ -30,7 +34,7 @@ namespace Arragro.Core.Web.Extensions
                 }
 
                 if (baseSettings.DataProtectionSettings.DataProtectionStorage == DataProtectionStorage.FileSystem &&
-                    !string.IsNullOrEmpty(baseSettings.DataProtectionSettings.DataProtectionStoragePath))
+                    !string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.DataProtectionStoragePath))
                 {
                     dataProtection.PersistKeysToFileSystem(new DirectoryInfo(baseSettings.DataProtectionSettings.DataProtectionStoragePath));
                 }

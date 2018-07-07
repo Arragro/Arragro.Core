@@ -19,6 +19,10 @@ namespace Arragro.Core.Common.Models
         /// </summary>
         public bool UseDataProtection { get; set; } = false;
         /// <summary>
+        /// The application name used by dataprotection
+        /// </summary>
+        public string ApplicationName { get; set; }
+        /// <summary>
         /// Determines if X509 cert is to be used, required for multi instance apps, replaces machine key
         /// </summary>
         public bool UseX509 { get; set; } = false;
