@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq;
 
 namespace Arragro.Core.EntityFrameworkCore.Extensions
@@ -18,6 +19,11 @@ namespace Arragro.Core.EntityFrameworkCore.Extensions
                 .Select(m => m.Key);
 
             return !total.Except(applied).Any();
+        }
+
+        public static bool Exists(this DbContext context)
+        {
+            return (context.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists();
         }
     }
 }
