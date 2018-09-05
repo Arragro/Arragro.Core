@@ -3,6 +3,7 @@ using Arragro.Core.Common.Models;
 using Arragro.Core.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Arragro.Core.EntityFrameworkCore
 {
@@ -13,6 +14,11 @@ namespace Arragro.Core.EntityFrameworkCore
         public AllDbContextMigrationsApplied(IEnumerable<DbContext> dbContexts)
         {
             _dbContexts = dbContexts;
+        }
+
+        public AllDbContextMigrationsApplied()
+        {
+            _dbContexts = Enumerable.Empty<DbContext>();
         }
 
         public IEnumerable<MigrationTestResult> TestDbContextsMigrated()
