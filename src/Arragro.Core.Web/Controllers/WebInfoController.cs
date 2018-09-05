@@ -18,15 +18,12 @@ namespace Arragro.Core.Web.Controllers
     {
         private static DateTime _startupTime = DateTime.UtcNow;
         private readonly BaseSettings _baseSettings;
-        private readonly IAllDbContextMigrationsApplied _allDbContextMigrationsApplied;
         private bool _migrationsAppliedNoMoreTests = false;
 
         public WebInfoController(
-            BaseSettings baseSettings,
-            IAllDbContextMigrationsApplied allDbContextMigrationsApplied)
+            BaseSettings baseSettings)
         {
             _baseSettings = baseSettings;
-            _allDbContextMigrationsApplied = allDbContextMigrationsApplied;
         }
 
         private IEnumerable<dynamic> GetIpAddress()
@@ -66,11 +63,12 @@ namespace Arragro.Core.Web.Controllers
             if (_baseSettings != null &&
                 _baseSettings.WebInfoSettings.IsWebInfoEnabled &&
                 _baseSettings.WebInfoSettings.Secret != Guid.Empty &&
-                _baseSettings.WebInfoSettings.Secret == secret)
+                _baseSettings.WebInfoSettings.Secret == secret &&
+                _baseSettings.AllDbContextMigrationsApplied != null)
             {
                 if (!_migrationsAppliedNoMoreTests)
                 {
-                    var results = _allDbContextMigrationsApplied.TestDbContextsMigrated();
+                    var results = _baseSettings.AllDbContextMigrationsApplied.TestDbContextsMigrated();
                     if (results.Any(x => !x.Migrated))
                     {
                         return new ConflictResult();

@@ -1,4 +1,5 @@
 ﻿using Arragro.Core.Common.Enums;
+using Arragro.Core.Common.Interfaces;
 using System;
 
 namespace Arragro.Core.Common.Models
@@ -52,5 +53,6 @@ namespace Arragro.Core.Common.Models
     {
         public WebInfoSettings WebInfoSettings { get; set; } = new WebInfoSettings();
         public DataProtectionSettings DataProtectionSettings { get; set; } = new DataProtectionSettings();
+        public IAllDbContextMigrationsApplied AllDbContextMigrationsApplied { get; set; } = null;
     }
 }
