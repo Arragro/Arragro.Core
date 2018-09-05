@@ -63,10 +63,9 @@ namespace Arragro.Core.Web.Controllers
             if (_baseSettings != null &&
                 _baseSettings.WebInfoSettings.IsWebInfoEnabled &&
                 _baseSettings.WebInfoSettings.Secret != Guid.Empty &&
-                _baseSettings.WebInfoSettings.Secret == secret &&
-                _baseSettings.AllDbContextMigrationsApplied != null)
+                _baseSettings.WebInfoSettings.Secret == secret)
             {
-                if (!_migrationsAppliedNoMoreTests)
+                if (_baseSettings.AllDbContextMigrationsApplied != null && !_migrationsAppliedNoMoreTests)
                 {
                     var results = _baseSettings.AllDbContextMigrationsApplied.TestDbContextsMigrated();
                     if (results.Any(x => !x.Migrated))
