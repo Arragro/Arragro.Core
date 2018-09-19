@@ -7,6 +7,9 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
 {
     public class ImageServiceTests
     {
+        const string _server = "http://192.168.69.89:3000";
+        // const string _server = "http://localhost:3000";
+
         public static byte[] ReadFully(Stream input)
         {
             byte[] buffer = new byte[16 * 1024];
@@ -24,7 +27,7 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
         [Fact]
         public void resize_image_jpg_quality_returns_successfully()
         {
-            var imageService = new ImageProvider("http://localhost:3000");
+            var imageService = new ImageProvider(_server);
             var assembly = typeof(ImageServiceTests).GetTypeInfo().Assembly;
             var bytes = ReadFully(assembly.GetManifestResourceStream("Arragro.Providers.ImageServiceProvider.IntegrationTests.Resources.bear-hands.jpg"));
             var result = imageService.GetImage(bytes).Result;
@@ -37,7 +40,7 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
         [Fact]
         public void resize_image_jpg_resize_returns_successfully()
         {
-            var imageService = new ImageProvider("http://localhost:3000");
+            var imageService = new ImageProvider(_server);
             var assembly = typeof(ImageServiceTests).GetTypeInfo().Assembly;
             var bytes = ReadFully(assembly.GetManifestResourceStream("Arragro.Providers.ImageServiceProvider.IntegrationTests.Resources.bear-hands.jpg"));
             var result = imageService.GetImage(bytes, 600, 80, true).Result;
@@ -50,7 +53,7 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
         [Fact]
         public void resize_image_gif_quality_returns_successfully()
         {
-            var imageService = new ImageProvider("http://localhost:3000");
+            var imageService = new ImageProvider(_server);
             var assembly = typeof(ImageServiceTests).GetTypeInfo().Assembly;
             var bytes = ReadFully(assembly.GetManifestResourceStream("Arragro.Providers.ImageServiceProvider.IntegrationTests.Resources.gold.gif"));
             var result = imageService.GetImage(bytes).Result;
@@ -63,7 +66,7 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
         [Fact]
         public void resize_image_gif_resize_returns_successfully()
         {
-            var imageService = new ImageProvider("http://localhost:3000");
+            var imageService = new ImageProvider(_server);
             var assembly = typeof(ImageServiceTests).GetTypeInfo().Assembly;
             var bytes = ReadFully(assembly.GetManifestResourceStream("Arragro.Providers.ImageServiceProvider.IntegrationTests.Resources.gold.gif"));
             var result = imageService.GetImage(bytes, 300, 80, true).Result;
@@ -76,7 +79,7 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
         [Fact]
         public void resize_image_svg_returns_successfully()
         {
-            var imageService = new ImageProvider("http://localhost:3000");
+            var imageService = new ImageProvider(_server);
             var assembly = typeof(ImageServiceTests).GetTypeInfo().Assembly;
             var bytes = ReadFully(assembly.GetManifestResourceStream("Arragro.Providers.ImageServiceProvider.IntegrationTests.Resources.ArragroCMSLogo.svg"));
             var result = imageService.GetImage(bytes, 300, 80, true).Result;

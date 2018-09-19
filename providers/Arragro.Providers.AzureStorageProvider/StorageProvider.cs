@@ -35,6 +35,10 @@ namespace Arragro.Providers.AzureStorageProvider
 
             _assetContainer = _client.GetContainerReference(assetsContainerName);
             _assetContainer.CreateIfNotExistsAsync().Wait();
+            _assetContainer.SetPermissionsAsync(new BlobContainerPermissions
+            {
+                PublicAccess = BlobContainerPublicAccessType.Blob
+            }).Wait();
         }
 
         const string THUMBNAIL_ASSETKEY = "ThumbNail:";
