@@ -88,7 +88,7 @@
     content_type: 
     body: >-
       payload={
-          "text": "AppVeyor Build {{#passed}}passed{{/passed}}{{#failed}}failed{{/failed}}"
+          "text": "AppVeyor Build {{projectName}} - {{buildVersion}} on branch {{branch}} by by {{commitAuthor}} {{#passed}}passed{{/passed}}{{#failed}}failed{{/failed}} ({{started}} - {{finished}})"
       }
     on_build_success: true
     on_build_failure: true
