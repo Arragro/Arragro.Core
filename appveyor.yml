@@ -48,7 +48,8 @@
   - dotnet build "src\Arragro.Core.Common" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "src\Arragro.Core.EntityFrameworkCore" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "src\Arragro.Core.Web" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
-  - dotnet build "src\Arragro.Core.DistributedCacheManager" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+  - dotnet build "src\Arragro.Core.DistributedCache" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
+  - dotnet build "src\Arragro.Core.Identity" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.ImageServiceProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
@@ -59,7 +60,8 @@
     - dotnet pack "src\Arragro.Core.Common" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
     - dotnet pack "src\Arragro.Core.EntityFrameworkCore" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
     - dotnet pack "src\Arragro.Core.Web" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "src\Arragro.Core.DistributedCacheManager" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.DistributedCache" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.Identity" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
     - dotnet pack "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
     - dotnet pack "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
     - dotnet pack "providers\Arragro.Providers.ImageServiceProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
@@ -83,10 +85,10 @@
     url:
       secure: /Mu5qzDWowMVA/HgNRKsFIRzdiAM8fWBT/i5SAyUJuLqehc92nC0PczXziza/Q6M4f91rrUq/19dzG36gpWnAN0tDvXnQE+bXyvR22woKNLC3fpbitLOwgAgV2iaDzNm6EQ8+R+y0a9BrPikNVucKeRygbA/vIsX24XkVTp5qWyP26ONeoJDJ5SUcTeYIMHFAj4XxgFjfmdwSWp623h9VWPXnjgEGiQO0xwfL2MI4bA=
     method: POST
+    content_type: 
     body: >-
       payload={
-          {{#passed}} Build {{projectName}} {{buildVersion}} passed {{/passed}}
-          {{#failed}} Build {{projectName}} {{buildVersion}} failed {{/failed}}
+          "text": "AppVeyor Build {{#passed}}passed{{/passed}}{{#failed}}failed{{/failed}}"
       }
     on_build_success: true
     on_build_failure: true
