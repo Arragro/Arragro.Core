@@ -1,5 +1,6 @@
 ﻿using Arragro.Core.Identity.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace Arragro.Core.Identity
@@ -8,5 +9,6 @@ namespace Arragro.Core.Identity
         where TUser : User
         where TRole : Role
     {
+        public ArragroCoreIdentityBaseContext(DbContextOptions options) : base(options) { }
     }
 }
