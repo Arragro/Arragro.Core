@@ -12,7 +12,7 @@ namespace Arragro.Core.Identity.Domains
     public class Users<TUser> 
         where TUser :  User
     {
-        private readonly UserManager<TUser> _userManager;
+        protected readonly UserManager<TUser> _userManager;
 
         public Users(UserManager<TUser> userManager)
         {
