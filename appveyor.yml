@@ -82,6 +82,12 @@
   - provider: Webhook
     url:
       secure: /Mu5qzDWowMVA/HgNRKsFIRzdiAM8fWBT/i5SAyUJuLqehc92nC0PczXziza/Q6M4f91rrUq/19dzG36gpWnAN0tDvXnQE+bXyvR22woKNLC3fpbitLOwgAgV2iaDzNm6EQ8+R+y0a9BrPikNVucKeRygbA/vIsX24XkVTp5qWyP26ONeoJDJ5SUcTeYIMHFAj4XxgFjfmdwSWp623h9VWPXnjgEGiQO0xwfL2MI4bA=
+    method: POST
+    body: >-
+      payload={
+          {{#passed}} Build {{projectName}} {{buildVersion}} passed {{/passed}}
+          {{#failed}} Build {{projectName}} {{buildVersion}} failed {{/failed}}
+      }
     on_build_success: true
     on_build_failure: true
     on_build_status_changed: true

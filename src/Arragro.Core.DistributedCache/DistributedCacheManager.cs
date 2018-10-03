@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Arragro.Core.DistributedCacheManager
+namespace Arragro.Core.DistributedCache
 {
     public class DistributedCacheManager
     {
