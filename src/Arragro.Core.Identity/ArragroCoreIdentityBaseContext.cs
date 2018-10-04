@@ -10,7 +10,7 @@ namespace Arragro.Core.Identity
         public ArragroCoreIdentityBaseContext(DbContextOptions options) : base(options) { }
     }
 
-    public class ArragroCoreIdentityContext : ArragroCoreIdentityBaseContext<User, Role>
+    public class ArragroCoreIdentityContext : ArragroCoreIdentityBaseContext
     {
         public ArragroCoreIdentityContext(DbContextOptions<ArragroCoreIdentityContext> options)
             : base(options)
@@ -26,7 +26,7 @@ namespace Arragro.Core.Identity
         }
     }
 
-    public class ArragroCoreIdentityPGContext : ArragroCoreIdentityBaseContext<User, Role>
+    public class ArragroCoreIdentityPGContext : ArragroCoreIdentityBaseContext
     {
         public ArragroCoreIdentityPGContext(DbContextOptions<ArragroCoreIdentityPGContext> options)
             : base(options)
