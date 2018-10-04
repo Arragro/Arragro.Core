@@ -11,4 +11,37 @@ namespace Arragro.Core.Identity
     {
         public ArragroCoreIdentityBaseContext(DbContextOptions options) : base(options) { }
     }
+
+    public class ArragroCoreIdentityContext : ArragroCoreIdentityBaseContext<User, Role>
+    {
+        public ArragroCoreIdentityContext(DbContextOptions<ArragroCoreIdentityContext> options)
+            : base(options)
+        {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=ArragroCMS;Trusted_Connection=True;");
+            }
+        }
+    }
+
+    public class ArragroCoreIdentityPGContext : ArragroCoreIdentityBaseContext<User, Role>
+    {
+        public ArragroCoreIdentityPGContext(DbContextOptions<ArragroCoreIdentityPGContext> options)
+            : base(options)
+        {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseNpgsql(@"host=localhost;port=5432;database=arragro-cms;user id=postgres;password=Password1");
+            }
+        }
+
+    }
 }
