@@ -56,6 +56,11 @@ namespace Arragro.Core.Identity.Domains
             return await _userManager.CreateAsync(user);
         }
 
+        public async Task<IdentityResult> AddLogin(TUser user, UserLoginInfo userLoginInfo)
+        {
+            return await _userManager.AddLoginAsync(user, userLoginInfo);
+        }
+
         public async Task<IdentityResult> UpdateAsync(TUser user, Guid userId)
         {
             user.ModifiedBy = userId;
@@ -116,8 +121,9 @@ namespace Arragro.Core.Identity.Domains
         {
             var userClaims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Email),
+                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
                 new Claim("User-Identifier", user.Id.ToString()),
                 new Claim("ModifiedDate", user.ModifiedDate.Ticks.ToString())
             };
