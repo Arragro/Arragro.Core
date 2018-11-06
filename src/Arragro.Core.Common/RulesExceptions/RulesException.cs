@@ -166,11 +166,7 @@ namespace Arragro.Core.Common.RulesExceptions
             {
                 foreach (var memberName in validationResult.MemberNames)
                 {
-                    var parameterExpression = Expression.Parameter(type);
-                    var memberExpression = Expression.Property(parameterExpression, memberName);
-                    var property = Expression.Lambda<Func<TModel, Object>>(memberExpression, parameterExpression);
-
-                    Errors.Add(new RuleViolation(property, validationResult.ErrorMessage));
+                    Errors.Add(new RuleViolation(memberName, validationResult.ErrorMessage));
                 }
             }
         }
