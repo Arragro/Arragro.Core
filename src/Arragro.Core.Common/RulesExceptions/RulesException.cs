@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Arragro.Core.Common.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -61,8 +62,7 @@ namespace Arragro.Core.Common.RulesExceptions
 
         public void ErrorForModel(string message)
         {
-            Errors.Add(new RuleViolation { Property = ThisObject, Message = message });
-
+            Errors.Add(new RuleViolation(ThisObject, message));
             ErrorMessages.Add(message);
         }
 
@@ -72,9 +72,9 @@ namespace Arragro.Core.Common.RulesExceptions
             {
                 Errors.Add(error);
                 if (string.IsNullOrEmpty(error.Prefix))
-                    ErrorMessages.Add($"{error.GetPropertyPath()} - {error.Message}");
+                    ErrorMessages.Add($"{error.Key} - {error.Message}");
                 else
-                    ErrorMessages.Add($"{error.Prefix} - {error.GetPropertyPath()} - {error.Message}");
+                    ErrorMessages.Add($"{error.Prefix} - {error.Key} - {error.Message}");
             }
         }
 
@@ -82,7 +82,7 @@ namespace Arragro.Core.Common.RulesExceptions
         {
             get
             {
-                var thisErrors = Errors.Where(x => x.Property == ThisObject);
+                var thisErrors = Errors.Where(x => x.Key == ExpressionHelper.GetExpressionText(ThisObject));
                 var output = new StringBuilder(base.Message);
 
                 if (thisErrors.Any())
@@ -96,7 +96,7 @@ namespace Arragro.Core.Common.RulesExceptions
 
         public void ThrowException()
         {
-            var thisErrors = Errors.Where(x => x.Property == ThisObject);
+            var thisErrors = Errors.Where(x => x.Key == ExpressionHelper.GetExpressionText(ThisObject));
             var output = new StringBuilder(base.Message);
 
             if (thisErrors.Any())
@@ -131,6 +131,14 @@ namespace Arragro.Core.Common.RulesExceptions
             }
             return dict;
         }
+
+        public void ErrorFor(
+            string propertyName,
+            string message, string prefix = "")
+        {
+            var propertyError = new RuleViolation(propertyName, message, prefix);
+            Errors.Add(propertyError);
+        }
     }
 
     public class RulesException<TModel> : RulesException
@@ -147,7 +155,7 @@ namespace Arragro.Core.Common.RulesExceptions
             Expression<Func<TModel, TProperty>> property,
             string message, string prefix = "")
         {
-            var propertyError = new RuleViolation { Property = property, Message = message, Prefix = prefix };
+            var propertyError = new RuleViolation(property, message, prefix);
             Errors.Add(propertyError);
         }
 
@@ -160,15 +168,9 @@ namespace Arragro.Core.Common.RulesExceptions
                 {
                     var parameterExpression = Expression.Parameter(type);
                     var memberExpression = Expression.Property(parameterExpression, memberName);
-                    var conversion = Expression.Convert(memberExpression, typeof(object));
-                    var property = Expression.Lambda<Func<TModel, Object>>(conversion, parameterExpression);
+                    var property = Expression.Lambda<Func<TModel, Object>>(memberExpression, parameterExpression);
 
-                    Errors.Add(
-                        new RuleViolation
-                        {
-                            Property = property,
-                            Message = validationResult.ErrorMessage
-                        });
+                    Errors.Add(new RuleViolation(property, validationResult.ErrorMessage));
                 }
             }
         }
@@ -190,7 +192,7 @@ namespace Arragro.Core.Common.RulesExceptions
     {
         public static bool ContainsErrorForProperty(this RulesException ex, string propertyName)
         {
-            return ex.Errors.Any(x => x.Property.Body.ToString().Contains(string.Format(".{0}", propertyName)));
+            return ex.Errors.Any(x => x.Key.Contains(propertyName));
         }
     }
 }

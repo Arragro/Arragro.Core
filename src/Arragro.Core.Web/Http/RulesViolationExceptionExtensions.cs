@@ -2,7 +2,6 @@
 using Arragro.Core.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 
 namespace Arragro.Core.Web
 {
@@ -29,7 +28,7 @@ namespace Arragro.Core.Web
             foreach (var propertyError in ex.Errors)
             {
                 var errorPrefix = string.IsNullOrEmpty(propertyError.Prefix) ? prefix : propertyError.Prefix + ".";
-                var key = ExpressionHelper.GetExpressionText(propertyError.Property);
+                var key = propertyError.Key;
                 modelState.AddModelError(errorPrefix + key, propertyError.Message);
             }
             if (controller != null)

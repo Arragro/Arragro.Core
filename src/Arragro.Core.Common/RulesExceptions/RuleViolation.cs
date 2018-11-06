@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Arragro.Core.Common.Helpers;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace Arragro.Core.Common.RulesExceptions
 {
@@ -20,11 +18,13 @@ namespace Arragro.Core.Common.RulesExceptions
     {
         public string Prefix { get; set; }
 
-        public LambdaExpression Property { get; set; }
+        public string Key { get; set; }
 
         public string Message { get; set; }
 
-        public string GetPropertyPath()
+        private LambdaExpression Property { get; set; }
+
+        private string GetPropertyPath()
         {
             var stack = new Stack<string>();
 
@@ -55,10 +55,25 @@ namespace Arragro.Core.Common.RulesExceptions
             get
             {
                 if (string.IsNullOrEmpty(Prefix))
-                    return new KeyValuePair<string, object>(GetPropertyPath(), Message);
+                    return new KeyValuePair<string, object>(Key, Message);
                 else
-                    return new KeyValuePair<string, object>(string.Format("{0}.{1}", Prefix, GetPropertyPath()), Message);
+                    return new KeyValuePair<string, object>(string.Format("{0}.{1}", Prefix, Key), Message);
             }
+        }
+
+        public RuleViolation(LambdaExpression property, string message, string prefix = null)
+        {
+            Prefix = string.IsNullOrEmpty(prefix) ? prefix : prefix + ".";
+            Property = property;
+            Key = ExpressionHelper.GetExpressionText(property);
+            Message = message;
+        }
+
+        public RuleViolation(string key, string message, string prefix = null)
+        {
+            Prefix = string.IsNullOrEmpty(prefix) ? prefix : prefix + ".";
+            Key = key;
+            Message = message;
         }
     }
 }

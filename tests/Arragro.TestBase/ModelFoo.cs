@@ -11,6 +11,16 @@ namespace Arragro.TestBase
         [MaxLength(6)]
         [Required]
         public string Name { get; set; }
+
+        public ModelBar ModelBar { get; set; }
+    }
+
+    public class ModelBar
+    {
+        public int Id { get; set; }
+        [MaxLength(6)]
+        [Required]
+        public string Name { get; set; }
     }
 
     public class ModelFooInt : Auditable<int>
