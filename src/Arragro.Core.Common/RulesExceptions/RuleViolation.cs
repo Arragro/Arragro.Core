@@ -63,7 +63,7 @@ namespace Arragro.Core.Common.RulesExceptions
 
         public RuleViolation(LambdaExpression property, string message, string prefix = null)
         {
-            Prefix = string.IsNullOrEmpty(prefix) ? prefix : prefix + ".";
+            Prefix = string.IsNullOrEmpty(prefix) ? prefix : prefix;
             Property = property;
             Key = ExpressionHelper.GetExpressionText(property);
             Message = message;
