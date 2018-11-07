@@ -71,7 +71,7 @@ namespace Arragro.Core.Common.RulesExceptions
 
         public RuleViolation(string key, string message, string prefix = null)
         {
-            Prefix = string.IsNullOrEmpty(prefix) ? prefix : prefix + ".";
+            Prefix = string.IsNullOrEmpty(prefix) ? prefix : prefix;
             Key = key;
             Message = message;
         }
