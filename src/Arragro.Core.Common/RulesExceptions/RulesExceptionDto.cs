@@ -19,8 +19,6 @@ namespace Arragro.Core.Common.RulesExceptions
             RulesExceptionListContainers = new List<RulesExceptionListContainer>();
         }
 
-
-
         private RulesExceptionListContainer FindRulesExceptionListContainer(string[] keySplit, int index, KeyValuePair<string, List<object>> error, RulesException rulesException, List<RulesExceptionListContainer> rulesExceptionListContainers)
         {
             var rulesExceptionListContainer = rulesExceptionListContainers.SingleOrDefault(x => x.KeyIndex == keySplit[index] || (x.Key == "" && x.KeyIndex == keySplit[index]));
