@@ -99,10 +99,9 @@ namespace Arragro.Core.Common.RulesExceptions
 
         public void ThrowException()
         {
-            var thisErrors = Errors.Where(x => x.Key == ExpressionHelper.GetExpressionText(ThisObject));
             var output = new StringBuilder(base.Message);
 
-            if (thisErrors.Any())
+            if (Errors.Any() || ErrorMessages.Any())
             {
                 output.AppendLine("\n\n====================================");
                 output.AppendLine(ToString());
