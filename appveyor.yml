@@ -28,7 +28,6 @@
         secure: F0ZPbEej7MlPRYAb43jRKMZdVDCWLEhfsgmx4o3YTSdcTKIGbOO92NL2LlHcjY1V
   init:
   - ps: $Env:LABEL = "alpha-" + $Env:APPVEYOR_BUILD_NUMBER
-  - ps: $Env:APPVEYOR_BUILD_VERSION = "alpha-" + $Env:APPVEYOR_BUILD_NUMBER
   before_build:
   - ps: >-
       $Env:LABEL
