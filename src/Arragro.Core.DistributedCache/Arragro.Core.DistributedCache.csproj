@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   
   <PropertyGroup>
-    <Version>1.0.0</Version>
-    <PackageVersion>1.0.0</PackageVersion>
     <TargetFrameworks>netcoreapp2.0;net462;net471</TargetFrameworks>
     <AssemblyName>Arragro.Core.DistributedCacheManager</AssemblyName>
     <PackageId>Arragro.Core.DistributedCacheManager</PackageId>
