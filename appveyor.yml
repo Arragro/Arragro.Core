@@ -30,6 +30,8 @@
     # Don't report back to the mothership
     DOTNET_CLI_TELEMETRY_OPTOUT: 1
     appveyor_build_version:  1.0.{build}
+    nuget_api_key:
+        secure: F0ZPbEej7MlPRYAb43jRKMZdVDCWLEhfsgmx4o3YTSdcTKIGbOO92NL2LlHcjY1V
   init:
   - ps: $Env:LABEL = "alpha-" + $Env:APPVEYOR_BUILD_NUMBER
   - ps: $Env:LABEL
@@ -57,17 +59,17 @@
   - dotnet build "providers\Arragro.Providers.MailKitEmailProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   - dotnet build "providers\Arragro.Providers.SendgridEmailProvider" -c %CONFIGURATION% --no-dependencies --version-suffix %LABEL%
   after_build:
-    - dotnet pack "src\Arragro.Core.Common" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "src\Arragro.Core.EntityFrameworkCore" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "src\Arragro.Core.Web" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "src\Arragro.Core.DistributedCache" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "src\Arragro.Core.Identity" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.ImageServiceProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.InMemoryStorageProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.MailKitEmailProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.SendgridEmailProvider" -c %CONFIGURATION% --no-build --include-symbols --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.Common" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.EntityFrameworkCore" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.Web" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.DistributedCache" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.Identity" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.ImageServiceProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.InMemoryStorageProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.MailKitEmailProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.SendgridEmailProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
   test_script:
   - dotnet test "tests\Arragro.Core.Common.Tests\Arragro.Core.Common.Tests.csproj" -c %CONFIGURATION%
   - dotnet test "tests\Arragro.Core.EntityFrameworkCore.IntegrationTests\Arragro.Core.EntityFrameworkCore.IntegrationTests.csproj" -c %CONFIGURATION%
@@ -75,11 +77,23 @@
   artifacts:  
     - path: .\artifacts\**\*.nupkg
       name: NuGet
-  deploy:
-  - provider: NuGet
-    api_key:
-      secure: F0ZPbEej7MlPRYAb43jRKMZdVDCWLEhfsgmx4o3YTSdcTKIGbOO92NL2LlHcjY1V
-    project_feed: true
+  deploy_script:
+    - dotnet nuget push Arragro.Core.Common.%appveyor_build_version%.nupkg -s https://api.nuget.org/v3/index.json -k %nuget_api_key%
+    - dotnet nuget push Arragro.Core.EntityFrameworkCore.%appveyor_build_version%.nupkg -s https://api.nuget.org/v3/index.json -k %nuget_api_key%
+    - dotnet nuget push Arragro.Core.Web.%appveyor_build_version%.nupkg -s https://api.nuget.org/v3/index.json -k %nuget_api_key%
+    - dotnet nuget push Arragro.Core.DistributedCache.%appveyor_build_version%.nupkg -s https://api.nuget.org/v3/index.json -k %nuget_api_key%
+    - dotnet nuget push Arragro.Core.Identity.%appveyor_build_version%.nupkg -s https://api.nuget.org/v3/index.json -k %nuget_api_key%
+    - dotnet nuget push Arragro.Providers.AzureStorageProvider.%appveyor_build_version%.nupkg -s https://api.nuget.org/v3/index.json -k %nuget_api_key%
+    - dotnet nuget push .Providers.ImageMagickProvider.%appveyor_build_version%.nupkg -s https://api.nuget.org/v3/index.json -k %nuget_api_key%
+    - dotnet nuget push Arragro.Providers.ImageServiceProvider.%appveyor_build_version%.nupkg -s https://api.nuget.org/v3/index.json -k %nuget_api_key%
+    - dotnet nuget push Arragro.Providers.InMemoryStorageProvider.%appveyor_build_version%.nupkg -s https://api.nuget.org/v3/index.json -k %nuget_api_key%
+    - dotnet nuget push Arragro.Providers.MailKitEmailProvider.%appveyor_build_version%.nupkg -s https://api.nuget.org/v3/index.json -k %nuget_api_key%
+    - dotnet nuget push Arragro.Providers.SendgridEmailProvider.%appveyor_build_version%.nupkg -s https://api.nuget.org/v3/index.json -k %nuget_api_key%
+#  deploy:
+#  - provider: NuGet
+#    api_key:
+#      secure: F0ZPbEej7MlPRYAb43jRKMZdVDCWLEhfsgmx4o3YTSdcTKIGbOO92NL2LlHcjY1V
+#    project_feed: true
   notifications:
   - provider: Webhook
     url:
