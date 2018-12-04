@@ -11,7 +11,7 @@
   nuget:
     account_feed: false
     project_feed: false
-    disable_publish_on_pr: true$Env:APPVEYOR_BUILD_VERSION
+    disable_publish_on_pr: true
   dotnet_csproj:
     patch: true
     file: '**\*.csproj'
