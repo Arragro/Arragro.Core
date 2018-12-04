@@ -35,11 +35,10 @@
   init:
   - ps: $Env:LABEL = "alpha-" + $Env:APPVEYOR_BUILD_NUMBER
   - ps: $Env:LABEL
-  - ps: $Env:APPVEYOR_BUILD_VERSION = "1.0." + $Env:APPVEYOR_BUILD_NUMBER
-  - ps: $Env:APPVEYOR_BUILD_VERSION
   before_build:
   - ps: >-
       $Env:LABEL
+      $Env:APPVEYOR_BUILD_VERSION
 
       C:\Tools\nuget\nuget.exe update -self
 
