@@ -60,17 +60,17 @@
     - path: .\artifacts\**\*.nupkg
       name: NuGet
   before_deploy:
-    - dotnet pack "src\Arragro.Core.Common" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "src\Arragro.Core.EntityFrameworkCore" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "src\Arragro.Core.Web" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "src\Arragro.Core.DistributedCache" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "src\Arragro.Core.Identity" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.ImageServiceProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.InMemoryStorageProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.MailKitEmailProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
-    - dotnet pack "providers\Arragro.Providers.SendgridEmailProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg --version-suffix %LABEL% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.Common" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=$Env:APPVEYOR_BUILD_VERSION -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.EntityFrameworkCore" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=$Env:APPVEYOR_BUILD_VERSION -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.Web" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=$Env:APPVEYOR_BUILD_VERSION -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.DistributedCache" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=$Env:APPVEYOR_BUILD_VERSION -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "src\Arragro.Core.Identity" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=$Env:APPVEYOR_BUILD_VERSION -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=$Env:APPVEYOR_BUILD_VERSION -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=$Env:APPVEYOR_BUILD_VERSION -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.ImageServiceProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=$Env:APPVEYOR_BUILD_VERSION -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.InMemoryStorageProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=$Env:APPVEYOR_BUILD_VERSION -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.MailKitEmailProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=$Env:APPVEYOR_BUILD_VERSION -o %APPVEYOR_BUILD_FOLDER%\artifacts
+    - dotnet pack "providers\Arragro.Providers.SendgridEmailProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=$Env:APPVEYOR_BUILD_VERSION -o %APPVEYOR_BUILD_FOLDER%\artifacts
   deploy_script:
     - dotnet nuget push %APPVEYOR_BUILD_FOLDER%\artifacts\Arragro.Core.Common.%APPVEYOR_BUILD_VERSION%.nupkg -s https://api.nuget.org/v3/index.json -k %NUGET_API_KEY%
     - dotnet nuget push %APPVEYOR_BUILD_FOLDER%\artifacts\Arragro.Core.EntityFrameworkCore.%APPVEYOR_BUILD_VERSION%.nupkg -s https://api.nuget.org/v3/index.json -k %NUGET_API_KEY%
