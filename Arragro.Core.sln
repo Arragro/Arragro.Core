@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{20754D
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		appveyor.yml = appveyor.yml
+		build.bat = build.bat
 		change-log.md = change-log.md
 		Readme.md = Readme.md
 	EndProjectSection
@@ -49,7 +50,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Providers.ImageServ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.DistributedCache", "src\Arragro.Core.DistributedCache\Arragro.Core.DistributedCache.csproj", "{4B461356-1365-45D6-8DAB-D0B5BCB18137}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arragro.Core.Identity", "src\Arragro.Core.Identity\Arragro.Core.Identity.csproj", "{9BE0E363-8313-400B-BF91-692C08D0B018}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Identity", "src\Arragro.Core.Identity\Arragro.Core.Identity.csproj", "{9BE0E363-8313-400B-BF91-692C08D0B018}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
