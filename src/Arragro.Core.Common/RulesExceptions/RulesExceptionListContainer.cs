@@ -26,7 +26,8 @@ namespace Arragro.Core.Common.RulesExceptions
         {
             IsRoot = true;
             PropertyName = rulesException.PropertyName;
-            PropertyNameCamelCase = PropertyName.ToCamelCase();
+            if (!string.IsNullOrEmpty(PropertyName))
+                PropertyNameCamelCase = PropertyName.ToCamelCase();
             Index = rulesException.Index;
         }
 
@@ -35,7 +36,8 @@ namespace Arragro.Core.Common.RulesExceptions
             IsRoot = false;
             Key = key;
             PropertyName = rulesException.PropertyName;
-            PropertyNameCamelCase = PropertyName.ToCamelCase();
+            if (!string.IsNullOrEmpty(PropertyName))
+                PropertyNameCamelCase = PropertyName.ToCamelCase();
             Index = rulesException.Index;
 
             Errors.Add(error.Key.ToCamelCase(), error.Value);
