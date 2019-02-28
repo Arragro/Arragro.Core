@@ -136,5 +136,37 @@ namespace Arragro.Core.Common.Tests.RulesExceptions
                 }
             });
         }
+
+        [Fact]
+        public void validate_fail_case_sensitive_keys()
+        {
+            var rulesException = new RulesException();
+            rulesException.ErrorFor("menu", "test");
+            rulesException.ErrorFor("Menu", "test");
+            var rulesExceptions = new List<RulesException> { rulesException };
+
+            Assert.Throws<ArgumentException>(() =>
+            {
+                new RulesExceptionCollection(rulesExceptions).GetRulesExceptionDto();
+            });
+
+            var rulesExceptionCollection = new RulesExceptionCollection(rulesExceptions).GetRulesExceptionDto(false);
+        }
+
+        public class ArrayCanError
+        {
+            public List<string> Values;
+        }
+
+        [Fact]
+        public void validate_rulesexceptioncollection_fails()
+        {
+            var arrayCanError = new ArrayCanError { Values = new List<string> { { "Item 1" } } };
+            var rulesException = new RulesException();
+            rulesException.ErrorFor("Values[0]", "Test Error");
+            var rulesExceptions = new List<RulesException> { rulesException };
+            var rulesExceptionCollection = new RulesExceptionCollection(rulesExceptions);
+            var rulesExceptionDto = rulesExceptionCollection.GetRulesExceptionDto();
+        }
     }
 }

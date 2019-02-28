@@ -75,14 +75,16 @@ namespace Arragro.Core.Common.RulesExceptions
                 RulesExceptionListContainers.Add(new RulesExceptionListContainer(key, error, rulesException));
         }
 
-        protected void ProcessDictionaries(IEnumerable<RulesException> rulesExceptions)
+        protected void ProcessDictionaries(IEnumerable<RulesException> rulesExceptions, bool camelCaseKey = true)
         {
             foreach (var rulesException in rulesExceptions)
             {
                 var errors = rulesException.GetErrorDictionary().ToList();
                 foreach (var error in errors)
                 {
-                    string key = string.IsNullOrEmpty(rulesException.Prefix) ? error.Key.ToCamelCaseFromDotNotation() : $"{rulesException.Prefix.ToCamelCaseFromDotNotation()}.{error.Key.ToCamelCaseFromDotNotation()}";
+                    string key = camelCaseKey ? 
+                        string.IsNullOrEmpty(rulesException.Prefix) ? error.Key.ToCamelCaseFromDotNotation() : $"{rulesException.Prefix.ToCamelCaseFromDotNotation()}.{error.Key.ToCamelCaseFromDotNotation()}" :
+                        string.IsNullOrEmpty(rulesException.Prefix) ? error.Key : $"{rulesException.Prefix}.{error.Key}";
 
                     ProcessEnumerableRulesException(key, error, rulesException);
                 }
@@ -106,9 +108,9 @@ namespace Arragro.Core.Common.RulesExceptions
             return output.ToString();
         }
 
-        public RulesExceptionDto(IEnumerable<RulesException> rulesExceptions) : this()
+        public RulesExceptionDto(IEnumerable<RulesException> rulesExceptions, bool camelCaseKey = true) : this()
         {
-            ProcessDictionaries(rulesExceptions);
+            ProcessDictionaries(rulesExceptions, camelCaseKey);
             rulesExceptions.SelectMany(x => x.ErrorMessages).ToList().ForEach(x => ErrorMessages.Add(x));
         }
     }

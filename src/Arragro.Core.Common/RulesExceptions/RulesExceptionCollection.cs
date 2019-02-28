@@ -18,9 +18,9 @@ namespace Arragro.Core.Common.RulesExceptions
             RulesExceptions.AddRange(rulesExceptions);
         }
 
-        public RulesExceptionDto GetRulesExceptionDto()
+        public RulesExceptionDto GetRulesExceptionDto(bool camelCaseKey = true)
         {
-            return new RulesExceptionDto(RulesExceptions);
+            return new RulesExceptionDto(RulesExceptions, camelCaseKey);
         }
 
         public void ThrowException()
