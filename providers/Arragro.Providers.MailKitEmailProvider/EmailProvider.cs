@@ -31,7 +31,7 @@ namespace Arragro.Providers.MailKitEmailProvider
             using (var client = new SmtpClient())
             {
                 // For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)
-                client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+                // client.ServerCertificateValidationCallback = (s, c, h, e) => true;
                 
                 client.Connect(_smtpSettings.Server, _smtpSettings.Port, false);
 
@@ -40,7 +40,7 @@ namespace Arragro.Providers.MailKitEmailProvider
                 //client.AuthenticationMechanisms.Remove("XOAUTH2");
 
                 // Note: only needed if the SMTP server requires authentication
-                client.Authenticate("user", "password");
+                // client.Authenticate("user", "password");
 
                 client.Send(message);
                 client.Disconnect(true);
