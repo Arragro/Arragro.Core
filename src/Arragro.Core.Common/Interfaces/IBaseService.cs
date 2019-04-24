@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Arragro.Core.Common.Interfaces
 {
-    public interface IBaseService<TModel> where TModel : class
+    internal interface IBaseService<TModel> where TModel : class
     {
         IEnumerable<TModel> SinceLastWrite(DateTime lastWriteDate);
         IEnumerable<TModel> All();

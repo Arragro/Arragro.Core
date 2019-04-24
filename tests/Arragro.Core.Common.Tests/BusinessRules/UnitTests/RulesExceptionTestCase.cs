@@ -46,7 +46,7 @@ namespace Arragro.Core.Common.Tests.BusinessRules.UnitTests
             {
             }
 
-            protected override void ValidateModelRules(ValidateTest model)
+            protected override void ValidateModelRules(ValidateTest model, params object[] otherValues)
             {
             }
 

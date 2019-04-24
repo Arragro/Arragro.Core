@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Arragro.Core.Common.ServiceBase
 {
-    public abstract class AsyncService<TRepository, TModel> : BusinessRulesBase<TRepository, TModel>, IAsyncService<TModel> 
+    public abstract class AsyncService<TRepository, TModel, TUserIdType> : BusinessRulesBase<TRepository, TModel>, IAsyncService<TModel> 
         where TModel : class
         where TRepository : IRepository<TModel>
     {
@@ -21,21 +21,21 @@ namespace Arragro.Core.Common.ServiceBase
             return await Repository.FindAsync(ids);
         }
 
-        protected abstract Task ValidateModelRulesAsync(TModel model);
+        protected abstract Task ValidateModelRulesAsync(TModel model, params object[] otherValues);
 
         protected abstract Task<TModel> InsertOrUpdateAsync(TModel model);
 
-        public async Task ValidateModelAsync(TModel model)
+        public async Task ValidateModelAsync(TModel model, params object[] otherValues)
         {
             ValidateModelPropertiesAndBuildRulesException(model);
-            await ValidateModelRulesAsync(model);
+            await ValidateModelRulesAsync(model, otherValues);
 
             if (RulesException.Errors.Any()) throw RulesException;
         }
 
-        public async Task<TModel> ValidateAndInsertOrUpdateAsync(TModel model)
+        public async Task<TModel> ValidateAndInsertOrUpdateAsync(TModel model, params object[] otherValues)
         {
-            await ValidateModelAsync(model);
+            await ValidateModelAsync(model, otherValues);
             return await InsertOrUpdateAsync(model);
         }
     }

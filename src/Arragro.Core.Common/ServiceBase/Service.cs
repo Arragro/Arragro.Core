@@ -26,21 +26,21 @@ namespace Arragro.Core.Common.ServiceBase
             return await Repository.FindAsync(ids);
         }
 
-        protected abstract void ValidateModelRules(TModel model);
+        protected abstract void ValidateModelRules(TModel model, params object[] otherValues);
 
         protected abstract TModel InsertOrUpdate(TModel model);
 
-        public void ValidateModel(TModel model)
+        public void ValidateModel(TModel model, params object[] otherValues)
         {
             ValidateModelPropertiesAndBuildRulesException(model);
-            ValidateModelRules(model);
+            ValidateModelRules(model, otherValues);
 
             if (RulesException.Errors.Any()) throw RulesException;
         }
 
-        public TModel ValidateAndInsertOrUpdate(TModel model)
+        public TModel ValidateAndInsertOrUpdate(TModel model, params object[] otherValues)
         {
-            ValidateModel(model);
+            ValidateModel(model, otherValues);
             return InsertOrUpdate(model);
         }
     }

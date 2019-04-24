@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Arragro.Core.Common.BusinessRules
 {
-    public abstract class BaseDomain<TModel> : BaseDomainServiceless<TModel> where TModel : class, IDictionaryKey, new()
+    internal abstract class BaseDomain<TModel> : BaseDomainServiceless<TModel> where TModel : class, IDictionaryKey, new()
     {
         protected readonly IBaseService<TModel> _service;
 
