@@ -1,7 +1,4 @@
-﻿using Arragro.Core.Common.BusinessRules;
-using Arragro.Core.Common.Exceptions;
-using Arragro.Core.Common.Interfaces;
-using Arragro.Core.Common.Repository;
+﻿using Arragro.Core.Common.Repository;
 using Arragro.Core.Common.ServiceBase;
 using System;
 using System.Linq;
@@ -38,11 +35,6 @@ namespace Arragro.TestBase
             if (!String.IsNullOrEmpty(modelFoo.Name) &&
                 (modelFoo.Name.Length < 2 || modelFoo.Name.Length > 6))
                 RulesException.ErrorFor(c => c.Name, RangeLengthName);
-        }
-
-        public object ValidateAndInsertOrUpdate(object empty)
-        {
-            throw new NotImplementedException();
         }
 
         protected override ModelFoo InsertOrUpdate(ModelFoo model)
