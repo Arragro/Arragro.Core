@@ -5,7 +5,7 @@ namespace Arragro.Core.Common.Interfaces
 {
     public interface IValidateUserAccess<TUserIdType>
     {
-        Task<bool> UserHasAccessAsync(Guid id, TUserIdType userId);
-        bool UserHasAccess(Guid id, TUserIdType userId);
+        Task UserHasAccessAsync(Guid id, TUserIdType userId);
+        void UserHasAccess(Guid id, TUserIdType userId);
     }
 }
