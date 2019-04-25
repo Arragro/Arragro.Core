@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Arragro.Core.Common.ServiceBase
 {
-    public abstract class AsyncService<TRepository, TModel, TUserIdType> : BusinessRulesBase<TRepository, TModel>, IAsyncService<TModel> 
+    public abstract class AsyncService<TRepository, TModel> : BusinessRulesBase<TRepository, TModel>, IAsyncService<TModel> 
         where TModel : class
         where TRepository : IRepository<TModel>
     {
