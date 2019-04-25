@@ -1,4 +1,6 @@
 ﻿using Arragro.Core.Common.BusinessRules;
+using Arragro.Core.Common.Exceptions;
+using Arragro.Core.Common.Interfaces;
 using Arragro.Core.Common.Repository;
 using Arragro.Core.Common.ServiceBase;
 using System;
@@ -12,7 +14,8 @@ namespace Arragro.TestBase
         public const string RequiredName = "The Name field is required.";
         public const string RangeLengthName = "The Name field must have between 3 and 6 characters";
 
-        public ModelFooService(IRepository<ModelFoo> modelFooRepository)
+        public ModelFooService(
+            IRepository<ModelFoo> modelFooRepository)
             : base(modelFooRepository)
         {
         }
@@ -25,7 +28,7 @@ namespace Arragro.TestBase
          * This would occur on a InsertOrUpdate at the service layer.
          */
 
-        protected override void ValidateModelRules(ModelFoo modelFoo, params object[] otherValues)
+        protected override void ValidateModelRules(ModelFoo modelFoo)
         {
             if (Repository.All()
                     .Where(x => x.Id != modelFoo.Id
@@ -35,6 +38,11 @@ namespace Arragro.TestBase
             if (!String.IsNullOrEmpty(modelFoo.Name) &&
                 (modelFoo.Name.Length < 2 || modelFoo.Name.Length > 6))
                 RulesException.ErrorFor(c => c.Name, RangeLengthName);
+        }
+
+        public object ValidateAndInsertOrUpdate(object empty)
+        {
+            throw new NotImplementedException();
         }
 
         protected override ModelFoo InsertOrUpdate(ModelFoo model)

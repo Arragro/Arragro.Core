@@ -7,8 +7,8 @@ namespace Arragro.Core.Common.Interfaces
     {
         TModel Find(params object[] ids);
         Task<TModel> FindAsync(params object[] ids);
-        TModel ValidateAndInsertOrUpdate(TModel model, params object[] otherValues);
-        void ValidateModel(TModel model, params object[] otherValues);
+        TModel ValidateAndInsertOrUpdate(TModel model);
+        void ValidateModel(TModel model);
         int SaveChanges(bool acceptAllChangesOnSuccess);
         int SaveChanges();
         Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken));

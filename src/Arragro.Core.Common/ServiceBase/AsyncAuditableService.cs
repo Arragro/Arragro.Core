@@ -19,21 +19,21 @@ namespace Arragro.Core.Common.ServiceBase
             return await Repository.FindAsync(ids);
         }
 
-        protected abstract Task ValidateModelRulesAsync(TModel model, TUserIdType userId, params object[] otherValues);
+        protected abstract Task ValidateModelRulesAsync(TModel model);
 
         protected abstract Task<TModel> InsertOrUpdateAsync(TModel model, TUserIdType userId);
 
-        public async Task ValidateModelAsync(TModel model, TUserIdType userId, params object[] otherValues)
+        public async Task ValidateModelAsync(TModel model)
         {
             RulesException.ErrorsForValidationResults(ValidateModelProperties(model));
-            await ValidateModelRulesAsync(model, userId, otherValues);
+            await ValidateModelRulesAsync(model);
 
             if (RulesException.Errors.Any()) throw RulesException;
         }
 
-        public async Task<TModel> ValidateAndInsertOrUpdateAsync(TModel model, TUserIdType userId, params object[] otherValues)
+        public async Task<TModel> ValidateAndInsertOrUpdateAsync(TModel model, TUserIdType userId)
         {
-            await ValidateModelAsync(model, userId, otherValues);
+            await ValidateModelAsync(model);
             return await InsertOrUpdateAsync(model, userId);
         }
     }

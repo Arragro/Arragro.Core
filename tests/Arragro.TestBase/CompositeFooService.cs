@@ -25,7 +25,7 @@ namespace Arragro.TestBase
          * This would occur on a InsertOrUpdate at the service layer.
          */
 
-        protected override void ValidateModelRules(CompositeFoo compositeFoo, params object[] otherValues)
+        protected override void ValidateModelRules(CompositeFoo compositeFoo)
         {
             if (Repository.All()
                     .Where(x => x.Id != compositeFoo.Id
