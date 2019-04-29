@@ -124,8 +124,8 @@ namespace Arragro.Core.Identity.Domains
                 new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim("User-Identifier", user.Id.ToString()),
-                new Claim("ModifiedDate", user.ModifiedDate.Ticks.ToString())
+                new Claim(ArragroClaimTypes.ModifiedDate, user.ModifiedDate.Ticks.ToString()),
+                new Claim(ArragroClaimTypes.IsExternalManaged, user.PasswordHash == null ? "true" : "false")
             };
 
             if (user.IsEnabled)
