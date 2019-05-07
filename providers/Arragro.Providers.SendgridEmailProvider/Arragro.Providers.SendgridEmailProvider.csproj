@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.0.0</Version>
-    <PackageVersion>1.0.0</PackageVersion>
     <TargetFrameworks>netcoreapp2.0;net462;net471</TargetFrameworks>
     <AssemblyName>Arragro.Providers.SendgridEmailProvider</AssemblyName>
     <PackageId>Arragro.Providers.SendgridEmailProvider</PackageId>
@@ -12,7 +10,7 @@
     <PackageTags>dotnet core netstandard email sendgrid</PackageTags>
     <Authors>Mike Jewell,Reece Beardsall</Authors>
     <PackageIconUrl>http://cdn.arragro.com/public/images/favicon.ico</PackageIconUrl>
-    <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageLicense>http://opensource.org/licenses/MIT</PackageLicense>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Arragro/Arragro.Core</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
