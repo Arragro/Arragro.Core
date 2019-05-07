@@ -10,15 +10,19 @@ namespace Arragro.Core.DistributedCache
     {
         private readonly IDistributedCache _distributedCache;
         private readonly DistributedCacheEntryOptions _distributedCacheEntryOptions;
-        private readonly string _typeName;
+        private readonly IDistributedCacheKeyPrefix _distributedCacheKeyPrefix;
 
         public DistributedCacheManager(
             IDistributedCache distributedCache,
-            DistributedCacheEntryOptions distributedCacheEntryOptions)
+            DistributedCacheEntryOptions distributedCacheEntryOptions,
+            IDistributedCacheKeyPrefix distributedCacheKeyPrefix = null)
         {
             _distributedCache = distributedCache;
             _distributedCacheEntryOptions = distributedCacheEntryOptions;
-            _typeName = _distributedCache.GetType().ToString();
+            if (distributedCacheKeyPrefix == null)
+                _distributedCacheKeyPrefix = new DistributedCacheKeyPrefix();
+            else
+                _distributedCacheKeyPrefix = distributedCacheKeyPrefix;
         }
 
         private T ProcessByteArray<T>(byte[] bytes)
@@ -41,16 +45,24 @@ namespace Arragro.Core.DistributedCache
             return output;
         }
 
+        private string PrefixKey(string key)
+        {
+            var prefix = _distributedCacheKeyPrefix.GeneratePrefix();
+            if (!string.IsNullOrEmpty(prefix))
+                return $"{prefix}:{key}";
+            return key;
+        }
+
         public T Get<T>(string key)
         {
-            return ProcessByteArray<T>(_distributedCache.Get(key));
+            return ProcessByteArray<T>(_distributedCache.Get(PrefixKey(key)));
         }
 
         public async Task<T> GetAsync<T>(string key, CancellationToken token = default(CancellationToken))
         {
             try
             {
-                var bytes = await _distributedCache.GetAsync(key, token);
+                var bytes = await _distributedCache.GetAsync(PrefixKey(key), token);
                 return ProcessByteArray<T>(bytes);
             }
             catch (Exception ex)
@@ -74,76 +86,76 @@ namespace Arragro.Core.DistributedCache
 
         public void Set<T>(string key, T value, DistributedCacheEntryOptions options)
         {
-            _distributedCache.Set(key, ToProtoBufByteArray<T>(value), options);
+            _distributedCache.Set(PrefixKey(key), ToProtoBufByteArray<T>(value), options);
         }
 
         public async Task SetAsync<T>(string key, T value, DistributedCacheEntryOptions options, CancellationToken token = default(CancellationToken))
         {
-            await _distributedCache.SetAsync(key, ToProtoBufByteArray<T>(value), options, token);
+            await _distributedCache.SetAsync(PrefixKey(key), ToProtoBufByteArray<T>(value), options, token);
         }
 
         public void Set<T>(string key, T value)
         {
-            _distributedCache.Set(key, ToProtoBufByteArray<T>(value), _distributedCacheEntryOptions);
+            _distributedCache.Set(PrefixKey(key), ToProtoBufByteArray<T>(value), _distributedCacheEntryOptions);
         }
 
         public async Task SetAsync<T>(string key, T value, CancellationToken token = default(CancellationToken))
         {
-            await _distributedCache.SetAsync(key, ToProtoBufByteArray<T>(value), _distributedCacheEntryOptions);
+            await _distributedCache.SetAsync(PrefixKey(key), ToProtoBufByteArray<T>(value), _distributedCacheEntryOptions);
         }
 
         public void Remove(string key)
         {
-            _distributedCache.Remove(key);
+            _distributedCache.Remove(PrefixKey(key));
         }
 
         public async Task RemoveAsync(string key, CancellationToken token = default(CancellationToken))
         {
-            await _distributedCache.RemoveAsync(key, token);
+            await _distributedCache.RemoveAsync(PrefixKey(key), token);
         }
 
         public T Get<T>(string key, Func<T> func)
         {
-            return Get(key, func, _distributedCacheEntryOptions);
+            return Get(PrefixKey(key), func, _distributedCacheEntryOptions);
         }
 
         public T Get<T>(string key, Func<T> func, DistributedCacheEntryOptions options)
         {
-            var value = Get<T>(key);
+            var value = Get<T>(PrefixKey(key));
             if (value != null)
                 return value;
             value = func();
-            Set<T>(key, value, options);
+            Set<T>(PrefixKey(key), value, options);
             return value;
         }
 
         public async Task<T> GetAsync<T>(string key, Func<Task<T>> func, CancellationToken token = default(CancellationToken))
         {
-            return await GetAsync(key, func, _distributedCacheEntryOptions, token);
+            return await GetAsync(PrefixKey(key), func, _distributedCacheEntryOptions, token);
         }
 
         public async Task<T> GetAsync<T>(string key, Func<T> func, CancellationToken token = default(CancellationToken))
         {
-            return await GetAsync(key, func, _distributedCacheEntryOptions, token);
+            return await GetAsync(PrefixKey(key), func, _distributedCacheEntryOptions, token);
         }
 
         public async Task<T> GetAsync<T>(string key, Func<T> func, DistributedCacheEntryOptions options, CancellationToken token = default(CancellationToken))
         {
-            var value = await GetAsync<T>(key, token);
+            var value = await GetAsync<T>(PrefixKey(key), token);
             if (value != null)
                 return value;
             value = func();
-            await SetAsync<T>(key, value, options, token);
+            await SetAsync<T>(PrefixKey(key), value, options, token);
             return value;
         }
 
         public async Task<T> GetAsync<T>(string key, Func<Task<T>> func, DistributedCacheEntryOptions options, CancellationToken token = default(CancellationToken))
         {
-            var value = await GetAsync<T>(key, token);
+            var value = await GetAsync<T>(PrefixKey(key), token);
             if (value != null)
                 return value;
             value = await func();
-            await SetAsync<T>(key, value, options, token);
+            await SetAsync<T>(PrefixKey(key), value, options, token);
             return value;
         }
     }
