@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Arragro.Core.DistributedCache\Arragro.Core.DistributedCache.csproj" />
+    <ProjectReference Include="..\Arragro.Core.EntityFrameworkCore\Arragro.Core.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
 </Project>
