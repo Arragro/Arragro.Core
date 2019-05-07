@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{20754D
 		appveyor.yml = appveyor.yml
 		build.bat = build.bat
 		change-log.md = change-log.md
+		nuget-build.ps1 = nuget-build.ps1
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
