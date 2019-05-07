@@ -13,6 +13,7 @@ namespace Arragro.Core.Identity.Models
         [Required]
         public string LastName { get; set; } = "";
         public bool IsEnabled { get; set; } = true;
+        public bool External { get; set; } = false;
         public Guid ModifiedBy { get; set; }
         public DateTime ModifiedDate { get; set; }
     }
