@@ -117,7 +117,7 @@ namespace Arragro.Core.Identity.Domains
             return false;
         }
 
-        public async Task<ClaimsPrincipal> GetClaimsPrincipal(TUser user)
+        public virtual async Task<ClaimsPrincipal> GetClaimsPrincipal(TUser user)
         {
             var userClaims = new List<Claim>
             {
@@ -125,7 +125,7 @@ namespace Arragro.Core.Identity.Domains
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ArragroClaimTypes.ModifiedDate, user.ModifiedDate.Ticks.ToString()),
-                new Claim(ArragroClaimTypes.IsExternalManaged, user.PasswordHash == null ? "true" : "false")
+                new Claim(ArragroClaimTypes.IsExternalManaged, user.External ? "true" : "false")
             };
 
             if (user.IsEnabled)

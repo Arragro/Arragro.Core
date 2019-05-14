@@ -3,14 +3,14 @@ using System;
 using Arragro.Core.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Arragro.Core.Identity.Migrations.SqlServer
+namespace Arragro.Core.Identity.Migrations.Postgres
 {
-    [DbContext(typeof(ArragroCoreIdentityContext))]
-    [Migration("20190503234934_Initial")]
+    [DbContext(typeof(ArragroCoreIdentityPGContext))]
+    [Migration("20190514011249_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,9 +18,9 @@ namespace Arragro.Core.Identity.Migrations.SqlServer
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("identity")
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Arragro.Core.Identity.Models.Role", b =>
                 {
@@ -45,8 +45,7 @@ namespace Arragro.Core.Identity.Migrations.SqlServer
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("role_name_index")
-                        .HasFilter("[normalized_name] IS NOT NULL");
+                        .HasName("role_name_index");
 
                     b.ToTable("asp_net_roles");
                 });
@@ -134,8 +133,7 @@ namespace Arragro.Core.Identity.Migrations.SqlServer
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("user_name_index")
-                        .HasFilter("[normalized_user_name] IS NOT NULL");
+                        .HasName("user_name_index");
 
                     b.ToTable("asp_net_users");
                 });
@@ -144,8 +142,7 @@ namespace Arragro.Core.Identity.Migrations.SqlServer
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnName("id");
 
                     b.Property<string>("ClaimType")
                         .HasColumnName("claim_type");
@@ -169,8 +166,7 @@ namespace Arragro.Core.Identity.Migrations.SqlServer
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnName("id");
 
                     b.Property<string>("ClaimType")
                         .HasColumnName("claim_type");

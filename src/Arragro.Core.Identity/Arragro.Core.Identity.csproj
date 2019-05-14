@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;net462;net471</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.2;netstandard2.0;net462;net471</TargetFrameworks>
     <AssemblyName>Arragro.Core.Identity</AssemblyName>
     <PackageId>Arragro.Core.Identity</PackageId>
     <Title>Arragro Core Identity</Title>
@@ -13,9 +13,7 @@
     <PackageLicenseUrl>&gt;http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Arragro/Arragro.Core</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
-    <OutputType>Exe</OutputType>
-    <LangVersion>7.2</LangVersion>
+    <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,6 +33,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Arragro.Core.DistributedCache\Arragro.Core.DistributedCache.csproj" />
     <ProjectReference Include="..\Arragro.Core.EntityFrameworkCore\Arragro.Core.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\Postgres\" />
+    <Folder Include="Migrations\SqlServer\" />
   </ItemGroup>
 
 </Project>

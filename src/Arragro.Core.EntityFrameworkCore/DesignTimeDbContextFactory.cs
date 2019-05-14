@@ -2,17 +2,8 @@
 using Microsoft.EntityFrameworkCore.Design;
 using System;
 
-namespace Arragro.Core.Identity
+namespace Arragro.Core.EntityFrameworkCore
 {
-    public class ArragroCoreIdentityContextFactory : DesignTimeDbContextFactory<ArragroCoreIdentityContext>
-    {
-    }
-
-    public class ArragroCoreIdentityPGContextFactory : DesignTimeDbContextFactory<ArragroCoreIdentityPGContext>
-    {
-    }
-
-
     public class DesignTimeDbContextFactory<T> : IDesignTimeDbContextFactory<T>
         where T : DbContext
     {
