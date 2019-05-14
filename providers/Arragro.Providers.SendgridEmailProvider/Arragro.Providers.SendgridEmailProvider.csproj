@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;net462;net471</TargetFrameworks>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>Arragro.Providers.SendgridEmailProvider</AssemblyName>
     <PackageId>Arragro.Providers.SendgridEmailProvider</PackageId>
     <Title>Arragro Providers Sendgrid Email Provider</Title>

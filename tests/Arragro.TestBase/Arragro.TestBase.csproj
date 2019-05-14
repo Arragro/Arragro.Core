@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Version>1.0.0</Version>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <AssemblyName>Arragro.TestBase</AssemblyName>
     <PackageId>Arragro.TestBase</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
