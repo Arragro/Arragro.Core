@@ -1,8 +1,8 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Arragro.Core.Identity.Migrations.Postgres
+namespace Arragro.Core.Identity.Migrations.SqlServer
 {
     public partial class Initial : Migration
     {
@@ -46,8 +46,8 @@ namespace Arragro.Core.Identity.Migrations.Postgres
                     lockout_end = table.Column<DateTimeOffset>(nullable: true),
                     lockout_enabled = table.Column<bool>(nullable: false),
                     access_failed_count = table.Column<int>(nullable: false),
-                    first_name = table.Column<string>(maxLength: 255, nullable: false),
-                    last_name = table.Column<string>(maxLength: 255, nullable: false),
+                    first_name = table.Column<string>(maxLength: 255, nullable: true),
+                    last_name = table.Column<string>(maxLength: 255, nullable: true),
                     is_enabled = table.Column<bool>(nullable: false),
                     external = table.Column<bool>(nullable: false),
                     modified_by = table.Column<Guid>(nullable: false),
@@ -64,7 +64,7 @@ namespace Arragro.Core.Identity.Migrations.Postgres
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     role_id = table.Column<Guid>(nullable: false),
                     claim_type = table.Column<string>(nullable: true),
                     claim_value = table.Column<string>(nullable: true)
@@ -87,7 +87,7 @@ namespace Arragro.Core.Identity.Migrations.Postgres
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     user_id = table.Column<Guid>(nullable: false),
                     claim_type = table.Column<string>(nullable: true),
                     claim_value = table.Column<string>(nullable: true)
@@ -186,7 +186,8 @@ namespace Arragro.Core.Identity.Migrations.Postgres
                 schema: "identity",
                 table: "asp_net_roles",
                 column: "normalized_name",
-                unique: true);
+                unique: true,
+                filter: "[normalized_name] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "ix_asp_net_user_claims_user_id",
@@ -217,7 +218,8 @@ namespace Arragro.Core.Identity.Migrations.Postgres
                 schema: "identity",
                 table: "asp_net_users",
                 column: "normalized_user_name",
-                unique: true);
+                unique: true,
+                filter: "[normalized_user_name] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

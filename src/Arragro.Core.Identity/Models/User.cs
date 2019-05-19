@@ -7,10 +7,8 @@ namespace Arragro.Core.Identity.Models
     public class User : IdentityUser<Guid>
     {
         [MaxLength(255)]
-        [Required]
         public string FirstName { get; set; } = "";
         [MaxLength(255)]
-        [Required]
         public string LastName { get; set; } = "";
         public bool IsEnabled { get; set; } = true;
         public bool External { get; set; } = false;

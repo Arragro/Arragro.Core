@@ -72,7 +72,6 @@ namespace Arragro.Core.Identity.Migrations.Postgres
                         .HasColumnName("external");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnName("first_name")
                         .HasMaxLength(255);
 
@@ -80,7 +79,6 @@ namespace Arragro.Core.Identity.Migrations.Postgres
                         .HasColumnName("is_enabled");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnName("last_name")
                         .HasMaxLength(255);
 
