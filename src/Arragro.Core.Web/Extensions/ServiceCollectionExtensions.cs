@@ -40,7 +40,7 @@ namespace Arragro.Core.Web.Extensions
                 }
 
                 if (baseSettings.DataProtectionSettings.UseX509 &&
-                    !string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.CertBase64) &&
+                    !string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.CertificatePath) &&
                     !string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.Password))
                 {
                     /*
@@ -58,7 +58,7 @@ namespace Arragro.Core.Web.Extensions
                      * 
                      */
 
-                    var bytes = Convert.FromBase64String(baseSettings.DataProtectionSettings.CertBase64);
+                    var bytes = File.ReadAllBytes(baseSettings.DataProtectionSettings.CertificatePath);
                     X509Certificate2 x509Cert = new X509Certificate2(bytes, baseSettings.DataProtectionSettings.Password);
 
                     dataProtection.ProtectKeysWithCertificate(x509Cert);

@@ -28,9 +28,9 @@ namespace Arragro.Core.Common.Models
         /// </summary>
         public bool UseX509 { get; set; } = false;
         /// <summary>
-        /// Base64 encoded byte array of the cert (cert should be pfx with password)
+        /// Certificate path (cert should be pfx with password)
         /// </summary>
-        public string CertBase64 { get; set; } = null;
+        public string CertificatePath { get; set; } = null;
         /// <summary>
         /// Password to the CertBase64 cert
         /// </summary>
