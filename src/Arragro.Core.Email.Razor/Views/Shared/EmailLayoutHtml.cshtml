@@ -1,0 +1,104 @@
+﻿@inject EmailConfiguration EmailConfiguration
+@{
+    var mainTableStyle = "margin: 0; padding: 0; height: 100%; width: 100%;";
+    var centeredContainerStyle = "max-width: 600px; display: block; margin: 0 auto; clear: both; text-align: left; padding-left: 15px; padding-right: 15px;";
+    var tableCenteredContainerStyle = "width: 600px; display: block; margin: 0 auto; clear: both; text-align: left; padding-left: 15px; padding-right: 15px;";
+    var logoStyle = "text-align: center;";
+    var logoImageStyle = "max-width:390px;width:100%; display: block; border: 0px;height:auto!important;";
+
+    var header = new HeaderViewModel { Text = ViewData["Title"].ToString() };
+}
+
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <partial name="./CSS/CustomStyles.cshtml" />
+    </head>
+    <body>
+
+        <table style="@mainTableStyle" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td>
+                    <center>
+                        <!--[if mso]><table><tr><td style="@tableCenteredContainerStyle"><![endif]-->
+                        <div style="@centeredContainerStyle">
+                            <div style="height:20px;">&nbsp;</div>
+                            <a href="@EmailConfiguration.AppUrl">
+                                <div style="@logoStyle">
+                                    <center>
+                                        <p>
+                                            <img src="@EmailConfiguration.AppLogoUrl" style="@logoImageStyle" width="390" />
+                                        </p>
+                                    </center>
+                                </div>
+                            </a>
+                        </div>
+                        <!--[if mso]></td></tr></table><![endif]-->
+                    </center>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div style="height:20px;">&nbsp;</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <center>
+                        <!--[if mso]><table><tr><td style="@tableCenteredContainerStyle"><![endif]-->
+                        <div style="@centeredContainerStyle">
+                            <div style="text-align:left;">
+                                <partial name="./Partials/HeaderText.cshtml" model="@header" />
+                                @RenderBody()
+                            </div>
+                            <!--[if mso]></td></tr></table><![endif]-->
+                        </div>
+                    </center>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div style="height:30px;">&nbsp;</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <center>
+                        <!--[if mso]><table><tr><td style="@tableCenteredContainerStyle"><![endif]-->
+                        <div style="@centeredContainerStyle">
+                            <table style="max-width: 600px; width:100%;" width="600">
+                                <tr>
+                                    <td style="height:1px;max-width: 600px; width:100%;background-color:#e0e0e0;" width="600" bgcolor="#e0e0e0"></td>
+                                </tr>
+                                <tr>
+                                    <td style="height:10px"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <!--[if mso]></td></tr></table><![endif]-->
+                    </center>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <center>
+                        <!--[if mso]><table><tr><td style="@tableCenteredContainerStyle"><![endif]-->
+                        <div style="@centeredContainerStyle">
+                            <div style="text-align: left;">
+                                © 2019 Arragro Ltd. All Rights Reserved.
+                            </div>
+                        </div>
+                        <!--[if mso]></td></tr></table><![endif]-->
+                    </center>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div style="height:30px;">&nbsp;</div>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

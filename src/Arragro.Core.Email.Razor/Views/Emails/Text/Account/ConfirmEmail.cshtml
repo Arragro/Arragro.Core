@@ -1,0 +1,27 @@
+﻿@inject EmailConfiguration  EmailConfiguration
+@model ConfirmAccountEmailViewModel
+
+@{
+    ViewData["Title"] = $"Welcome to {EmailConfiguration.AppName}";
+}
+
+@if (Model.UsesExternalProviders)
+{
+    <text>
+        We're excited to have you get started. First, you need to confirm your account by either setting a password, or using an external provider to confirm your email address.  To confirm your email address by clicking the link below.
+    </text>
+
+    <text>
+        If you use an external provider, please ensure that the email address for the provider is the same as the one used for this email.
+    </text>
+}
+else
+{
+    <text>
+        We're excited to have you get started. First, you need to confirm your account by setting a password by clicking the link below.
+    </text>
+}
+
+@Model.ConfirmEmailUrl
+
+The above link is only valid for 1 day, if you don't use the link above in time you will have to ask your administrator to reissue this email.

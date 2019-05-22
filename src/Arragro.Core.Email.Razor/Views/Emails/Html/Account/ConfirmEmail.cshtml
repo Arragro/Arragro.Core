@@ -1,0 +1,30 @@
+﻿@inject EmailConfiguration  EmailConfiguration
+@model ConfirmAccountEmailViewModel
+
+@{
+    ViewData["Title"] = $"Welcome to {EmailConfiguration.AppName}";
+    var confirmButtonViewModel = new ButtonViewModel { Href = @Model.ConfirmEmailUrl, Text = "Confirm" };
+}
+
+@if (Model.UsesExternalProviders)
+{
+    <p>
+        You have been invited to @EmailConfiguration.AppName. First, you need to confirm your account by either setting a password, or using an external provider.  To confirm your email address by clicking the button below.
+    </p>
+
+    <p>
+        If you use an external provider, please ensure that the email address for the provider is the same as the one used for this email.
+    </p>
+}
+else
+{
+    <p>
+        You have been invited to @EmailConfiguration.AppName. First, you need to confirm your account by setting a password by clicking the button below:
+    </p>
+}
+
+<partial name="../../../Shared/Partials/Button.cshtml" model="confirmButtonViewModel" />
+
+<p>
+    The above button link is only valid for 1 day, if you don't use the button above in time you will have to ask your administrator to reissue this email.
+</p>
