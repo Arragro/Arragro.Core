@@ -2,6 +2,7 @@
 using Arragro.Core.Common.Models;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,6 +42,11 @@ namespace Arragro.Providers.SendgridEmailProvider
             message.PlainTextContent = text;
             message.HtmlContent = html;
             var response = await client.SendEmailAsync(message);
+            if (response.StatusCode != System.Net.HttpStatusCode.Accepted)
+            {
+                var body = await response.Body.ReadAsStringAsync();
+                throw new Exception($"SendGrid responded with a {response.StatusCode} and the following message:\r\n\r\n{body}");
+            }
         }
 
         public async Task SendEmailAsync(string subject, string text, string html, List<EmailAddress> tos, List<EmailAddress> ccs = null, List<EmailAddress> bccs = null)
