@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.PlatformAbstractions;
 using System;
@@ -97,7 +98,7 @@ namespace Arragro.Core.Email.Razor.Services
             return new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
         }
 
-        public static IMvcBuilder ConfigureAndGet(IServiceCollection serviceCollection, string executingAssemblyLocation = null, IEnumerable<string> assemblyParts = null)
+        public static IMvcBuilder ConfigureAndGet(IServiceCollection serviceCollection, string executingAssembly = null)
         {
             var applicationEnvironment = PlatformServices.Default.Application;
 
@@ -105,18 +106,18 @@ namespace Arragro.Core.Email.Razor.Services
             string path;
             IFileProvider fileProvider;
 
-            if (!string.IsNullOrEmpty(executingAssemblyLocation))
+            if (!string.IsNullOrEmpty(executingAssembly))
             {
-                applicationName = Path.GetFileNameWithoutExtension(executingAssemblyLocation);
-                path = Path.GetDirectoryName(executingAssemblyLocation);
-                fileProvider = new PhysicalFileProvider(path);
+                applicationName = Path.GetFileNameWithoutExtension(executingAssembly);
+                path = Path.GetDirectoryName(executingAssembly);
             }
             else
             {
                 applicationName = Assembly.GetExecutingAssembly().GetName().Name;
                 path = Directory.GetCurrentDirectory();
-                fileProvider = new PhysicalFileProvider(path);
             }
+
+            fileProvider = new PhysicalFileProvider(path);
 
             var environment = new HostingEnvironment
             {
@@ -131,26 +132,35 @@ namespace Arragro.Core.Email.Razor.Services
                 options.FileProviders.Add(fileProvider);
             });
 
+            var viewAssemblies = Directory.GetFiles(path, "*.Views.dll").Select(x => Path.GetFileName(x));
+
+            serviceCollection.AddLogging();
+
+            var serviceBuilder = serviceCollection.BuildServiceProvider();
+            var logger = serviceBuilder.GetService<ILogger<RazorViewToStringRenderer>>();
+
+            logger.LogInformation("RazorViewToStringRenderer is using the following config: {applicationName} - {path}", applicationName, path);
+            logger.LogInformation("RazorViewToStringRenderer is registering the following dlls: {viewAssemblies}", viewAssemblies);
+
             var diagnosticSource = new DiagnosticListener("Microsoft.AspNetCore");
             serviceCollection.AddSingleton<DiagnosticSource>(diagnosticSource);
 
             serviceCollection.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
             serviceCollection.AddSingleton(applicationEnvironment);
-            serviceCollection.AddLogging();
             var mvcBuilder = serviceCollection.AddMvc();
-            if (assemblyParts != null)
+            foreach (var viewAssembly in viewAssemblies)
             {
-                foreach (var assemblyPart in assemblyParts)
-                    mvcBuilder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(Assembly.LoadFile($"{path}\\{assemblyPart}")));
+                logger.LogInformation("RazorViewToStringRenderer is registering the following assemblyPart: {path}", $"{path}\\{viewAssembly}");
+                mvcBuilder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(Assembly.LoadFile($"{path}\\{viewAssembly}")));
             }
             serviceCollection.AddSingleton<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
             return mvcBuilder;
         }
 
-        public static IMvcBuilder ConfigureAndGet(string executingAssemblyLocation = null, IEnumerable<string> assemblyParts = null)
+        public static IMvcBuilder ConfigureAndGet(string executingAssembly = null)
         {
             var serviceCollection = new ServiceCollection();
-            return ConfigureAndGet(serviceCollection, executingAssemblyLocation, assemblyParts);
+            return ConfigureAndGet(serviceCollection, executingAssembly);
         }
     }
 

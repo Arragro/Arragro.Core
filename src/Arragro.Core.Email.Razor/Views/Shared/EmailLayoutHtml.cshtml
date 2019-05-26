@@ -6,7 +6,7 @@
     var logoStyle = "text-align: center;";
     var logoImageStyle = "max-width:390px;width:100%; display: block; border: 0px;height:auto!important;";
 
-    var header = new HeaderViewModel { Text = ViewData["Title"].ToString() };
+    var header = new HeaderViewModel { Text = ViewData["Title"] == null ? "" : ViewData["Title"].ToString() };
 }
 
 <!doctype html>

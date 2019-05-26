@@ -2,9 +2,9 @@
 using MailKit.Net.Smtp;
 using Arragro.Core.Common.Interfaces.Providers;
 using Arragro.Core.Common.Models;
-using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Arragro.Providers.MailKitEmailProvider
 {
@@ -25,22 +25,20 @@ namespace Arragro.Providers.MailKitEmailProvider
             _smtpSettings = smtpSettings;
         }
 
-        public async Task SendEmailAsync(string subject, string text, string html, EmailAddress from, List<EmailAddress> tos, List<EmailAddress> ccs = null, List<EmailAddress> bccs = null)
+        public async Task SendEmailAsync(EmailMessage emailMessage)
         {
             var message = new MimeMessage();
-            message.From.Add(from.ToMailboxAddress());
-            if (tos == null)
-                throw new ArgumentNullException("tos");
-            tos.ForEach(to => message.To.Add(to.ToMailboxAddress()));
-            if (ccs != null)
-                ccs.ForEach(cc => message.To.Add(cc.ToMailboxAddress()));
-            if (bccs != null)
-                bccs.ForEach(bcc => message.To.Add(bcc.ToMailboxAddress()));
-            message.Subject = subject;
+            message.From.Add(emailMessage.From.ToMailboxAddress());
+            emailMessage.Tos.ForEach(to => message.To.Add(to.ToMailboxAddress()));
+            if (emailMessage.Ccs.Any())
+                emailMessage.Ccs.ForEach(cc => message.To.Add(cc.ToMailboxAddress()));
+            if (emailMessage.Bccs.Any())
+            emailMessage.Bccs.ForEach(bcc => message.To.Add(bcc.ToMailboxAddress()));
+            message.Subject = emailMessage.Subject;
 
             var bodyBuilder = new BodyBuilder ();
-            bodyBuilder.HtmlBody = html;
-            bodyBuilder.TextBody = text;
+            bodyBuilder.HtmlBody = emailMessage.Html;
+            bodyBuilder.TextBody = emailMessage.Text;
 
             message.Body = bodyBuilder.ToMessageBody ();
 
@@ -69,11 +67,6 @@ namespace Arragro.Providers.MailKitEmailProvider
                 var e = ex;
                 throw;
             }
-        }
-
-        public async Task SendEmailAsync(string subject, string text, string html, List<EmailAddress> tos, List<EmailAddress> ccs = null, List<EmailAddress> bccs = null)
-        {
-           await SendEmailAsync(subject, text, html, _smtpSettings.DefaultFrom, tos, ccs, bccs);
         }
     }
 }

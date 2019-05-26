@@ -1,3 +1,6 @@
 ﻿@model HeaderViewModel
 
-<div style="font-weight: 400; font-size: 34px; line-height: 40px;">@Model.Text</div>
+@if (!string.IsNullOrEmpty(Model.Text))
+{
+    <div style="font-weight: 400; font-size: 34px; line-height: 40px;">@Model.Text</div>
+}
