@@ -11,6 +11,7 @@ namespace Arragro.Core.Common.Models
         public List<EmailAddress> Tos { get; } = new List<EmailAddress>();
         public List<EmailAddress> Ccs { get; } = new List<EmailAddress>();
         public List<EmailAddress> Bccs { get; } = new List<EmailAddress>();
+        public Dictionary<string, string> Headers { get; } = new Dictionary<string, string>();
 
         public EmailMessage(string subject, EmailAddress from, string text, string html, EmailAddress to)
         {

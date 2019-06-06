@@ -26,7 +26,7 @@ namespace Arragro.Providers.SendgridEmailProvider
             _smtpSettings = smtpSettings;
         }
 
-        public async Task SendEmailAsync(EmailMessage emailMessage)
+        public async Task<Guid> SendEmailAsync(EmailMessage emailMessage)
         {
             var client = new SendGridClient(_smtpSettings.SendgridApiKey);
             var message = new SendGridMessage();
@@ -40,12 +40,24 @@ namespace Arragro.Providers.SendgridEmailProvider
             message.Subject = emailMessage.Subject;
             message.PlainTextContent = emailMessage.Text;
             message.HtmlContent = emailMessage.Html;
+
+            var arragroId = Guid.NewGuid();
+            emailMessage.Headers.Add("arragro-id", arragroId.ToString());
+
+            foreach (var key in emailMessage.Headers.Keys)
+            {
+                message.Headers.Add(key, emailMessage.Headers[key]);
+            }
+
+
             var response = await client.SendEmailAsync(message);
             if (response.StatusCode != System.Net.HttpStatusCode.Accepted)
             {
                 var body = await response.Body.ReadAsStringAsync();
                 throw new Exception($"SendGrid responded with a {response.StatusCode} and the following message:\r\n\r\n{body}");
             }
+
+            return arragroId;
         }
     }
 }

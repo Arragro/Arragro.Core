@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\providers\Arragro.Providers.ImageServiceProvider\Arragro.Providers.ImageServiceProvider.csproj" />
+    <ProjectReference Include="..\..\providers\Arragro.Providers.MailKitEmailProvider\Arragro.Providers.MailKitEmailProvider.csproj" />
   </ItemGroup>
 
 </Project>

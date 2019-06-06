@@ -25,7 +25,7 @@ namespace Arragro.Providers.MailKitEmailProvider
             _smtpSettings = smtpSettings;
         }
 
-        public async Task SendEmailAsync(EmailMessage emailMessage)
+        public async Task<Guid> SendEmailAsync(EmailMessage emailMessage)
         {
             var message = new MimeMessage();
             message.From.Add(emailMessage.From.ToMailboxAddress());
@@ -41,6 +41,14 @@ namespace Arragro.Providers.MailKitEmailProvider
             bodyBuilder.TextBody = emailMessage.Text;
 
             message.Body = bodyBuilder.ToMessageBody ();
+
+            var arragroId = Guid.NewGuid();
+            emailMessage.Headers.Add("arragro-id", arragroId.ToString());
+
+            foreach (var key in emailMessage.Headers.Keys)
+            {
+                message.Headers.Add(key, emailMessage.Headers[key]);
+            }
 
             try
             {
@@ -59,7 +67,7 @@ namespace Arragro.Providers.MailKitEmailProvider
                     // client.Authenticate("user", "password");
 
                     await client.SendAsync(message).ConfigureAwait(true);
-                    await client.DisconnectAsync(true).ConfigureAwait(true);
+                    await client.DisconnectAsync(false).ConfigureAwait(true);
                 }
             }
             catch (Exception ex) //todo add another try to send email
@@ -67,6 +75,8 @@ namespace Arragro.Providers.MailKitEmailProvider
                 var e = ex;
                 throw;
             }
+
+            return arragroId;
         }
     }
 }
