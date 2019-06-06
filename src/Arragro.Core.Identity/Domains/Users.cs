@@ -1,4 +1,5 @@
-﻿using Arragro.Core.Identity.Models;
+﻿using Arragro.Core.Identity.Interfaces;
+using Arragro.Core.Identity.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Arragro.Core.Identity.Domains
 {
-    public class Users<TUser> 
+    public class Users<TUser> : IUsers<TUser>
         where TUser :  User
     {
         protected readonly UserManager<TUser> _userManager;
