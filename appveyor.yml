@@ -44,6 +44,8 @@
   - dotnet build "src\Arragro.Core.Web" -c %CONFIGURATION% --no-dependencies /p:Version=%APPVEYOR_BUILD_VERSION%
   - dotnet build "src\Arragro.Core.DistributedCache" -c %CONFIGURATION% --no-dependencies /p:Version=%APPVEYOR_BUILD_VERSION%
   - dotnet build "src\Arragro.Core.Identity" -c %CONFIGURATION% --no-dependencies /p:Version=%APPVEYOR_BUILD_VERSION%
+  - dotnet build "src\Arragro.Core.Docker" -c %CONFIGURATION% --no-dependencies /p:Version=%APPVEYOR_BUILD_VERSION%
+  - dotnet build "src\Arragro.Core.MailhogClient" -c %CONFIGURATION% --no-dependencies /p:Version=%APPVEYOR_BUILD_VERSION%
   - dotnet build "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-dependencies /p:Version=%APPVEYOR_BUILD_VERSION%
   - dotnet build "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-dependencies /p:Version=%APPVEYOR_BUILD_VERSION%
   - dotnet build "providers\Arragro.Providers.ImageServiceProvider" -c %CONFIGURATION% --no-dependencies /p:Version=%APPVEYOR_BUILD_VERSION%
@@ -60,6 +62,8 @@
   - dotnet pack "src\Arragro.Core.Web" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=%APPVEYOR_BUILD_VERSION% -o %APPVEYOR_BUILD_FOLDER%\artifacts
   - dotnet pack "src\Arragro.Core.DistributedCache" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=%APPVEYOR_BUILD_VERSION% -o %APPVEYOR_BUILD_FOLDER%\artifacts
   - dotnet pack "src\Arragro.Core.Identity" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=%APPVEYOR_BUILD_VERSION% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+  - dotnet pack "src\Arragro.Core.Docker" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=%APPVEYOR_BUILD_VERSION% -o %APPVEYOR_BUILD_FOLDER%\artifacts
+  - dotnet pack "src\Arragro.Core.MailhogClient" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=%APPVEYOR_BUILD_VERSION% -o %APPVEYOR_BUILD_FOLDER%\artifacts
   - dotnet pack "providers\Arragro.Providers.AzureStorageProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=%APPVEYOR_BUILD_VERSION% -o %APPVEYOR_BUILD_FOLDER%\artifacts
   - dotnet pack "providers\Arragro.Providers.ImageMagickProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=%APPVEYOR_BUILD_VERSION% -o %APPVEYOR_BUILD_FOLDER%\artifacts
   - dotnet pack "providers\Arragro.Providers.ImageServiceProvider" -c %CONFIGURATION% --no-build --include-symbols -p:SymbolPackageFormat=snupkg /p:Version=%APPVEYOR_BUILD_VERSION% -o %APPVEYOR_BUILD_FOLDER%\artifacts
@@ -77,6 +81,8 @@
   - dotnet nuget push %APPVEYOR_BUILD_FOLDER%\artifacts\Arragro.Core.Web.%APPVEYOR_BUILD_VERSION%.nupkg -s https://api.nuget.org/v3/index.json -k %NUGET_API_KEY%
   - dotnet nuget push %APPVEYOR_BUILD_FOLDER%\artifacts\Arragro.Core.DistributedCache.%APPVEYOR_BUILD_VERSION%.nupkg -s https://api.nuget.org/v3/index.json -k %NUGET_API_KEY%
   - dotnet nuget push %APPVEYOR_BUILD_FOLDER%\artifacts\Arragro.Core.Identity.%APPVEYOR_BUILD_VERSION%.nupkg -s https://api.nuget.org/v3/index.json -k %NUGET_API_KEY%
+  - dotnet nuget push %APPVEYOR_BUILD_FOLDER%\artifacts\Arragro.Core.Docker.%APPVEYOR_BUILD_VERSION%.nupkg -s https://api.nuget.org/v3/index.json -k %NUGET_API_KEY%
+  - dotnet nuget push %APPVEYOR_BUILD_FOLDER%\artifacts\Arragro.Core.MailhogClient.%APPVEYOR_BUILD_VERSION%.nupkg -s https://api.nuget.org/v3/index.json -k %NUGET_API_KEY%
   - dotnet nuget push %APPVEYOR_BUILD_FOLDER%\artifacts\Arragro.Providers.AzureStorageProvider.%APPVEYOR_BUILD_VERSION%.nupkg -s https://api.nuget.org/v3/index.json -k %NUGET_API_KEY%
   - dotnet nuget push %APPVEYOR_BUILD_FOLDER%\artifacts\Arragro.Providers.ImageMagickProvider.%APPVEYOR_BUILD_VERSION%.nupkg -s https://api.nuget.org/v3/index.json -k %NUGET_API_KEY%
   - dotnet nuget push %APPVEYOR_BUILD_FOLDER%\artifacts\Arragro.Providers.ImageServiceProvider.%APPVEYOR_BUILD_VERSION%.nupkg -s https://api.nuget.org/v3/index.json -k %NUGET_API_KEY%

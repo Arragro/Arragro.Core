@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Arragro.Core.Common.Models;
+using System.Collections.Generic;
 
 namespace Arragro.Core.Common.Models
 {

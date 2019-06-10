@@ -53,9 +53,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.DistributedCac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Identity", "src\Arragro.Core.Identity\Arragro.Core.Identity.csproj", "{9BE0E363-8313-400B-BF91-692C08D0B018}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arragro.Core.Email.Razor", "src\Arragro.Core.Email.Razor\Arragro.Core.Email.Razor.csproj", "{C5E1FECD-2A54-49DE-868E-CFE246414E57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Email.Razor", "src\Arragro.Core.Email.Razor\Arragro.Core.Email.Razor.csproj", "{C5E1FECD-2A54-49DE-868E-CFE246414E57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arragro.Core.Email.WebView", "tests\Arragro.Core.Email.WebView\Arragro.Core.Email.WebView.csproj", "{3DD2029C-F18C-46C4-8706-BD3EEE252B11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Email.WebView", "tests\Arragro.Core.Email.WebView\Arragro.Core.Email.WebView.csproj", "{3DD2029C-F18C-46C4-8706-BD3EEE252B11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arragro.Core.MailhogClient", "src\Arragro.Core.MailhogClient\Arragro.Core.MailhogClient.csproj", "{A5493B91-057D-4921-A16D-3A193905D6D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arragro.Core.Docker", "src\Arragro.Core.Docker\Arragro.Core.Docker.csproj", "{853A90D5-6ED8-4560-B017-CA7571C9EB89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -131,6 +135,14 @@ Global
 		{3DD2029C-F18C-46C4-8706-BD3EEE252B11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DD2029C-F18C-46C4-8706-BD3EEE252B11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DD2029C-F18C-46C4-8706-BD3EEE252B11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5493B91-057D-4921-A16D-3A193905D6D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5493B91-057D-4921-A16D-3A193905D6D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5493B91-057D-4921-A16D-3A193905D6D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5493B91-057D-4921-A16D-3A193905D6D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{853A90D5-6ED8-4560-B017-CA7571C9EB89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{853A90D5-6ED8-4560-B017-CA7571C9EB89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{853A90D5-6ED8-4560-B017-CA7571C9EB89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{853A90D5-6ED8-4560-B017-CA7571C9EB89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

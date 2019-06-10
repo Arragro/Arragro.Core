@@ -1,4 +1,5 @@
 ﻿using Arragro.Core.Common.Enums;
+using Arragro.Core.Common.Models;
 
 namespace Arragro.Core.Common.Models
 {
