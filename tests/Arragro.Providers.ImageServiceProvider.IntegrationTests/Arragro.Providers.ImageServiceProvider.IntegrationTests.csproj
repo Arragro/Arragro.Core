@@ -29,6 +29,7 @@
     <ProjectReference Include="..\..\providers\Arragro.Providers.ImageServiceProvider\Arragro.Providers.ImageServiceProvider.csproj" />
     <ProjectReference Include="..\..\providers\Arragro.Providers.MailKitEmailProvider\Arragro.Providers.MailKitEmailProvider.csproj" />
     <ProjectReference Include="..\..\src\Arragro.Core.Docker\Arragro.Core.Docker.csproj" />
+    <ProjectReference Include="..\..\src\Arragro.Core.MailDevClient\Arragro.Core.MailDevClient.csproj" />
     <ProjectReference Include="..\..\src\Arragro.Core.MailhogClient\Arragro.Core.MailhogClient.csproj" />
   </ItemGroup>
 

@@ -43,7 +43,7 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             var httpClient = new HttpClient();
             var mailhogClient = new MailhogClient(httpClient);
             var messages = await mailhogClient.GetMessagesAsync();
-            foreach (var item in messages.Items)
+            foreach (var item in messages)
             {
                 var message = await mailhogClient.GetMessageAsync(item.Id);
                 var consumable = message.ToConsumableMessage();
