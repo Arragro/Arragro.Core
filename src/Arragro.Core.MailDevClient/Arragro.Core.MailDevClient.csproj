@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Arragro.Core.MailDevClient</AssemblyName>
+    <PackageId>Arragro.Core.MailDevClient</PackageId>
+    <Title>Arragro Core MailDev Client</Title>
+    <Copyright>Arragro 2017 (c) Arragro Ltd.</Copyright>
+    <Description>Core MailDev Client for Arragro.</Description>
+    <PackageTags>dotnet core netstandard mvc web &amp; api</PackageTags>
+    <Authors>Mike Jewell,Reece Beardsall</Authors>
+    <PackageIconUrl>http://cdn.arragro.com/public/images/favicon.ico</PackageIconUrl>
+    <PackageLicenseUrl>&gt;http://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/Arragro/Arragro.Core</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Arragro.Core.Common\Arragro.Core.Common.csproj" />
+  </ItemGroup>
+
+</Project>

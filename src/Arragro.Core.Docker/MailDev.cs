@@ -2,6 +2,7 @@
 using Docker.DotNet.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Arragro.Core.Docker
@@ -47,6 +48,7 @@ namespace Arragro.Core.Docker
                 var started = await client.Containers.StartContainerAsync(container.ID, new ContainerStartParameters());
                 if (!started)
                     throw new Exception("Cannot start the MailDev docker container.");
+                Thread.Sleep(100);
             }
 
             return container;
