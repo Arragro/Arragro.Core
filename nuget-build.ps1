@@ -1,5 +1,5 @@
 $versionPrefix = "1.0.0"
-$versionSuffix = "alpha-328"
+$versionSuffix = "alpha-330"
 $ErrorActionPreference = "Stop"
 
 function executeSomething {
@@ -43,6 +43,7 @@ $paths = @(
 	".\src\Arragro.Core.Email.Razor",
 	".\src\Arragro.Core.Docker",
 	".\src\Arragro.Core.MailhogClient",
+	".\src\Arragro.Core.MailDevClient",
 	".\providers\Arragro.Providers.AzureStorageProvider",
 	".\providers\Arragro.Providers.ImageMagickProvider",
 	".\providers\Arragro.Providers.ImageServiceProvider",
