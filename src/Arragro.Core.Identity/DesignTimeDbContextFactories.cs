@@ -1,7 +1,4 @@
 ﻿using Arragro.Core.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using System;
 
 namespace Arragro.Core.Identity
 {
@@ -10,6 +7,10 @@ namespace Arragro.Core.Identity
     }
 
     public class ArragroCoreIdentityPGContextFactory : DesignTimeDbContextFactory<ArragroCoreIdentityPGContext>
+    {
+    }
+
+    public class ArragroCoreIdentitySqliteContextFactory : DesignTimeDbContextFactory<ArragroCoreIdentitySqliteContext>
     {
     }
 }

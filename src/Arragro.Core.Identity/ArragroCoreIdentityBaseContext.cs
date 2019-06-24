@@ -64,4 +64,21 @@ namespace Arragro.Core.Identity
         }
 
     }
+
+    public class ArragroCoreIdentitySqliteContext : ArragroCoreIdentityBaseContext
+    {
+        public ArragroCoreIdentitySqliteContext(DbContextOptions<ArragroCoreIdentitySqliteContext> options)
+            : base(options)
+        {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlite(@"DataSource=:memory:");
+            }
+        }
+
+    }
 }
