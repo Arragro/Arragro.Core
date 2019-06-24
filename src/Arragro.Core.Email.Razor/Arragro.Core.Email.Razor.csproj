@@ -4,10 +4,10 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Arragro.Core.Email.Razor</AssemblyName>
     <PackageId>Arragro.Core.Email.Razor</PackageId>
-    <Title>Arragro Core Distributed Cache Wrapper</Title>
-    <Copyright>Arragro 2017 (c) Arragro Ltd.</Copyright>
-    <Description>Razor Class Library for Arragro Emails.</Description>
-    <PackageTags>dotnet core asp email</PackageTags>
+    <Title>Arragro Core Email Razor</Title>
+    <Copyright>Arragro 2019 (c) Arragro Ltd.</Copyright>
+    <Description>Core library for Arragro email razor templates.</Description>
+    <PackageTags>dotnet core netstandard razor emails</PackageTags>
     <Authors>Mike Jewell,Reece Beardsall</Authors>
     <PackageIconUrl>http://cdn.arragro.com/public/images/favicon.ico</PackageIconUrl>
     <PackageLicenseUrl>&gt;http://opensource.org/licenses/MIT</PackageLicenseUrl>

@@ -49,6 +49,14 @@ namespace Arragro.Providers.SendgridEmailProvider
                 message.Headers.Add(key, emailMessage.Headers[key]);
             }
 
+            foreach (var fileName in emailMessage.Attachments.Keys)
+            {
+                var emailAttachment = emailMessage.Attachments[fileName];
+                var fileBytes = emailAttachment.Stream.ToArray();
+                string base64Content = Convert.ToBase64String(fileBytes);
+                message.AddAttachment(fileName, base64Content);
+            }
+
 
             var response = await client.SendEmailAsync(message);
             if (response.StatusCode != System.Net.HttpStatusCode.Accepted)

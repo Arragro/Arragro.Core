@@ -1,5 +1,4 @@
 ﻿using Arragro.Core.Common.Models;
-using Arragro.Core.Common.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -41,6 +40,27 @@ namespace Arragro.Core.MailhogClient.Models
                     string contentHeader = null;
                     foreach (var header in part.Headers)
                     {
+                        if (part.Mime != null && part.Mime.Parts.Any() && header.Value.Any(x => x.StartsWith("multipart/alternative")))
+                        {
+                            foreach (var innerPart in part.Mime.Parts)
+                            {
+                                foreach (var innerHeader in innerPart.Headers)
+                                {
+                                    switch (contentType)
+                                    {
+                                        case ContentType.Html:
+                                            contentHeader = innerHeader.Value.SingleOrDefault(x => x.StartsWith("text/html"));
+                                            break;
+                                        default:
+                                            contentHeader = innerHeader.Value.SingleOrDefault(x => x.StartsWith("text/plain"));
+                                            break;
+                                    }
+                                }
+                                if (contentHeader != null)
+                                    return innerPart.Body;
+                            }
+                        }
+
                         switch (contentType)
                         {
                             case ContentType.Html:

@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using System.Linq;
 using Arragro.Core.Common.Models;
+using System.Collections.Generic;
 
 namespace Arragro.Providers.MailKitEmailProvider
 {
@@ -41,10 +42,16 @@ namespace Arragro.Providers.MailKitEmailProvider
             bodyBuilder.HtmlBody = emailMessage.Html;
             bodyBuilder.TextBody = emailMessage.Text;
 
-            message.Body = bodyBuilder.ToMessageBody ();
+            foreach (var fileName in emailMessage.Attachments.Keys)
+            {
+                var emailAttachment = emailMessage.Attachments[fileName];
+                bodyBuilder.Attachments.Add(fileName, emailAttachment.Stream, ContentType.Parse(emailAttachment.MimeType));
+            }
+
+            message.Body = bodyBuilder.ToMessageBody();
 
             var arragroId = Guid.NewGuid();
-            emailMessage.Headers.Add("arragro-id", arragroId.ToString());
+            message.Headers.Add("arragro-id", arragroId.ToString());
 
             foreach (var key in emailMessage.Headers.Keys)
             {

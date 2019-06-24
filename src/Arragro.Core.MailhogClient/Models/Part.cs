@@ -7,6 +7,6 @@ namespace Arragro.Core.MailhogClient.Models
         public Dictionary<string, List<string>> Headers { get; set; }
         public string Body { get; set; }
         public int Size { get; set; }
-        public string Mime { get; set; }
+        public Mime Mime { get; set; }
     }
 }
