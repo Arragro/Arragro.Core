@@ -5,7 +5,7 @@
     <AssemblyName>Arragro.Core.Docker</AssemblyName>
     <PackageId>Arragro.Core.Docker</PackageId>
     <Title>Arragro Core Docker</Title>
-    <Copyright>Arragro 2017 (c) Arragro Ltd.</Copyright>
+    <Copyright>Arragro 2019 (c) Arragro Ltd.</Copyright>
     <Description>Core library for Arragro for docker integration testing.</Description>
     <PackageTags>dotnet core netstandard</PackageTags>
     <Authors>Mike Jewell,Reece Beardsall</Authors>
