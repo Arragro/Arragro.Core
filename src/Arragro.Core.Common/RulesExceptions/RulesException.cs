@@ -35,6 +35,12 @@ namespace Arragro.Core.Common.RulesExceptions
         protected RulesException(string message, RulesException rulesException) : base(message)
         {
             Errors = rulesException.Errors;
+            ErrorMessages = rulesException.ErrorMessages;
+            Prefix = rulesException.Prefix;
+            IsEnumerable = rulesException.IsEnumerable;
+            PropertyName = rulesException.PropertyName;
+            Index = rulesException.Index;
+            ErrorMessage = rulesException.ErrorMessage;
         }
 
         public RulesException(SerializationInfo info, StreamingContext context)

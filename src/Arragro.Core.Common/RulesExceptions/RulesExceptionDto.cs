@@ -94,6 +94,8 @@ namespace Arragro.Core.Common.RulesExceptions
         public RulesExceptionDto(RulesException rulesException) : this()
         {
             Errors = rulesException.GetErrorDictionary();
+            if (!string.IsNullOrEmpty(rulesException.ErrorMessage))
+                ErrorMessages.Add(rulesException.ErrorMessage);
             ErrorMessages.AddRange(rulesException.ErrorMessages);
         }
 
