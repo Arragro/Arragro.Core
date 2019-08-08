@@ -5,7 +5,7 @@
       - /[Dd]ev/
   version: 1.0.0-alpha-{build}
   configuration: Release
-  image: Visual Studio 2017 Preview
+  image: Visual Studio 2019
   services:
     - mssql2016
   nuget:

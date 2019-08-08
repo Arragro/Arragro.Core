@@ -46,7 +46,7 @@ namespace Arragro.Providers.SendgridEmailProvider
 
             foreach (var key in emailMessage.Headers.Keys)
             {
-                message.Headers.Add(key, emailMessage.Headers[key]);
+                message.AddHeader(key, emailMessage.Headers[key]);
             }
 
             foreach (var fileName in emailMessage.Attachments.Keys)
