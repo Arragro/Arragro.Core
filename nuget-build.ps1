@@ -1,5 +1,5 @@
 $versionPrefix = "1.0.0"
-$versionSuffix = "alpha-340"
+$versionSuffix = "alpha-341"
 $ErrorActionPreference = "Stop"
 
 function executeSomething {
@@ -13,25 +13,25 @@ function executeSomething {
 
 function build {
 	param($project)
-	executeSomething(dotnet build $project -c Release --version-suffix $versionSuffix)
+	executeSomething(dotnet build $project -c Debug --version-suffix $versionSuffix)
 }
 
 function test {
 	param($project)
-	executeSomething(dotnet test $project -c Release)
+	executeSomething(dotnet test $project -c Debug)
 }
 
 function pack {
 	param($project)
-	# Write-Host "dotnet pack $($project) --include-symbols --include-source -c Release --version-suffix $($versionSuffix) --no-build"
-	executeSomething(dotnet pack $project --include-symbols --include-source -c Release --version-suffix $versionSuffix --no-build)
+	# Write-Host "dotnet pack $($project) --include-symbols --include-source -c Debug --version-suffix $($versionSuffix) --no-build"
+	executeSomething(dotnet pack $project --include-symbols --include-source -c Debug --version-suffix $versionSuffix --no-build)
 }
 
 function push {
 	param($project)
 	$projectname = $project.SubString($project.LastIndexOf("\") + 1)
-	executeSomething(dotnet nuget push $project\bin\Release\$projectname.$versionPrefix-$versionSuffix.nupkg -s https://registry.arragro.com/repository/nuget-hosted/)
-	executeSomething(dotnet nuget push $project\bin\Release\$projectname.$versionPrefix-$versionSuffix.symbols.nupkg -s https://registry.arragro.com/repository/nuget-hosted/)
+	executeSomething(dotnet nuget push $project\bin\Debug\$projectname.$versionPrefix-$versionSuffix.nupkg -s https://registry.arragro.com/repository/nuget-hosted/)
+	executeSomething(dotnet nuget push $project\bin\Debug\$projectname.$versionPrefix-$versionSuffix.symbols.nupkg -s https://registry.arragro.com/repository/nuget-hosted/)
 }
 
 $paths = @(
