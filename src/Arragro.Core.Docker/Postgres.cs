@@ -39,6 +39,11 @@ namespace Arragro.Core.Docker
                 Env = new List<string>
                 {
                     "POSTGRES_PASSWORD=password1"
+                },
+                Cmd = new List<string>
+                {
+                    "-c",
+                    "max_prepared_transactions=100"
                 }
             });
 
