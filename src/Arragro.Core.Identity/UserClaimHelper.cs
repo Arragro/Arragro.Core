@@ -9,12 +9,9 @@ namespace Arragro.Core.Identity
     {
         public static Guid UserId(this HttpContext httpContext)
         {
-            if (httpContext != null &&
-                httpContext.User != null &&
-                httpContext.User.Identity != null &&
-                !string.IsNullOrEmpty(httpContext.User.Identity.Name))
+            if (httpContext != null)
             {
-                return Guid.Parse(httpContext.User.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+                return UserId(httpContext.User);
             }
 
             return Guid.Empty;
@@ -22,12 +19,9 @@ namespace Arragro.Core.Identity
 
         public static string UserEmailAddress(this HttpContext httpContext)
         {
-            if (httpContext != null &&
-                httpContext.User != null &&
-                httpContext.User.Identity != null &&
-                !string.IsNullOrEmpty(httpContext.User.Identity.Name))
+            if (httpContext != null)
             {
-                return httpContext.User.Claims.Single(x => x.Type == ClaimTypes.Email).Value;
+                return UserEmailAddress(httpContext.User);
             }
 
             return string.Empty;
@@ -35,12 +29,9 @@ namespace Arragro.Core.Identity
 
         public static string UserName(this HttpContext httpContext)
         {
-            if (httpContext != null &&
-                httpContext.User != null &&
-                httpContext.User.Identity != null &&
-                !string.IsNullOrEmpty(httpContext.User.Identity.Name))
+            if (httpContext != null)
             {
-                return httpContext.User.Claims.Single(x => x.Type == ClaimTypes.Name).Value;
+                return UserName(httpContext);
             }
 
             return string.Empty;
@@ -48,12 +39,9 @@ namespace Arragro.Core.Identity
 
         public static string UserModifiedDate(this HttpContext httpContext)
         {
-            if (httpContext != null &&
-                httpContext.User != null &&
-                httpContext.User.Identity != null &&
-                !string.IsNullOrEmpty(httpContext.User.Identity.Name))
+            if (httpContext != null)
             {
-                return httpContext.User.Claims.Single(x => x.Type == ArragroClaimTypes.ModifiedDate).Value;
+                return UserModifiedDate(httpContext);
             }
 
             return string.Empty;
@@ -61,12 +49,68 @@ namespace Arragro.Core.Identity
 
         public static bool? UserIsExternalManaged(this HttpContext httpContext)
         {
-            if (httpContext != null &&
-                httpContext.User != null &&
-                httpContext.User.Identity != null &&
-                !string.IsNullOrEmpty(httpContext.User.Identity.Name))
+            if (httpContext != null)
             {
-                return bool.Parse(httpContext.User.Claims.Single(x => x.Type == ArragroClaimTypes.IsExternalManaged).Value);
+                return UserIsExternalManaged(httpContext);
+            }
+
+            return null;
+        }
+        public static Guid UserId(this ClaimsPrincipal claimsPrincipal)
+        {
+            if (claimsPrincipal != null &&
+                claimsPrincipal.Identity != null &&
+                !string.IsNullOrEmpty(claimsPrincipal.Identity.Name))
+            {
+                return Guid.Parse(claimsPrincipal.Claims.Single(x => x.Type == ClaimTypes.NameIdentifier).Value);
+            }
+
+            return Guid.Empty;
+        }
+
+        public static string UserEmailAddress(this ClaimsPrincipal claimsPrincipal)
+        {
+            if (claimsPrincipal != null &&
+                claimsPrincipal.Identity != null &&
+                !string.IsNullOrEmpty(claimsPrincipal.Identity.Name))
+            {
+                return claimsPrincipal.Claims.Single(x => x.Type == ClaimTypes.Email).Value;
+            }
+
+            return string.Empty;
+        }
+
+        public static string UserName(this ClaimsPrincipal claimsPrincipal)
+        {
+            if (claimsPrincipal != null &&
+                claimsPrincipal.Identity != null &&
+                !string.IsNullOrEmpty(claimsPrincipal.Identity.Name))
+            {
+                return claimsPrincipal.Claims.Single(x => x.Type == ClaimTypes.Name).Value;
+            }
+
+            return string.Empty;
+        }
+
+        public static string UserModifiedDate(this ClaimsPrincipal claimsPrincipal)
+        {
+            if (claimsPrincipal != null &&
+                claimsPrincipal.Identity != null &&
+                !string.IsNullOrEmpty(claimsPrincipal.Identity.Name))
+            {
+                return claimsPrincipal.Claims.Single(x => x.Type == ArragroClaimTypes.ModifiedDate).Value;
+            }
+
+            return string.Empty;
+        }
+
+        public static bool? UserIsExternalManaged(this ClaimsPrincipal claimsPrincipal)
+        {
+            if (claimsPrincipal != null &&
+                claimsPrincipal.Identity != null &&
+                !string.IsNullOrEmpty(claimsPrincipal.Identity.Name))
+            {
+                return bool.Parse(claimsPrincipal.Claims.Single(x => x.Type == ArragroClaimTypes.IsExternalManaged).Value);
             }
 
             return null;
