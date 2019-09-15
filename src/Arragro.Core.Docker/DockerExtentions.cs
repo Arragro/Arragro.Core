@@ -1,6 +1,7 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -11,7 +12,7 @@ namespace Arragro.Core.Docker
 {
     public static class DockerExtentions
     {
-        public static List<DockerContainerResult> DockerContainerResults = new List<DockerContainerResult>();
+        public static ConcurrentBag<DockerContainerResult> DockerContainerResults = new ConcurrentBag<DockerContainerResult>();
 
         public static async Task<(string stdout, string stderr)> RunCommandInContainerAsync(this IContainerOperations source, string containerId, string command)
         {
@@ -91,7 +92,7 @@ namespace Arragro.Core.Docker
                 });
             }
             await Task.Yield();
-            DockerContainerResults.Clear();
+            DockerContainerResults = new ConcurrentBag<DockerContainerResult>();
         }
     }
 }
