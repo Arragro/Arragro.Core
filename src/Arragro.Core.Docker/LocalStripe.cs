@@ -11,8 +11,8 @@ namespace Arragro.Core.Docker
         public static async Task<ContainerListResponse> StartLocalStripe(DockerClient client)
         {
             const string ContainerName = "localstripe";
-            const string ImageName = "docker.io/mikejewell/localstripe";
-            const string ImageTag = "v0.0.1-alpha";
+            const string ImageName = "mikejewell/localstripe";
+            const string ImageTag = "v0.0.5-alpha";
 
             await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, ImageTag, ContainerName);
 
