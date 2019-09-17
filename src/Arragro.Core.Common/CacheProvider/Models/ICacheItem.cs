@@ -7,9 +7,9 @@ namespace Arragro.Core.Common.CacheProvider
     {
         Guid Identifier { get; }
         string Key { get; }
-        DateTime CreatedDate { get; }
+        DateTimeOffset CreatedDate { get; }
         CacheSettings CacheSettings { get; }
-        DateTime? Expiration { get; }
+        DateTimeOffset? Expiration { get; }
         int ByteLength { get; }
 
         void ResetExpiration();

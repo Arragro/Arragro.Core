@@ -30,7 +30,7 @@ namespace Arragro.Providers.InMemoryStorageProvider.FileInfo
                     var fileInfo = new System.IO.FileInfo(assembly.Location);
                     return fileInfo.LastWriteTime;
 #else
-                    return DateTime.MinValue;
+                    return DateTimeOffset.MinValue;
 #endif
 
                 }

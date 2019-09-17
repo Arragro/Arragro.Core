@@ -21,7 +21,8 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             DockerExtentions.StartDockerServicesAsync(new List<Func<DockerClient, Task<ContainerListResponse>>>
             {
                 Mailhog.StartMailhog,
-                LocalStripe.StartLocalStripe
+                LocalStripe.StartLocalStripe,
+                Postgres.StartPostgres
             }).Wait();
         }
 

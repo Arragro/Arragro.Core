@@ -3,14 +3,14 @@ using System;
 using Arragro.Core.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Arragro.Core.Identity.Migrations.Sqlite
+namespace Arragro.Core.Identity.Migrations.SqlServer
 {
-    [DbContext(typeof(ArragroCoreIdentitySqliteContext))]
-    [Migration("20190620214021_Initial")]
+    [DbContext(typeof(ArragroCoreIdentityContext))]
+    [Migration("20190917051529_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,9 +18,9 @@ namespace Arragro.Core.Identity.Migrations.Sqlite
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("identity")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Arragro.Core.Identity.Models.Role", b =>
                 {
@@ -45,7 +45,8 @@ namespace Arragro.Core.Identity.Migrations.Sqlite
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("role_name_index");
+                        .HasName("role_name_index")
+                        .HasFilter("[normalized_name] IS NOT NULL");
 
                     b.ToTable("asp_net_roles");
                 });
@@ -93,7 +94,7 @@ namespace Arragro.Core.Identity.Migrations.Sqlite
                     b.Property<Guid>("ModifiedBy")
                         .HasColumnName("modified_by");
 
-                    b.Property<DateTime>("ModifiedDate")
+                    b.Property<DateTimeOffset>("ModifiedDate")
                         .HasColumnName("modified_date");
 
                     b.Property<string>("NormalizedEmail")
@@ -131,7 +132,8 @@ namespace Arragro.Core.Identity.Migrations.Sqlite
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("user_name_index");
+                        .HasName("user_name_index")
+                        .HasFilter("[normalized_user_name] IS NOT NULL");
 
                     b.ToTable("asp_net_users");
                 });
@@ -140,7 +142,8 @@ namespace Arragro.Core.Identity.Migrations.Sqlite
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id");
+                        .HasColumnName("id")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ClaimType")
                         .HasColumnName("claim_type");
@@ -164,7 +167,8 @@ namespace Arragro.Core.Identity.Migrations.Sqlite
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("id");
+                        .HasColumnName("id")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ClaimType")
                         .HasColumnName("claim_type");

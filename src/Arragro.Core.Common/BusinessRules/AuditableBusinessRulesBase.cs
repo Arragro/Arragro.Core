@@ -17,12 +17,12 @@ namespace Arragro.Core.Common.BusinessRules
             if (add)
             {
                 entity.CreatedBy = userId;
-                entity.CreatedDate = DateTime.UtcNow;
+                entity.CreatedDate = DateTimeOffset.UtcNow;
                 entity.ModifiedDate = entity.CreatedDate;
             }
             else
             {
-                entity.ModifiedDate = DateTime.UtcNow;
+                entity.ModifiedDate = DateTimeOffset.UtcNow;
             }
         }
     }

@@ -16,7 +16,7 @@ namespace Arragro.Core.Web.Controllers
     [AllowAnonymous]
     public class WebInfoController : Controller
     {
-        private static DateTime _startupTime = DateTime.UtcNow;
+        private static DateTimeOffset _startupTime = DateTime.UtcNow;
         private readonly BaseSettings _baseSettings;
         private bool _migrationsAppliedNoMoreTests = false;
 
@@ -82,7 +82,7 @@ namespace Arragro.Core.Web.Controllers
                 new {
                     AssemblyVersion = typeof(RuntimeEnvironment).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version,
                     IPAddressInformation = GetIpAddress(),
-                    UpTime = DateTime.UtcNow - _startupTime
+                    UpTime = DateTimeOffset.UtcNow - _startupTime
                 });
             }
             return new NotFoundResult();

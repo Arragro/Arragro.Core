@@ -1,8 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Arragro.Core.Identity.Migrations.Postgres
+namespace Arragro.Core.Identity.Migrations.Sqlite
 {
     public partial class Initial : Migration
     {
@@ -51,7 +50,7 @@ namespace Arragro.Core.Identity.Migrations.Postgres
                     is_enabled = table.Column<bool>(nullable: false),
                     external = table.Column<bool>(nullable: false),
                     modified_by = table.Column<Guid>(nullable: false),
-                    modified_date = table.Column<DateTime>(nullable: false)
+                    modified_date = table.Column<DateTimeOffset>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,7 +63,7 @@ namespace Arragro.Core.Identity.Migrations.Postgres
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     role_id = table.Column<Guid>(nullable: false),
                     claim_type = table.Column<string>(nullable: true),
                     claim_value = table.Column<string>(nullable: true)
@@ -87,7 +86,7 @@ namespace Arragro.Core.Identity.Migrations.Postgres
                 columns: table => new
                 {
                     id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                        .Annotation("Sqlite:Autoincrement", true),
                     user_id = table.Column<Guid>(nullable: false),
                     claim_type = table.Column<string>(nullable: true),
                     claim_value = table.Column<string>(nullable: true)

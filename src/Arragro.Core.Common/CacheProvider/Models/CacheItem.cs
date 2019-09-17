@@ -4,9 +4,9 @@ namespace Arragro.Core.Common.CacheProvider
 {
     public class CacheItem : ICacheItem
     {
-        protected DateTime? GetExpiration(TimeSpan? cacheDuration)
+        protected DateTimeOffset? GetExpiration(TimeSpan? cacheDuration)
         {
-            DateTime? expiration = DateTime.UtcNow;
+            DateTimeOffset? expiration = DateTimeOffset.UtcNow;
 
             if (cacheDuration.HasValue)
                 expiration = expiration.Value.Add(cacheDuration.Value);
@@ -18,9 +18,9 @@ namespace Arragro.Core.Common.CacheProvider
 
         public Guid Identifier { get; protected set; }
         public string Key { get; protected set; }
-        public DateTime CreatedDate { get; protected set; }
+        public DateTimeOffset CreatedDate { get; protected set; }
         public CacheSettings CacheSettings { get; protected set; }
-        public DateTime? Expiration { get; protected set; }
+        public DateTimeOffset? Expiration { get; protected set; }
         public int ByteLength { get; protected set; }
 
         public CacheItem(
@@ -29,7 +29,7 @@ namespace Arragro.Core.Common.CacheProvider
         {
             Identifier = Guid.NewGuid();
             Key = key;
-            CreatedDate = DateTime.UtcNow;
+            CreatedDate = DateTimeOffset.UtcNow;
             if (cacheSettings != null)
             {
                 CacheSettings = cacheSettings;

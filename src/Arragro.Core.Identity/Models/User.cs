@@ -13,6 +13,6 @@ namespace Arragro.Core.Identity.Models
         public bool IsEnabled { get; set; } = true;
         public bool External { get; set; } = false;
         public Guid ModifiedBy { get; set; }
-        public DateTime ModifiedDate { get; set; }
+        public DateTimeOffset ModifiedDate { get; set; }
     }
 }

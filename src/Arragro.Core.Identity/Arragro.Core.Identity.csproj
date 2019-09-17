@@ -43,6 +43,7 @@
 
   <ItemGroup>
     <Folder Include="Migrations\Postgres\" />
+    <Folder Include="Migrations\Sqlite\" />
     <Folder Include="Migrations\SqlServer\" />
   </ItemGroup>
 
