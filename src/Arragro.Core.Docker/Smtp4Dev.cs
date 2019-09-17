@@ -16,17 +16,14 @@ namespace Arragro.Core.Docker
 
             await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, ImageTag, ContainerName);
 
-            var config = new Config()
-            {
-                Hostname = "localhost"
-            };
+            var config = new Config();
 
             var hostConfig = new HostConfig
             {
                 PortBindings = new Dictionary<string, IList<PortBinding>>
                 {
-                    { "80/tcp", new List<PortBinding> { new PortBinding { HostIP = "127.0.0.1", HostPort = "5080" } } },
-                    { "25/tcp", new List<PortBinding> { new PortBinding { HostIP = "127.0.0.1", HostPort = "25" } } }
+                    { "80/tcp", new List<PortBinding> { new PortBinding { HostIP = "", HostPort = "5080" } } },
+                    { "25/tcp", new List<PortBinding> { new PortBinding { HostIP = "", HostPort = "25" } } }
                 }
             };
 
