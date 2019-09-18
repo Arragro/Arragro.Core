@@ -18,6 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
@@ -28,6 +30,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\providers\Arragro.Providers.ImageServiceProvider\Arragro.Providers.ImageServiceProvider.csproj" />
     <ProjectReference Include="..\..\providers\Arragro.Providers.MailKitEmailProvider\Arragro.Providers.MailKitEmailProvider.csproj" />
+    <ProjectReference Include="..\..\src\Arragro.Core.Common\Arragro.Core.Common.csproj" />
+    <ProjectReference Include="..\..\src\Arragro.Core.DistributedCache\Arragro.Core.DistributedCache.csproj" />
     <ProjectReference Include="..\..\src\Arragro.Core.Docker\Arragro.Core.Docker.csproj" />
     <ProjectReference Include="..\..\src\Arragro.Core.MailDevClient\Arragro.Core.MailDevClient.csproj" />
     <ProjectReference Include="..\..\src\Arragro.Core.MailhogClient\Arragro.Core.MailhogClient.csproj" />

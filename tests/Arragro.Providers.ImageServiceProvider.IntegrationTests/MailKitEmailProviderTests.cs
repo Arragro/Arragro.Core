@@ -1,19 +1,31 @@
 ﻿using Arragro.Core.Common.Models;
+using Arragro.Core.DistributedCache;
 using Arragro.Core.Docker;
 using Arragro.Core.MailhogClient;
 using Arragro.Providers.MailKitEmailProvider;
 using Docker.DotNet;
 using Docker.DotNet.Models;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
 {
+    [Serializable]
+    [DataContract]
+    public class MyClass
+    {
+        [DataMember(Order = 1)]
+        public DateTimeOffset DateTimeOffset { get; set; }
+    }
+
     public class MailKitEmailProviderTests : IDisposable
     {
         public MailKitEmailProviderTests()
@@ -24,6 +36,7 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
                 LocalStripe.StartLocalStripe,
                 Postgres.StartPostgres
             }).Wait();
+
         }
 
         public void Dispose()
@@ -57,6 +70,30 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
                 var consumable = message.ToConsumableMessage();
                 var result = await mailhogClient.DeleteMessageAsync(item.Id);
             }
+        }
+
+        [Fact]
+        public void test_protobuf_date_time_offset_serialization()
+        {
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddDistributedMemoryCache();
+
+            serviceCollection.AddTransient<DistributedCacheManager>();
+            serviceCollection.AddSingleton(new DistributedCacheEntryOptions { SlidingExpiration = new TimeSpan(0, 5, 0) });
+
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+            var distributedCacheManager = serviceProvider.GetRequiredService<DistributedCacheManager>();
+
+            DateTimeOffsetSurrogate.Configure();
+
+            var myClass = new MyClass { DateTimeOffset = DateTimeOffset.UtcNow };
+            distributedCacheManager.Set("myClass", myClass);
+            myClass = distributedCacheManager.Get<MyClass>("myClass");
+
+            DateTimeOffsetSurrogate.Configure();
+
+            distributedCacheManager.Set("myClass", myClass);
+            myClass = distributedCacheManager.Get<MyClass>("myClass");
         }
     }
 }
