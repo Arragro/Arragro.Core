@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>Arragro.Providers.InMemoryStorageProvider</AssemblyName>
     <PackageId>Arragro.Providers.InMemoryStorageProvider</PackageId>
     <Title>Arragro Providers In Memory Storage Provider</Title>
