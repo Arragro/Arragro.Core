@@ -1,5 +1,5 @@
 $versionPrefix = "1.0.0"
-$versionSuffix = "alpha-370"
+$versionSuffix = "alpha-372"
 $ErrorActionPreference = "Stop"
 
 function executeSomething {

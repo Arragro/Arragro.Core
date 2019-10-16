@@ -35,7 +35,7 @@ namespace Arragro.Core.Common.ServiceBase
             ValidateModelPropertiesAndBuildRulesException(model);
             ValidateModelRules(model);
 
-            if (RulesException.Errors.Any()) throw RulesException;
+            RulesException.ThrowException();
         }
 
         public TModel ValidateAndInsertOrUpdate(TModel model)
