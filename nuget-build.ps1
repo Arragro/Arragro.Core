@@ -1,38 +1,5 @@
-$versionPrefix = "1.0.0"
-$versionSuffix = "alpha-372"
+$version = "1.0.0-alpha-373"
 $ErrorActionPreference = "Stop"
-
-function executeSomething {
-	param($something)
-	$something
-	if($LASTEXITCODE -ne 0)
-	{
-		exit
-	}
-}
-
-function build {
-	param($project)
-	executeSomething(dotnet build $project -c Debug --version-suffix $versionSuffix)
-}
-
-function test {
-	param($project)
-	executeSomething(dotnet test $project -c Debug)
-}
-
-function pack {
-	param($project)
-	# Write-Host "dotnet pack $($project) --include-symbols --include-source -c Debug --version-suffix $($versionSuffix) --no-build"
-	executeSomething(dotnet pack $project --include-symbols --include-source -c Debug --version-suffix $versionSuffix --no-build)
-}
-
-function push {
-	param($project)
-	$projectname = $project.SubString($project.LastIndexOf("\") + 1)
-	executeSomething(dotnet nuget push $project\bin\Debug\$projectname.$versionPrefix-$versionSuffix.nupkg -s https://registry.arragro.com/repository/nuget-hosted/)
-	executeSomething(dotnet nuget push $project\bin\Debug\$projectname.$versionPrefix-$versionSuffix.symbols.nupkg -s https://registry.arragro.com/repository/nuget-hosted/)
-}
 
 $paths = @(
 	".\src\Arragro.Core.Common",
@@ -57,17 +24,23 @@ foreach ($path in $paths) {
 	Remove-Item "$($path)\obj" -Force -Recurse
 }
 
-foreach ($path in $paths) {
-	build($path)
+function executeSomething {
+	param($something)
+	$something
+	if($LASTEXITCODE -ne 0)
+	{
+		exit
+	}
 }
 
-test(".\tests\Arragro.Core.Common.Tests")
-test(".\tests\Arragro.Core.EntityFrameworkCore.IntegrationTests")
+executeSomething(dotnet test .\tests\Arragro.Core.Common.Tests -c Debug )
+executeSomething(dotnet test .\tests\Arragro.Core.EntityFrameworkCore.IntegrationTests -c Debug )
 
 foreach ($path in $paths) {
-	pack($path)
+	executeSomething(dotnet pack $path -c Debug /p:Version=$version)
 }
 
 foreach ($path in $paths) {
-	push($path)
+	$projectName = $path.Replace(".\src\", "").Replace(".\providers\", "")
+	executeSomething(dotnet nuget push $path\bin\Debug\$($projectName).$version.nupkg -s https://registry.arragro.com/repository/nuget-hosted/)
 }
