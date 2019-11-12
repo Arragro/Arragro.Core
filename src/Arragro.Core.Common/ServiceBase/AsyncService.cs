@@ -29,7 +29,7 @@ namespace Arragro.Core.Common.ServiceBase
             ValidateModelPropertiesAndBuildRulesException(model);
             await ValidateModelRulesAsync(model);
 
-            if (RulesException.Errors.Any()) throw RulesException;
+            RulesException.ThrowException();
         }
 
         public async Task<TModel> ValidateAndInsertOrUpdateAsync(TModel model)
