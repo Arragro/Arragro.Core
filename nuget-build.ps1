@@ -57,17 +57,23 @@ foreach ($path in $paths) {
 	Remove-Item "$($path)\obj" -Force -Recurse
 }
 
-foreach ($path in $paths) {
-	build($path)
+function executeSomething {
+	param($something)
+	$something
+	if($LASTEXITCODE -ne 0)
+	{
+		exit
+	}
 }
 
-test(".\tests\Arragro.Core.Common.Tests")
-test(".\tests\Arragro.Core.EntityFrameworkCore.IntegrationTests")
+executeSomething(dotnet test .\tests\Arragro.Core.Common.Tests -c Debug )
+executeSomething(dotnet test .\tests\Arragro.Core.EntityFrameworkCore.IntegrationTests -c Debug )
 
 foreach ($path in $paths) {
-	pack($path)
+	executeSomething(dotnet pack $path -c Debug /p:Version=$version)
 }
 
 foreach ($path in $paths) {
-	push($path)
+	$projectName = $path.Replace(".\src\", "").Replace(".\providers\", "")
+	executeSomething(dotnet nuget push $path\bin\Debug\$($projectName).$version.nupkg -s https://registry.arragro.com/repository/nuget-hosted/)
 }
