@@ -8,7 +8,7 @@ namespace Arragro.Core.MailhogClient.Models
     public class Message
     {
         public string Id { get; set; }
-        public DateTime Time { get; set; }
+        public DateTimeOffset Time { get; set; }
         public List<MailDevEmailAddress> From { get; set; }
         public List<MailDevEmailAddress> To { get; set; }
         public string Subject { get; set; }

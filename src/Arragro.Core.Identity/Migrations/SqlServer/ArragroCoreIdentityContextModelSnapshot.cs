@@ -16,7 +16,7 @@ namespace Arragro.Core.Identity.Migrations.SqlServer
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("identity")
-                .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -92,7 +92,7 @@ namespace Arragro.Core.Identity.Migrations.SqlServer
                     b.Property<Guid>("ModifiedBy")
                         .HasColumnName("modified_by");
 
-                    b.Property<DateTime>("ModifiedDate")
+                    b.Property<DateTimeOffset>("ModifiedDate")
                         .HasColumnName("modified_date");
 
                     b.Property<string>("NormalizedEmail")

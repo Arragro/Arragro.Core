@@ -51,7 +51,7 @@ namespace Arragro.Core.Identity.Domains
         public async Task<IdentityResult> AddAsync(TUser user, Guid userId, string password = null)
         {
             user.ModifiedBy = userId;
-            user.ModifiedDate = DateTime.UtcNow;
+            user.ModifiedDate = DateTimeOffset.UtcNow;
             if (password != null)
                 return await _userManager.CreateAsync(user, password);
             return await _userManager.CreateAsync(user);
@@ -65,7 +65,7 @@ namespace Arragro.Core.Identity.Domains
         public async Task<IdentityResult> UpdateAsync(TUser user, Guid userId)
         {
             user.ModifiedBy = userId;
-            user.ModifiedDate = DateTime.UtcNow;
+            user.ModifiedDate = DateTimeOffset.UtcNow;
             return await _userManager.UpdateAsync(user);
         }
 
@@ -112,7 +112,7 @@ namespace Arragro.Core.Identity.Domains
         {
             if (long.TryParse(modifiedDate, out long ticks))
             {
-                var date = new DateTime(ticks);
+                var date = new DateTimeOffset(ticks, new TimeSpan());
                 return date == user.ModifiedDate;
             }
             return false;

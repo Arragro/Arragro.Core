@@ -17,7 +17,7 @@ namespace Arragro.Core.Identity.Migrations.Postgres
             modelBuilder
                 .HasDefaultSchema("identity")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Arragro.Core.Identity.Models.Role", b =>
@@ -91,7 +91,7 @@ namespace Arragro.Core.Identity.Migrations.Postgres
                     b.Property<Guid>("ModifiedBy")
                         .HasColumnName("modified_by");
 
-                    b.Property<DateTime>("ModifiedDate")
+                    b.Property<DateTimeOffset>("ModifiedDate")
                         .HasColumnName("modified_date");
 
                     b.Property<string>("NormalizedEmail")

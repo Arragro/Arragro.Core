@@ -1,6 +1,7 @@
 ﻿using Docker.DotNet;
 using Docker.DotNet.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -11,7 +12,7 @@ namespace Arragro.Core.Docker
 {
     public static class DockerExtentions
     {
-        public static List<DockerContainerResult> DockerContainerResults = new List<DockerContainerResult>();
+        public static ConcurrentBag<DockerContainerResult> DockerContainerResults = new ConcurrentBag<DockerContainerResult>();
 
         public static async Task<(string stdout, string stderr)> RunCommandInContainerAsync(this IContainerOperations source, string containerId, string command)
         {
@@ -45,7 +46,7 @@ namespace Arragro.Core.Docker
             var container = await DockerExtentions.GetContainerAsync(client, containerName);
             if (container != null)
             {
-                await client.Containers.StopContainerAsync(container.ID, new ContainerStopParameters());
+                // await client.Containers.StopContainerAsync(container.ID, new ContainerStopParameters());
                 await client.Containers.RemoveContainerAsync(container.ID, new ContainerRemoveParameters { Force = true });
             }
         }
@@ -68,28 +69,30 @@ namespace Arragro.Core.Docker
             using (var conf = new DockerClientConfiguration(LocalDockerUri())) // localhost
             using (var client = conf.CreateClient())
             {
-                foreach (var action in actions)
+                await actions.ForEachAsync(4, async action =>
                 {
                     var container = await action(client);
                     var inspectResponse = await client.Containers.InspectContainerAsync(container.ID);
                     var dockerContainerResult = new DockerContainerResult(container, inspectResponse);
                     DockerContainerResults.Add(dockerContainerResult);
-                }
+                });
             }
         }
 
-        public static async Task RemoveDockerServicesAsync()
+        public static async Task RemoveDockerServicesAsync(bool gracefulShutdown = false)
         {
             using (var conf = new DockerClientConfiguration(LocalDockerUri())) // localhost
             using (var client = conf.CreateClient())
             {
-                foreach (var containerResults in DockerContainerResults)
+                await DockerContainerResults.ForEachAsync(4, async containerResults =>
                 {
-                    await client.Containers.StopContainerAsync(containerResults.ContainerListResponse.ID, new ContainerStopParameters());
+                    if (gracefulShutdown)
+                        await client.Containers.StopContainerAsync(containerResults.ContainerListResponse.ID, new ContainerStopParameters());
                     await client.Containers.RemoveContainerAsync(containerResults.ContainerListResponse.ID, new ContainerRemoveParameters { Force = true });
-                }
+                });
             }
-            DockerContainerResults.Clear();
+            await Task.Yield();
+            DockerContainerResults = new ConcurrentBag<DockerContainerResult>();
         }
     }
 }

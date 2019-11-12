@@ -11,22 +11,19 @@ namespace Arragro.Core.Docker
         public static async Task<ContainerListResponse> StartLocalStripe(DockerClient client)
         {
             const string ContainerName = "localstripe";
-            const string ImageName = "docker.io/mikejewell/localstripe";
-            const string ImageTag = "v0.0.1-alpha";
+            const string ImageName = "mikejewell/localstripe";
+            const string ImageTag = "v0.0.6-alpha";
 
             await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, ImageTag, ContainerName);
 
-            var config = new Config()
-            {
-                Hostname = "localhost"
-            };
+            var config = new Config();
 
             var hostConfig = new HostConfig
             {
                 PublishAllPorts = true,
                 PortBindings = new Dictionary<string, IList<PortBinding>>
                 {
-                    { "8420/tcp", new List<PortBinding> { new PortBinding { HostIP = "127.0.0.1", HostPort = "8420" } } }
+                    { "8420/tcp", new List<PortBinding> { new PortBinding { HostIP = "", HostPort = "8420" } } }
                 }
             };
 

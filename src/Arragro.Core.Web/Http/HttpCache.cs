@@ -5,9 +5,9 @@ namespace Arragro.Core.Web.Http
     public class HttpCache
     {
         public string ETag { get; set; }
-        public DateTime? LastModified { get; set; }
+        public DateTimeOffset? LastModified { get; set; }
 
-        public bool IsCached(string etag, DateTime lastModified)
+        public bool IsCached(string etag, DateTimeOffset lastModified)
         {
             if (etag == ETag)
                 return true;

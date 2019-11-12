@@ -11,11 +11,11 @@ namespace Arragro.Core.Web.Http
 {
     public static class ETagHelper
     {
-        public static string GenerateETag(string path, DateTime? lastModified)
+        public static string GenerateETag(string path, DateTimeOffset? lastModified)
         {
             var encoding = new UTF8Encoding();
 
-            if (!lastModified.HasValue) lastModified = DateTime.UtcNow;
+            if (!lastModified.HasValue) lastModified = DateTimeOffset.UtcNow;
 
             using (var md5 = MD5.Create())
             {
@@ -24,12 +24,12 @@ namespace Arragro.Core.Web.Http
             }
         }
 
-        public static EntityTagHeaderValue GetEntityTagHeaderValue(string path, DateTime? lastModified)
+        public static EntityTagHeaderValue GetEntityTagHeaderValue(string path, DateTimeOffset? lastModified)
         {
             return EntityTagHeaderValue.Parse(GenerateETag(path, lastModified));
         }
         
-        public static IActionResult HandleETag<T>(this Controller controller, DateTime? lastModified, T data)
+        public static IActionResult HandleETag<T>(this Controller controller, DateTimeOffset? lastModified, T data)
         {
             if (lastModified.HasValue)
             {

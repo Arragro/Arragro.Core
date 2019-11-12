@@ -4,7 +4,6 @@ using Arragro.Core.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Arragro.Core.Identity.Migrations.Sqlite
 {
@@ -16,9 +15,7 @@ namespace Arragro.Core.Identity.Migrations.Sqlite
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("identity")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
 
             modelBuilder.Entity("Arragro.Core.Identity.Models.Role", b =>
                 {
@@ -91,7 +88,7 @@ namespace Arragro.Core.Identity.Migrations.Sqlite
                     b.Property<Guid>("ModifiedBy")
                         .HasColumnName("modified_by");
 
-                    b.Property<DateTime>("ModifiedDate")
+                    b.Property<DateTimeOffset>("ModifiedDate")
                         .HasColumnName("modified_date");
 
                     b.Property<string>("NormalizedEmail")

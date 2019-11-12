@@ -5,7 +5,7 @@ namespace Arragro.Core.Common.Interfaces
 {
     internal interface IBaseService<TModel> where TModel : class
     {
-        IEnumerable<TModel> SinceLastWrite(DateTime lastWriteDate);
+        IEnumerable<TModel> SinceLastWrite(DateTimeOffset lastWriteDate);
         IEnumerable<TModel> All();
         bool Delete(TModel entity);
         TModel Find(params object[] ids);
@@ -14,6 +14,6 @@ namespace Arragro.Core.Common.Interfaces
         TModel ValidateAndInsert(TModel model);
         bool ValidateAndUpdate(TModel model);
         void ValidateModel(TModel model);
-        IEnumerable<TModel> AllChanged(DateTime lastWriteDate);
+        IEnumerable<TModel> AllChanged(DateTimeOffset lastWriteDate);
     }
 }

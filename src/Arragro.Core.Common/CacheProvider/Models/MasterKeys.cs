@@ -7,7 +7,7 @@ namespace Arragro.Core.Common.CacheProvider
     {
         public string Key { get; set; }
         public int ByteLength { get; set; }
-        public DateTime? Expiration { get; set; }
+        public DateTimeOffset? Expiration { get; set; }
     }
 
     public class MasterKeys
