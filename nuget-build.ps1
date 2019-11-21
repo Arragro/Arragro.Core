@@ -1,4 +1,4 @@
-$version = "1.0.0-alpha-375"
+$version = "1.0.0-alpha-391"
 $ErrorActionPreference = "Stop"
 
 $paths = @(
@@ -16,12 +16,13 @@ $paths = @(
 	".\providers\Arragro.Providers.ImageServiceProvider",
 	".\providers\Arragro.Providers.InMemoryStorageProvider",
 	".\providers\Arragro.Providers.MailKitEmailProvider",
+	".\providers\Arragro.Providers.S3StorageProvider",
 	".\providers\Arragro.Providers.SendgridEmailProvider"
 )
 
 foreach ($path in $paths) {
-	Remove-Item "$($path)\bin" -Force -Recurse
-	Remove-Item "$($path)\obj" -Force -Recurse
+	Remove-Item "$($path)\bin" -Force -Recurse -ErrorAction SilentlyContinue
+	Remove-Item "$($path)\obj" -Force -Recurse -ErrorAction SilentlyContinue
 }
 
 function executeSomething {
@@ -38,9 +39,6 @@ executeSomething(dotnet test .\tests\Arragro.Core.EntityFrameworkCore.Integratio
 
 foreach ($path in $paths) {
 	executeSomething(dotnet pack $path -c Debug /p:Version=$version)
-}
-
-foreach ($path in $paths) {
 	$projectName = $path.Replace(".\src\", "").Replace(".\providers\", "")
 	executeSomething(dotnet nuget push $path\bin\Debug\$($projectName).$version.nupkg -s https://registry.arragro.com/repository/nuget-hosted/)
 }
