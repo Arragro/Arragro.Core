@@ -43,7 +43,8 @@ namespace Arragro.Core.Docker
                 },
                 Cmd = new List<string>
                 {
-                    "server /data"
+                    "server",
+                    "/data"
                 }
             });
 
