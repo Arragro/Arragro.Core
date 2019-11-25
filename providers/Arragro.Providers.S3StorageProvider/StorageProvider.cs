@@ -57,6 +57,11 @@ namespace Arragro.Providers.S3StorageProvider
             _bucketName = bucketName;
             _cacheControlMaxAge = cacheControlMaxAge;
             _prefix = string.IsNullOrEmpty(prefix) ? "assets" : prefix;
+
+            if (!Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(_client, _bucketName).Result)
+            {
+                _client.PutBucketAsync(_bucketName).Wait();
+            }
         }
 
         protected const string THUMBNAIL_ASSETKEY = "ThumbNail:";
@@ -153,6 +158,9 @@ namespace Arragro.Providers.S3StorageProvider
                     ContentType = mimeType
                 };
 
+                putRequest.Headers.ContentType = mimeType;
+                putRequest.Headers.CacheControl = $"public, max-age={_cacheControlMaxAge}";
+
                 var putResponse = await _client.PutObjectAsync(putRequest);
                 if (putResponse.HttpStatusCode != System.Net.HttpStatusCode.OK)
                     throw new Exception($"Something went wrong uploading to '{putRequest.BucketName}/{putRequest.Key}'.");
@@ -214,7 +222,8 @@ namespace Arragro.Providers.S3StorageProvider
                 SourceBucket = _bucketName,
                 SourceKey = s3Object.Key,
                 DestinationBucket = _bucketName,
-                DestinationKey = s3Object.Key
+                DestinationKey = s3Object.Key,
+                MetadataDirective = S3MetadataDirective.REPLACE
             };
             copyRequest.Headers.CacheControl = $"public, max-age={cacheControlMaxAge}";
             await _client.CopyObjectAsync(copyRequest);
@@ -231,6 +240,9 @@ namespace Arragro.Providers.S3StorageProvider
                     InputStream = stream,
                     ContentType = mimeType
                 };
+
+                putRequest.Headers.ContentType = mimeType;
+                putRequest.Headers.CacheControl = $"public, max-age={_cacheControlMaxAge}";
 
                 var putResponse = await _client.PutObjectAsync(putRequest);
                 if (putResponse.HttpStatusCode != System.Net.HttpStatusCode.OK)
