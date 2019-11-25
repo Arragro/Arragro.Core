@@ -11,8 +11,8 @@ namespace Arragro.Core.Docker
         public static async Task<ContainerListResponse> StartAzurite(DockerClient client)
         {
             const string ContainerName = "azurite";
-            const string ImageName = "arafato/azurite";
-            const string ImageTag = "2.6.5";
+            const string ImageName = "touchify/azurite";
+            const string ImageTag = "2.7.1";
 
             await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, ImageTag, ContainerName);
 
