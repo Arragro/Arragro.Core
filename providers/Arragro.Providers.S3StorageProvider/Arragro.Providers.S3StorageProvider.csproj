@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Arragro.Providers.S3StorageProvider</AssemblyName>
+    <PackageId>Arragro.Providers.S3StorageProvider</PackageId>
+    <Title>Arragro Providers S3 Storage Provider</Title>
+    <Copyright>Arragro 2017 (c) Arragro Ltd.</Copyright>
+    <Description>Arragro provider for Storage (S3).</Description>
+    <PackageTags>dotnet core netstandard storage azure</PackageTags>
+    <Authors>Mike Jewell,Reece Beardsall</Authors>
+    <PackageIconUrl>http://cdn.arragro.com/public/images/favicon.ico</PackageIconUrl>
+    <PackageLicense>http://opensource.org/licenses/MIT</PackageLicense>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/Arragro/Arragro.Core</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.3.106.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Arragro.Core.Common\Arragro.Core.Common.csproj" />
+  </ItemGroup>
+
+</Project>

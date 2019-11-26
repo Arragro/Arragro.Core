@@ -12,14 +12,14 @@ namespace Arragro.Providers.AzureStorageProvider
 {
     public class StorageProvider<FolderIdType, FileIdType> : IStorageProvider<FolderIdType, FileIdType>
     {
-        private readonly IImageProvider _imageService;
+        protected readonly IImageProvider _imageService;
 
-        private readonly string _storageConnectionString;
-        private readonly int _cacheControlMaxAge;
+        protected readonly string _storageConnectionString;
+        protected readonly int _cacheControlMaxAge;
 
-        private readonly CloudStorageAccount _account;
-        private readonly CloudBlobClient _client;
-        private readonly CloudBlobContainer _assetContainer;
+        protected readonly CloudStorageAccount _account;
+        protected readonly CloudBlobClient _client;
+        protected readonly CloudBlobContainer _assetContainer;
 
         public StorageProvider(
             IImageProvider imageProcessor,
@@ -41,10 +41,10 @@ namespace Arragro.Providers.AzureStorageProvider
             }).Wait();
         }
 
-        const string THUMBNAIL_ASSETKEY = "ThumbNail:";
-        const string ASSET_ASSETKEY = "Asset:";
-        const string ASSET_QUALITY_ASSETKEY = "Asset:Quality:";
-        const string ASSET_QUALITY_WIDTH_ASSETKEY = "Asset:Quality:Width:";
+        protected const string THUMBNAIL_ASSETKEY = "ThumbNail:";
+        protected const string ASSET_ASSETKEY = "Asset:";
+        protected const string ASSET_QUALITY_ASSETKEY = "Asset:Quality:";
+        protected const string ASSET_QUALITY_WIDTH_ASSETKEY = "Asset:Quality:Width:";
 
         public async Task<bool> Delete(FolderIdType folderId, FileIdType fileId, bool thumbNail = false)
         {
@@ -53,7 +53,7 @@ namespace Arragro.Providers.AzureStorageProvider
             return await blob.DeleteIfExistsAsync();
         }
 
-        private async Task DeleteFolder(string folder)
+        protected async Task DeleteFolder(string folder)
         {
             var directory = _assetContainer.GetDirectoryReference(folder);
 
@@ -79,7 +79,7 @@ namespace Arragro.Providers.AzureStorageProvider
             await DeleteFolder($"{folderId}");
         }
 
-        private async Task<Uri> Get(FolderIdType folderId, FileIdType fileId)
+        protected async Task<Uri> Get(FolderIdType folderId, FileIdType fileId)
         {
             var key = $"{ASSET_ASSETKEY}{folderId}:{fileId}";
             var cacheItem = CacheProviderManager.CacheProvider.Get<Uri>(key);
@@ -99,7 +99,7 @@ namespace Arragro.Providers.AzureStorageProvider
             return null;
         }
 
-        private async Task<Uri> Upload(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
+        protected async Task<Uri> Upload(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
         {
             var blob = _assetContainer.GetBlockBlobReference($"{folderId}/{fileId}");
             using (var stream = new MemoryStream(data))
@@ -110,7 +110,7 @@ namespace Arragro.Providers.AzureStorageProvider
             }
         }
 
-        private async Task<Uri> GetImageThumbnail(FolderIdType folderId, FileIdType fileId)
+        protected async Task<Uri> GetImageThumbnail(FolderIdType folderId, FileIdType fileId)
         {
             var key = $"{THUMBNAIL_ASSETKEY}{folderId}:{fileId}";
             var cacheItem = CacheProviderManager.CacheProvider.Get<Uri>(key);
@@ -141,7 +141,7 @@ namespace Arragro.Providers.AzureStorageProvider
             while (blobs.ContinuationToken != null);
         }
 
-        private async Task ResetCloudBlobCacheControl(IListBlobItem blobItem, int cacheControlMaxAge)
+        protected async Task ResetCloudBlobCacheControl(IListBlobItem blobItem, int cacheControlMaxAge)
         {
             if (blobItem is CloudBlockBlob)
             {
@@ -165,7 +165,7 @@ namespace Arragro.Providers.AzureStorageProvider
             }
         }
 
-        private async Task<Uri> UploadThumbnail(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
+        protected async Task<Uri> UploadThumbnail(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
         {
             var blob = _assetContainer.GetBlockBlobReference($"{folderId}/thumbnails/{fileId}");
             using (var stream = new MemoryStream(data))

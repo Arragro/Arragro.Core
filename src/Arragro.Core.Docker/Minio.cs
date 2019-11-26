@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Arragro.Core.Docker
 {
-    public static class Azurite
+    public static class Minio
     {
-        public static async Task<ContainerListResponse> StartAzurite(DockerClient client)
+        public static async Task<ContainerListResponse> StartMinio(DockerClient client)
         {
-            const string ContainerName = "azurite";
-            const string ImageName = "touchify/azurite";
-            const string ImageTag = "2.7.1";
+            const string ContainerName = "minio";
+            const string ImageName = "minio/minio";
+            const string ImageTag = "RELEASE.2019-10-12T01-39-57Z";
 
             await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, ImageTag, ContainerName);
 
@@ -23,9 +23,7 @@ namespace Arragro.Core.Docker
                 PublishAllPorts = true,
                 PortBindings = new Dictionary<string, IList<PortBinding>>
                 {
-                    { "10000/tcp", new List<PortBinding> { new PortBinding { HostIP = "", HostPort = "10000" } } },
-                    { "10001/tcp", new List<PortBinding> { new PortBinding { HostIP = "", HostPort = "10001" } } },
-                    { "10002/tcp", new List<PortBinding> { new PortBinding { HostIP = "", HostPort = "10002" } } }
+                    { "9000/tcp", new List<PortBinding> { new PortBinding { HostIP = "", HostPort = "9000" } } }
                 }
             };
 
@@ -34,22 +32,31 @@ namespace Arragro.Core.Docker
                 Image = ImageName + ":" + ImageTag,
                 Name = ContainerName,
                 ExposedPorts = new Dictionary<string, object>() {
-                    { "10000/tcp", new { HostPort = 10000.ToString() } },
-                    { "10001/tcp", new { HostPort = 10001.ToString() } },
-                    { "10002/tcp", new { HostPort = 10002.ToString() } }
+                    { "9000/tcp", new { HostPort = 9000.ToString() } }
                 } as IDictionary<string, EmptyStruct>,
-                HostConfig = hostConfig
+                HostConfig = hostConfig,
+                Env = new List<string>
+                {      
+                    "MINIO_REGION=us-east-1",
+                    "MINIO_ACCESS_KEY=minio_access_key",
+                    "MINIO_SECRET_KEY=minio_secret_key"
+                },
+                Cmd = new List<string>
+                {
+                    "server",
+                    "/data"
+                }
             });
 
             var container = await DockerExtentions.GetContainerAsync(client, ContainerName);
             if (container == null)
-                throw new Exception("No azurite container.");
+                throw new Exception("No minio container.");
 
             if (container.State != "running")
             {
                 var started = await client.Containers.StartContainerAsync(container.ID, new ContainerStartParameters());
                 if (!started)
-                    throw new Exception("Cannot start the azurite docker container.");
+                    throw new Exception("Cannot start the minio docker container.");
             }
 
             return container;

@@ -1,38 +1,5 @@
-$versionPrefix = "1.0.0"
-$versionSuffix = "net-core-3-348"
+$version = "1.0.0-alpha-397"
 $ErrorActionPreference = "Stop"
-
-function executeSomething {
-	param($something)
-	$something
-	if($LASTEXITCODE -ne 0)
-	{
-		exit
-	}
-}
-
-function build {
-	param($project)
-	executeSomething(dotnet build $project -c Debug --version-suffix $versionSuffix)
-}
-
-function test {
-	param($project)
-	executeSomething(dotnet test $project -c Debug)
-}
-
-function pack {
-	param($project)
-	# Write-Host "dotnet pack $($project) --include-symbols --include-source -c Debug --version-suffix $($versionSuffix) --no-build"
-	executeSomething(dotnet pack $project --include-symbols --include-source -c Debug --version-suffix $versionSuffix --no-build)
-}
-
-function push {
-	param($project)
-	$projectname = $project.SubString($project.LastIndexOf("\") + 1)
-	executeSomething(dotnet nuget push $project\bin\Debug\$projectname.$versionPrefix-$versionSuffix.nupkg -s https://registry.arragro.com/repository/nuget-hosted/)
-	executeSomething(dotnet nuget push $project\bin\Debug\$projectname.$versionPrefix-$versionSuffix.symbols.nupkg -s https://registry.arragro.com/repository/nuget-hosted/)
-}
 
 $paths = @(
 	".\src\Arragro.Core.Common",
@@ -49,12 +16,13 @@ $paths = @(
 	".\providers\Arragro.Providers.ImageServiceProvider",
 	".\providers\Arragro.Providers.InMemoryStorageProvider",
 	".\providers\Arragro.Providers.MailKitEmailProvider",
+	".\providers\Arragro.Providers.S3StorageProvider",
 	".\providers\Arragro.Providers.SendgridEmailProvider"
 )
 
 foreach ($path in $paths) {
-	Remove-Item "$($path)\bin" -Force -Recurse
-	Remove-Item "$($path)\obj" -Force -Recurse
+	Remove-Item "$($path)\bin" -Force -Recurse -ErrorAction SilentlyContinue
+	Remove-Item "$($path)\obj" -Force -Recurse -ErrorAction SilentlyContinue
 }
 
 function executeSomething {
@@ -71,9 +39,6 @@ executeSomething(dotnet test .\tests\Arragro.Core.EntityFrameworkCore.Integratio
 
 foreach ($path in $paths) {
 	executeSomething(dotnet pack $path -c Debug /p:Version=$version)
-}
-
-foreach ($path in $paths) {
 	$projectName = $path.Replace(".\src\", "").Replace(".\providers\", "")
 	executeSomething(dotnet nuget push $path\bin\Debug\$($projectName).$version.nupkg -s https://registry.arragro.com/repository/nuget-hosted/)
 }
