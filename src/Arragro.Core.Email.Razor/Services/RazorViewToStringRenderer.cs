@@ -1,22 +1,22 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Internal;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.PlatformAbstractions;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -121,12 +121,13 @@ namespace Arragro.Core.Email.Razor.Services
 
             var environment = new HostingEnvironment
             {
-                WebRootFileProvider = fileProvider,
+                ContentRootFileProvider = fileProvider,
+                ContentRootPath = path,
                 ApplicationName = applicationName
             };
-            serviceCollection.AddSingleton<IHostingEnvironment>(environment);
+            serviceCollection.AddSingleton<IHostEnvironment>(environment);
 
-            serviceCollection.Configure<RazorViewEngineOptions>(options =>
+            serviceCollection.Configure<MvcRazorRuntimeCompilationOptions>(options =>
             {
                 options.FileProviders.Clear();
                 options.FileProviders.Add(fileProvider);

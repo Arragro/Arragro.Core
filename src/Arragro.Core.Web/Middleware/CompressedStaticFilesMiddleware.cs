@@ -18,10 +18,10 @@ namespace Arragro.Core.Web.Middleware
         {{"gzip", ".gz" },
          {"br", ".br" }};
 
-        private readonly IHostingEnvironment _hostingEnv;
+        private readonly IWebHostEnvironment _hostingEnv;
         private readonly StaticFileMiddleware _base;
         private readonly ILogger _logger;
-        public CompressedStaticFilesMiddleware(RequestDelegate next, IHostingEnvironment hostingEnv, IOptions<StaticFileOptions> staticFileOptions, ILoggerFactory loggerFactory)
+        public CompressedStaticFilesMiddleware(RequestDelegate next, IWebHostEnvironment hostingEnv, IOptions<StaticFileOptions> staticFileOptions, ILoggerFactory loggerFactory)
         {
             if (next == null)
             {

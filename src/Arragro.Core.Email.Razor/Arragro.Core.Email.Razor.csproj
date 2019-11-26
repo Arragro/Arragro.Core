@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <AssemblyName>Arragro.Core.Email.Razor</AssemblyName>
     <PackageId>Arragro.Core.Email.Razor</PackageId>
     <Title>Arragro Core Email Razor</Title>
@@ -15,6 +15,8 @@
     <RepositoryUrl>https://github.com/Arragro/Arragro.Core</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
     <LangVersion>7.2</LangVersion>
+    <OutputType>Library</OutputType>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -23,11 +25,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="3.0.1" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.0.1" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="3.0.1" />
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
   </ItemGroup>
 

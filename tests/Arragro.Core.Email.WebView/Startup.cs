@@ -1,12 +1,11 @@
 ﻿using Arragro.Core.Common.Models;
-using Arragro.Core.Email.Razor.Models;
 using Arragro.Core.Email.Razor.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Arragro.Core.Email.WebView
 {
@@ -38,11 +37,11 @@ namespace Arragro.Core.Email.WebView
             services.AddTransient<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -57,13 +56,14 @@ namespace Arragro.Core.Email.WebView
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseRouting();
             app.UseCookiePolicy();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=MicrosoftAccount}/{action=Index}/{id?}");
             });
         }
     }

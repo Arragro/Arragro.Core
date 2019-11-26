@@ -1,5 +1,4 @@
-﻿using Arragro.Core.Common.Interfaces;
-using Arragro.Core.Common.Models;
+﻿using Arragro.Core.Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;

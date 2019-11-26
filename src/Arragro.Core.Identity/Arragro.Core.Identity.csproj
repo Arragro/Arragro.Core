@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
     <AssemblyName>Arragro.Core.Identity</AssemblyName>
     <PackageId>Arragro.Core.Identity</PackageId>
     <Title>Arragro Core Identity</Title>
@@ -13,7 +13,10 @@
     <PackageLicenseUrl>&gt;http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Arragro/Arragro.Core</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>    <LangVersion>7.2</LangVersion>
+    <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
+    <LangVersion>7.2</LangVersion>
+    <OutputType>Library</OutputType>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.2|AnyCPU'">
@@ -23,7 +26,6 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.1">
