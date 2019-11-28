@@ -5,7 +5,6 @@ using Arragro.Core.Common.Models;
 using System;
 using System.Threading.Tasks;
 using System.Linq;
-using Arragro.Core.Common.Models;
 using System.Collections.Generic;
 
 namespace Arragro.Providers.MailKitEmailProvider
