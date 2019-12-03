@@ -37,8 +37,10 @@ function executeSomething {
 executeSomething(dotnet test .\tests\Arragro.Core.Common.Tests -c Debug )
 executeSomething(dotnet test .\tests\Arragro.Core.EntityFrameworkCore.IntegrationTests -c Debug )
 
+dotnet clean
+
 foreach ($path in $paths) {
-	executeSomething(dotnet pack $path -c Debug /p:Version=$version)
+	dotnet pack $path -c Debug /p:Version=$version --include-symbols --include-source
 	$projectName = $path.Replace(".\src\", "").Replace(".\providers\", "")
 	executeSomething(dotnet nuget push $path\bin\Debug\$($projectName).$version.nupkg -s https://registry.arragro.com/repository/nuget-hosted/)
 }
