@@ -25,6 +25,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Properties\launchSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
@@ -51,6 +55,10 @@
     <Folder Include="Migrations\Postgres\" />
     <Folder Include="Migrations\Sqlite\" />
     <Folder Include="Migrations\SqlServer\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Properties\launchSettings.json" />
   </ItemGroup>
 
 </Project>
