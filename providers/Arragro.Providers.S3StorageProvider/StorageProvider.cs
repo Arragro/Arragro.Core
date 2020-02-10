@@ -5,6 +5,7 @@ using Amazon.S3.Model;
 using Arragro.Core.Common.CacheProvider;
 using Arragro.Core.Common.Interfaces.Providers;
 using Arragro.Core.Common.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,32 @@ using System.Threading.Tasks;
 
 namespace Arragro.Providers.S3StorageProvider
 {
+    public static class AWSHelper
+    {
+        public static AmazonS3Client BuildAmazonS3Client(
+            string accessKey,
+            string secretKey,
+            RegionEndpoint regionEndpoint,
+            string minioServerUrl = null)
+        {
+            var credentials = new BasicAWSCredentials(accessKey, secretKey);
+
+            var config = new AmazonS3Config
+            {
+                RegionEndpoint = regionEndpoint,
+            };
+
+            if (!string.IsNullOrEmpty(minioServerUrl))
+            {
+                config.ServiceURL = minioServerUrl;
+                config.ForcePathStyle = true;
+            }
+
+            return new AmazonS3Client(credentials, config);
+        }
+    }
+
+
     public class StorageProvider<FolderIdType, FileIdType> : IStorageProvider<FolderIdType, FileIdType>
     {
         protected readonly IImageProvider _imageService;
@@ -23,21 +50,22 @@ namespace Arragro.Providers.S3StorageProvider
         protected readonly string _minioServerUrl;
 
         protected readonly BasicAWSCredentials _credentials;
+        private readonly ILogger<StorageProvider<FolderIdType, FileIdType>> _logger;
         protected readonly AmazonS3Client _client;
         protected readonly RegionEndpoint _regionEndpoint;
 
         public StorageProvider(
+            ILogger<StorageProvider<FolderIdType, FileIdType>> logger,
+            AmazonS3Client amazonS3Client,
             IImageProvider imageProcessor,
-            string accessKey,
-            string secretKey,
             RegionEndpoint regionEndpoint,
             string bucketName,
             int cacheControlMaxAge = 0,
             string prefix = "assets",
             string minioServerUrl = null)
         {
+            _logger = logger;
             _imageService = imageProcessor;
-            _credentials = new BasicAWSCredentials(accessKey, secretKey);
 
             var config = new AmazonS3Config
             {
@@ -52,15 +80,23 @@ namespace Arragro.Providers.S3StorageProvider
 
             _minioServerUrl = minioServerUrl;
             _regionEndpoint = regionEndpoint;
-            _client = new AmazonS3Client(_credentials, config);
+            _client = amazonS3Client;
 
             _bucketName = bucketName;
             _cacheControlMaxAge = cacheControlMaxAge;
             _prefix = string.IsNullOrEmpty(prefix) ? "assets" : prefix;
 
-            if (!Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(_client, _bucketName).Result)
+            try
             {
-                _client.PutBucketAsync(_bucketName).Wait();
+                if (!Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(_client, _bucketName).Result)
+                {
+                    _client.PutBucketAsync(_bucketName).Wait();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to connect to AWS @MinioServerUrl @RegionEndpoint", _minioServerUrl, _regionEndpoint);
+                throw ex;
             }
         }
 
