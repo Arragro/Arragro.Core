@@ -14,7 +14,7 @@ namespace Arragro.Core.Docker
         {
             const string ContainerName = "sqlserver-integration-tests";
             const string ImageName = "mcr.microsoft.com/mssql/server";
-            const string ImageTag = "latest";
+            const string ImageTag = "2019-latest";
 
             await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, ImageTag, ContainerName);
 
