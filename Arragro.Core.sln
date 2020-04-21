@@ -63,7 +63,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Docker", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.MailDevClient", "src\Arragro.Core.MailDevClient\Arragro.Core.MailDevClient.csproj", "{503733C7-7910-454E-8965-500641E65DEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arragro.Providers.S3StorageProvider", "providers\Arragro.Providers.S3StorageProvider\Arragro.Providers.S3StorageProvider.csproj", "{B2A1DC86-846F-490A-8EA4-9EA4766CE8F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Providers.S3StorageProvider", "providers\Arragro.Providers.S3StorageProvider\Arragro.Providers.S3StorageProvider.csproj", "{B2A1DC86-846F-490A-8EA4-9EA4766CE8F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arragro.Core.CronJobService", "src\Arragro.Core.CronJobService\Arragro.Core.CronJobService.csproj", "{1C0E30F5-2E79-4597-83FE-1FBF1C86B592}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,6 +157,10 @@ Global
 		{B2A1DC86-846F-490A-8EA4-9EA4766CE8F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2A1DC86-846F-490A-8EA4-9EA4766CE8F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2A1DC86-846F-490A-8EA4-9EA4766CE8F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C0E30F5-2E79-4597-83FE-1FBF1C86B592}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C0E30F5-2E79-4597-83FE-1FBF1C86B592}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C0E30F5-2E79-4597-83FE-1FBF1C86B592}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C0E30F5-2E79-4597-83FE-1FBF1C86B592}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

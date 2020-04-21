@@ -1,8 +1,9 @@
-$version = "3.1.0-alpha-014"
+$version = "3.1.0-alpha-018"
 $ErrorActionPreference = "Stop"
 
 $paths = @(
 	".\src\Arragro.Core.Common",
+	".\src\Arragro.Core.CronJobService",
 	".\src\Arragro.Core.EntityFrameworkCore",
 	".\src\Arragro.Core.Web",
 	".\src\Arragro.Core.DistributedCache",
