@@ -18,8 +18,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.S3" Version="3.3.111.9" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.111.30" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.6" />
   </ItemGroup>
 
   <ItemGroup>

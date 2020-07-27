@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="7.19.0" />
+    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="7.21.1" />
   </ItemGroup>
 
   <ItemGroup>
