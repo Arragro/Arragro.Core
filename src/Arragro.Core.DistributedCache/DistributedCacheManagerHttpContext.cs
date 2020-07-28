@@ -22,9 +22,14 @@ namespace Arragro.Core.DistributedCache
             _httpContextAccessor = httpContextAccessor;
         }
 
+        private bool TestHttpContext()
+        {
+            return _httpContextAccessor != null && _httpContextAccessor.HttpContext != null;
+        }
+
         private void SetHttpContextItem<T>(string key, T value)
         {
-            if (_httpContextAccessor != null)
+            if (TestHttpContext())
             {
                 key = PrefixKey(key);
                 if (_httpContextAccessor.HttpContext.Items.ContainsKey(key))
@@ -40,7 +45,7 @@ namespace Arragro.Core.DistributedCache
 
         private T GetHttpContextItem<T>(string key)
         {
-            if (_httpContextAccessor != null)
+            if (TestHttpContext())
             {
                 var data = _httpContextAccessor.HttpContext.Items[PrefixKey(key)];
                 if (data != null)
@@ -51,7 +56,7 @@ namespace Arragro.Core.DistributedCache
 
         private void RemoveHttpContextItem(string key)
         {
-            if (_httpContextAccessor != null)
+            if (TestHttpContext())
                 _httpContextAccessor.HttpContext.Items.Remove(PrefixKey(key));
         }
         public override void Remove(string key)
