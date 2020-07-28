@@ -91,7 +91,6 @@ namespace Arragro.Core.Docker
                     await client.Containers.RemoveContainerAsync(containerResults.ContainerListResponse.ID, new ContainerRemoveParameters { Force = true });
                 });
             }
-            await Task.Yield();
             DockerContainerResults = new ConcurrentBag<DockerContainerResult>();
         }
     }
