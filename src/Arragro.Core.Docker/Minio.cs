@@ -12,7 +12,7 @@ namespace Arragro.Core.Docker
         {
             const string ContainerName = "minio";
             const string ImageName = "minio/minio";
-            const string ImageTag = "RELEASE.2019-10-12T01-39-57Z";
+            const string ImageTag = "RELEASE.2020-08-08T04-50-06Z";
 
             await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, ImageTag, ContainerName);
 
