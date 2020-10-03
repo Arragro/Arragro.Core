@@ -119,7 +119,7 @@ namespace Arragro.Core.Web.Helpers
             controller.TempData[GetType(type)] = error.ToString();
         }
 
-        public static HtmlString Flash(this HtmlHelper helper)
+        public static HtmlString Flash(this IHtmlHelper helper)
         {
             var tempData = helper.ViewContext.TempData;
 
