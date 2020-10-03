@@ -14,18 +14,18 @@ namespace Arragro.Core.Docker
     {
         public static ConcurrentBag<DockerContainerResult> DockerContainerResults = new ConcurrentBag<DockerContainerResult>();
 
-        public static async Task<(string stdout, string stderr)> RunCommandInContainerAsync(this IContainerOperations source, string containerId, string command)
+        public static async Task<(string stdout, string stderr)> RunCommandInContainerAsync(this DockerClient client, string containerId, string command)
         {
             var commandTokens = command.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var createdExec = await source.ExecCreateContainerAsync(containerId, new ContainerExecCreateParameters
+            var createdExec = await client.Exec.ExecCreateContainerAsync(containerId, new ContainerExecCreateParameters
             {
                 AttachStderr = true,
                 AttachStdout = true,
                 Cmd = commandTokens
             });
 
-            var multiplexedStream = await source.StartAndAttachContainerExecAsync(createdExec.ID, false);
+            var multiplexedStream = await client.Exec.StartAndAttachContainerExecAsync(createdExec.ID, false);
 
             return await multiplexedStream.ReadOutputToEndAsync(CancellationToken.None);
         }

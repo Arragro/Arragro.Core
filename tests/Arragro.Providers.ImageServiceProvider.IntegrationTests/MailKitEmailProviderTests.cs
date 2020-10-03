@@ -34,7 +34,8 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             {
                 Mailhog.StartMailhog,
                 Azurite.StartAzurite,
-                Minio.StartMinio
+                Minio.StartMinio,
+                Postgres.StartPostgres
             }).Wait();
 
         }

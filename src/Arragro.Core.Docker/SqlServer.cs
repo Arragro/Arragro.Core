@@ -65,14 +65,14 @@ namespace Arragro.Core.Docker
                     var commandTokens = "/opt/mssql-tools/bin/sqlcmd -U sa -P P@ssword123 -Q".Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                     commandTokens.Add("SELECT TOP 1 name FROM master.sys.databases");
 
-                    var createdExec = await client.Containers.ExecCreateContainerAsync(container.ID, new ContainerExecCreateParameters
+                    var createdExec = await client.Exec.ExecCreateContainerAsync(container.ID, new ContainerExecCreateParameters
                     {
                         AttachStderr = true,
                         AttachStdout = true,
                         Cmd = commandTokens
                     });
 
-                    var multiplexedStream = await client.Containers.StartAndAttachContainerExecAsync(createdExec.ID, false);
+                    var multiplexedStream = await client.Exec.StartAndAttachContainerExecAsync(createdExec.ID, false);
 
                     var result = await multiplexedStream.ReadOutputToEndAsync(CancellationToken.None);
 

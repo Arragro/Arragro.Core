@@ -60,7 +60,7 @@ namespace Arragro.Core.Docker
             while (!isContainerReady)
             {
                 isReadyCounter++;
-                var result = await client.Containers.RunCommandInContainerAsync(container.ID, "pg_isready -U postgres");
+                var result = await client.RunCommandInContainerAsync(container.ID, "pg_isready -U postgres");
                 if (result.stdout.TrimEnd('\n') == "/var/run/postgresql:5432 - accepting connections")
                 {
                     isContainerReady = true;
