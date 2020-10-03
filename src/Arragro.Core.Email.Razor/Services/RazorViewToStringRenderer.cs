@@ -98,7 +98,13 @@ namespace Arragro.Core.Email.Razor.Services
             return new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
         }
 
-        public static IMvcBuilder ConfigureAndGet(IServiceCollection serviceCollection, string executingAssembly = null)
+        private static void LogHelper(ILogger logger, string message, params object[] args)
+        {
+            if (logger != null)
+                logger.LogInformation(message, args);
+        }
+
+        private static IMvcBuilder ConfigureAndGet(IServiceCollection serviceCollection, string executingAssembly = null, bool logging = false)
         {
             var applicationEnvironment = PlatformServices.Default.Application;
 
@@ -135,13 +141,18 @@ namespace Arragro.Core.Email.Razor.Services
 
             var viewAssemblies = Directory.GetFiles(path, "*.Views.dll").Select(x => Path.GetFileName(x));
 
-            serviceCollection.AddLogging();
+            ILogger logger = null;
 
-            var serviceBuilder = serviceCollection.BuildServiceProvider();
-            var logger = serviceBuilder.GetService<ILogger<RazorViewToStringRenderer>>();
+            if (logging)
+            {
+                serviceCollection.AddLogging();
 
-            logger.LogInformation("RazorViewToStringRenderer is using the following config: {applicationName} - {path}", applicationName, path);
-            logger.LogInformation("RazorViewToStringRenderer is registering the following dlls: {viewAssemblies}", viewAssemblies);
+                var serviceBuilder = serviceCollection.BuildServiceProvider();
+                logger = serviceBuilder.GetService<ILogger<RazorViewToStringRenderer>>();
+            }
+
+            LogHelper(logger, "RazorViewToStringRenderer is using the following config: {applicationName} - {path}", applicationName, path);
+            LogHelper(logger, "RazorViewToStringRenderer is registering the following dlls: {viewAssemblies}", viewAssemblies);
 
             var diagnosticSource = new DiagnosticListener("Microsoft.AspNetCore");
             serviceCollection.AddSingleton<DiagnosticSource>(diagnosticSource);
@@ -151,17 +162,33 @@ namespace Arragro.Core.Email.Razor.Services
             var mvcBuilder = serviceCollection.AddMvc();
             foreach (var viewAssembly in viewAssemblies)
             {
-                logger.LogInformation("RazorViewToStringRenderer is registering the following assemblyPart: {path}", $"{path}\\{viewAssembly}");
+                LogHelper(logger, "RazorViewToStringRenderer is registering the following assemblyPart: {path}", $"{path}\\{viewAssembly}");
                 mvcBuilder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(Assembly.LoadFile($"{path}\\{viewAssembly}")));
             }
             serviceCollection.AddSingleton<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
             return mvcBuilder;
         }
 
+        public static IMvcBuilder ConfigureAndGet(IServiceCollection serviceCollection, string executingAssembly = null)
+        {
+            return ConfigureAndGet(serviceCollection, executingAssembly, true);
+        }
+
         public static IMvcBuilder ConfigureAndGet(string executingAssembly = null)
         {
             var serviceCollection = new ServiceCollection();
             return ConfigureAndGet(serviceCollection, executingAssembly);
+        }
+
+        public static IMvcBuilder ConfigureAndGetNoLogging(IServiceCollection serviceCollection, string executingAssembly = null)
+        {
+            return ConfigureAndGet(serviceCollection, executingAssembly, false);
+        }
+
+        public static IMvcBuilder ConfigureAndGetNoLogging(string executingAssembly = null)
+        {
+            var serviceCollection = new ServiceCollection();
+            return ConfigureAndGetNoLogging(serviceCollection, executingAssembly);
         }
     }
 
