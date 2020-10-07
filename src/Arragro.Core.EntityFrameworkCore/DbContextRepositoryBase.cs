@@ -44,9 +44,9 @@ namespace Arragro.Core.EntityFrameworkCore
             return DbSet.Remove(entity).Entity;
         }
 
-        public async Task<TEntity> DeleteAsync(object[] ids, CancellationToken token = default(CancellationToken))
+        public async Task<TEntity> DeleteAsync(params object[] ids)
         {
-            var entity = await FindAsync(ids, token);
+            var entity = await FindAsync(ids);
             return DbSet.Remove(entity).Entity;
         }
 

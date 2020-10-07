@@ -9,6 +9,7 @@ namespace Arragro.Core.Common.Repository
         TModel Find(params object[] ids);
         Task<TModel> FindAsync(params object[] ids);
         TModel Delete(params object[] ids);
+        Task<TModel> DeleteAsync(params object[] ids);
         IQueryable<TModel> All();
         IQueryable<TModel> AllNoTracking();
         TModel InsertOrUpdate(TModel model, bool add);
