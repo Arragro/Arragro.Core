@@ -9,13 +9,17 @@
     <Description>Core library for Arragro for scheduled jobs.</Description>
     <PackageTags>dotnet core netstandard</PackageTags>
     <Authors>Mike Jewell,Reece Beardsall</Authors>
-    <PackageIconUrl>http://cdn.arragro.com/public/images/favicon.ico</PackageIconUrl>
+    <PackageIcon>arragro-icon.png</PackageIcon>
     <PackageLicenseUrl>&gt;http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Arragro/Arragro.Core</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../arragro-icon.png" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Cronos" Version="0.7.0" />

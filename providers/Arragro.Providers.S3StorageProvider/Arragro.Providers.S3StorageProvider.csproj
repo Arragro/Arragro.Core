@@ -9,13 +9,17 @@
     <Description>Arragro provider for Storage (S3).</Description>
     <PackageTags>dotnet core netstandard storage azure</PackageTags>
     <Authors>Mike Jewell,Reece Beardsall</Authors>
-    <PackageIconUrl>http://cdn.arragro.com/public/images/favicon.ico</PackageIconUrl>
+    <PackageIcon>arragro-icon.png</PackageIcon>
     <PackageLicense>http://opensource.org/licenses/MIT</PackageLicense>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Arragro/Arragro.Core</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../arragro-icon.png" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="3.3.111.30" />
