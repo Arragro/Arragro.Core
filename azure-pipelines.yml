@@ -63,23 +63,23 @@ stages:
         targetType: 'inline'
         script: |
           $paths = @(
-	        ".\src\Arragro.Core.Common",
-	        ".\src\Arragro.Core.CronJobService",
-	        ".\src\Arragro.Core.EntityFrameworkCore",
-	        ".\src\Arragro.Core.Web",
-	        ".\src\Arragro.Core.DistributedCache",
-	        ".\src\Arragro.Core.Identity",
-	        ".\src\Arragro.Core.Email.Razor",
-	        ".\src\Arragro.Core.Docker",
-	        ".\src\Arragro.Core.MailhogClient",
-	        ".\src\Arragro.Core.MailDevClient",
-	        ".\providers\Arragro.Providers.AzureStorageProvider",
-	        ".\providers\Arragro.Providers.ImageMagickProvider",
-	        ".\providers\Arragro.Providers.ImageServiceProvider",
-	        ".\providers\Arragro.Providers.InMemoryStorageProvider",
-	        ".\providers\Arragro.Providers.MailKitEmailProvider",
-	        ".\providers\Arragro.Providers.S3StorageProvider",
-	        ".\providers\Arragro.Providers.SendgridEmailProvider"
+            ".\src\Arragro.Core.Common",
+            ".\src\Arragro.Core.CronJobService",
+            ".\src\Arragro.Core.EntityFrameworkCore",
+            ".\src\Arragro.Core.Web",
+            ".\src\Arragro.Core.DistributedCache",
+            ".\src\Arragro.Core.Identity",
+            ".\src\Arragro.Core.Email.Razor",
+            ".\src\Arragro.Core.Docker",
+            ".\src\Arragro.Core.MailhogClient",
+            ".\src\Arragro.Core.MailDevClient",
+            ".\providers\Arragro.Providers.AzureStorageProvider",
+            ".\providers\Arragro.Providers.ImageMagickProvider",
+            ".\providers\Arragro.Providers.ImageServiceProvider",
+            ".\providers\Arragro.Providers.InMemoryStorageProvider",
+            ".\providers\Arragro.Providers.MailKitEmailProvider",
+            ".\providers\Arragro.Providers.S3StorageProvider",
+            ".\providers\Arragro.Providers.SendgridEmailProvider"
           )
       
           function executeSomething {
