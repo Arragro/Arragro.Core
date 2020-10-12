@@ -12,7 +12,7 @@ namespace Arragro.Providers.AzureStorageProvider
 {
     public static class StorageProviderExtentions
     {
-        public static async Task ConfigureAzureStorageProvider<FolderIdType, FileIdType>( 
+        public static async Task ConfigureAzureStorageProvider( 
             string storageConnectionString,
             string assetsContainerName = "assets")
         {

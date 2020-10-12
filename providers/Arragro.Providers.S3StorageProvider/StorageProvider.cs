@@ -38,7 +38,7 @@ namespace Arragro.Providers.S3StorageProvider
             return new AmazonS3Client(credentials, config);
         }
 
-        public static async Task ConfigureAzureStorageProvider<FolderIdType, FileIdType>(
+        public static async Task ConfigureAzureStorageProvider(
             AmazonS3Client amazonS3Client,
             string bucketName,
             ILogger logger)
