@@ -3,7 +3,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace Arragro.Core.Common.Helpers
 {
