@@ -37,6 +37,25 @@ namespace Arragro.Providers.S3StorageProvider
 
             return new AmazonS3Client(credentials, config);
         }
+
+        public static async Task ConfigureAzureStorageProvider<FolderIdType, FileIdType>(
+            AmazonS3Client amazonS3Client,
+            string bucketName,
+            ILogger logger)
+        {
+            try
+            {
+                if (!(await Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(amazonS3Client, bucketName)))
+                {
+                    await amazonS3Client.PutBucketAsync(bucketName);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Failed to connect to AWS Storage");
+                throw ex;
+            }
+        }
     }
 
 
@@ -67,17 +86,6 @@ namespace Arragro.Providers.S3StorageProvider
             _logger = logger;
             _imageService = imageProcessor;
 
-            var config = new AmazonS3Config
-            {
-                RegionEndpoint = regionEndpoint,
-            };
-
-            if (!string.IsNullOrEmpty(minioServerUrl))
-            {
-                config.ServiceURL = minioServerUrl;
-                config.ForcePathStyle = true;
-            }
-
             _minioServerUrl = minioServerUrl;
             _regionEndpoint = regionEndpoint;
             _client = amazonS3Client;
@@ -85,19 +93,6 @@ namespace Arragro.Providers.S3StorageProvider
             _bucketName = bucketName;
             _cacheControlMaxAge = cacheControlMaxAge;
             _prefix = string.IsNullOrEmpty(prefix) ? "assets" : prefix;
-
-            try
-            {
-                if (!Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(_client, _bucketName).Result)
-                {
-                    _client.PutBucketAsync(_bucketName).Wait();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to connect to AWS @MinioServerUrl @RegionEndpoint", _minioServerUrl, _regionEndpoint);
-                throw ex;
-            }
         }
 
         protected const string THUMBNAIL_ASSETKEY = "ThumbNail:";

@@ -159,7 +159,9 @@ namespace Arragro.Core.Email.Razor.Services
 
             serviceCollection.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
             serviceCollection.AddSingleton(applicationEnvironment);
-            var mvcBuilder = serviceCollection.AddMvc();
+            var mvcBuilder = serviceCollection.AddMvc()
+                                .AddViewLocalization()
+                                .AddDataAnnotationsLocalization();
             foreach (var viewAssembly in viewAssemblies)
             {
                 LogHelper(logger, "RazorViewToStringRenderer is registering the following assemblyPart: {path}", $"{path}\\{viewAssembly}");

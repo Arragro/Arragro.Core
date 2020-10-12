@@ -7,9 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{20754D
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		appveyor.yml = appveyor.yml
+		azure-pipelines.yml = azure-pipelines.yml
 		build.bat = build.bat
 		change-log.md = change-log.md
 		nuget-build.ps1 = nuget-build.ps1
+		nuget.config = nuget.config
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
@@ -65,7 +67,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.MailDevClient"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Providers.S3StorageProvider", "providers\Arragro.Providers.S3StorageProvider\Arragro.Providers.S3StorageProvider.csproj", "{B2A1DC86-846F-490A-8EA4-9EA4766CE8F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arragro.Core.CronJobService", "src\Arragro.Core.CronJobService\Arragro.Core.CronJobService.csproj", "{1C0E30F5-2E79-4597-83FE-1FBF1C86B592}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.CronJobService", "src\Arragro.Core.CronJobService\Arragro.Core.CronJobService.csproj", "{1C0E30F5-2E79-4597-83FE-1FBF1C86B592}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

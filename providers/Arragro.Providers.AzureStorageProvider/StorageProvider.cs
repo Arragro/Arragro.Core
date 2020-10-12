@@ -10,6 +10,24 @@ using System.Threading.Tasks;
 
 namespace Arragro.Providers.AzureStorageProvider
 {
+    public static class StorageProviderExtentions
+    {
+        public static async Task ConfigureAzureStorageProvider<FolderIdType, FileIdType>( 
+            string storageConnectionString,
+            string assetsContainerName = "assets")
+        {
+            var account = CloudStorageAccount.Parse(storageConnectionString);
+            var client = account.CreateCloudBlobClient();
+
+            var assetContainer = client.GetContainerReference(assetsContainerName);
+            await assetContainer.CreateIfNotExistsAsync();
+            await assetContainer.SetPermissionsAsync(new BlobContainerPermissions
+            {
+                PublicAccess = BlobContainerPublicAccessType.Blob
+            });
+        }
+    }
+
     public class StorageProvider<FolderIdType, FileIdType> : IStorageProvider<FolderIdType, FileIdType>
     {
         protected readonly IImageProvider _imageService;
@@ -34,11 +52,6 @@ namespace Arragro.Providers.AzureStorageProvider
             _client = _account.CreateCloudBlobClient();
 
             _assetContainer = _client.GetContainerReference(assetsContainerName);
-            _assetContainer.CreateIfNotExistsAsync().Wait();
-            _assetContainer.SetPermissionsAsync(new BlobContainerPermissions
-            {
-                PublicAccess = BlobContainerPublicAccessType.Blob
-            }).Wait();
         }
 
         protected const string THUMBNAIL_ASSETKEY = "ThumbNail:";

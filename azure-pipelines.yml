@@ -1,0 +1,112 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+- dev
+- netstandard
+
+variables:
+  ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
+    MyRunNumber: '3.1.8'
+  ${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:
+    MyRunNumber: '3.1.8-alpha-$(Build.BuildNumber)'
+  ${{ if eq(variables['Build.SourceBranchName'], 'netstandard') }}:
+    MyRunNumber: '3.1.8-alpha-$(Build.BuildNumber)'
+
+stages:
+- stage: Test
+
+  jobs:
+  - job:
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet restore'
+      inputs:
+        command: 'restore'
+        projects: '**/*.sln'
+        feedsToUse: 'config'
+        nugetConfigPath: 'nuget.config'
+        externalFeedCredentials: 'Arragro Nuget'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet test'
+      inputs:
+        command: test
+        projects: |
+         **/Arragro.Core.Common.Tests/*.csproj
+         **/Arragro.Core.EntityFrameworkCore.IntegrationTests/*.csproj
+
+- stage: Build_and_Deploy 
+  jobs:
+  - job: 
+    pool:
+      vmImage: 'windows-latest'
+
+    steps:
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet restore'
+      inputs:
+        command: 'restore'
+        projects: '**/*.sln'
+        feedsToUse: 'config'
+        nugetConfigPath: 'nuget.config'
+        externalFeedCredentials: 'Arragro Nuget'
+
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          $paths = @(
+	        ".\src\Arragro.Core.Common",
+	        ".\src\Arragro.Core.CronJobService",
+	        ".\src\Arragro.Core.EntityFrameworkCore",
+	        ".\src\Arragro.Core.Web",
+	        ".\src\Arragro.Core.DistributedCache",
+	        ".\src\Arragro.Core.Identity",
+	        ".\src\Arragro.Core.Email.Razor",
+	        ".\src\Arragro.Core.Docker",
+	        ".\src\Arragro.Core.MailhogClient",
+	        ".\src\Arragro.Core.MailDevClient",
+	        ".\providers\Arragro.Providers.AzureStorageProvider",
+	        ".\providers\Arragro.Providers.ImageMagickProvider",
+	        ".\providers\Arragro.Providers.ImageServiceProvider",
+	        ".\providers\Arragro.Providers.InMemoryStorageProvider",
+	        ".\providers\Arragro.Providers.MailKitEmailProvider",
+	        ".\providers\Arragro.Providers.S3StorageProvider",
+	        ".\providers\Arragro.Providers.SendgridEmailProvider"
+          )
+      
+          function executeSomething {
+              param($something)
+              $something
+              if($LASTEXITCODE -ne 0)
+              {
+                  exit
+              }
+          }
+      
+          foreach ($path in $paths) {
+              dotnet pack $path -c Release /p:Version=$(MyRunNumber) -o $(Build.ArtifactStagingDirectory)
+              $projectName = $path.Replace(".\src\", "").Replace(".\providers\", "")
+          }
+      displayName: 'dotnet pack'
+
+    - task: PublishSymbols@2
+      inputs:
+        SearchPattern: '**/bin/**/*.pdb'
+        SymbolServerType: 'TeamServices'
+  
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet push'
+      inputs:
+        command: 'push'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg;!$(Build.ArtifactStagingDirectory)/*.symbols.nupkg'
+        nuGetFeedType: 'internal'
+        publishVstsFeed: '18f19931-9e05-406a-8378-32b0620b4f22'
+        publishPackageMetadata: false
