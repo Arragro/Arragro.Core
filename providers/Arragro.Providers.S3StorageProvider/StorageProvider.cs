@@ -40,20 +40,11 @@ namespace Arragro.Providers.S3StorageProvider
 
         public static async Task ConfigureAzureStorageProvider(
             AmazonS3Client amazonS3Client,
-            string bucketName,
-            ILogger logger)
+            string bucketName)
         {
-            try
+            if (!(await Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(amazonS3Client, bucketName)))
             {
-                if (!(await Amazon.S3.Util.AmazonS3Util.DoesS3BucketExistV2Async(amazonS3Client, bucketName)))
-                {
-                    await amazonS3Client.PutBucketAsync(bucketName);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Failed to connect to AWS Storage");
-                throw ex;
+                await amazonS3Client.PutBucketAsync(bucketName);
             }
         }
     }
