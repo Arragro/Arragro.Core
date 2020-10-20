@@ -10,11 +10,11 @@ trigger:
 
 variables:
   ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
-    MyRunNumber: '3.1.8'
+    MyRunNumber: '3.1.98'
   ${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:
-    MyRunNumber: '3.1.8-alpha-$(Build.BuildNumber)'
+    MyRunNumber: '3.1.9-alpha-$(Build.BuildNumber)'
   ${{ if eq(variables['Build.SourceBranchName'], 'netstandard') }}:
-    MyRunNumber: '3.1.8-alpha-$(Build.BuildNumber)'
+    MyRunNumber: '3.1.9-alpha-$(Build.BuildNumber)'
 
 stages:
 - stage: Test
