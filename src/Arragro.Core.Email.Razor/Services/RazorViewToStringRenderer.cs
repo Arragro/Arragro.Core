@@ -46,6 +46,11 @@ namespace Arragro.Core.Email.Razor.Services
             var actionContext = GetActionContext();
             var view = FindView(actionContext, viewName);
 
+            if (view == null)
+            {
+                throw new ArgumentNullException($"{viewName} does not match any available view");
+            }
+
             using (var output = new StringWriter())
             {
                 var viewContext = new ViewContext(

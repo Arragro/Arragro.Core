@@ -41,8 +41,11 @@ namespace Arragro.Providers.SendgridEmailProvider
             message.PlainTextContent = emailMessage.Text;
             message.HtmlContent = emailMessage.Html;
 
-            var arragroId = Guid.NewGuid();
-            emailMessage.Headers.Add("arragro-id", arragroId.ToString());
+            if (!emailMessage.Headers.ContainsKey("arragro-id"))
+            {
+                var arragroId = Guid.NewGuid();
+                emailMessage.Headers.Add("arragro-id", arragroId.ToString());
+            }
 
             foreach (var key in emailMessage.Headers.Keys)
             {
@@ -65,7 +68,7 @@ namespace Arragro.Providers.SendgridEmailProvider
                 throw new Exception($"SendGrid responded with a {response.StatusCode} and the following message:\r\n\r\n{body}");
             }
 
-            return arragroId;
+            return Guid.Parse(emailMessage.Headers["arragro-id"]);
         }
     }
 }
