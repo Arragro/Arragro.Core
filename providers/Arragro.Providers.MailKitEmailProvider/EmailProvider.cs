@@ -49,8 +49,11 @@ namespace Arragro.Providers.MailKitEmailProvider
 
             message.Body = bodyBuilder.ToMessageBody();
 
-            var arragroId = Guid.NewGuid();
-            message.Headers.Add("arragro-id", arragroId.ToString());
+            if (!emailMessage.Headers.ContainsKey("arragro-id"))
+            {
+                var arragroId = Guid.NewGuid();
+                emailMessage.Headers.Add("arragro-id", arragroId.ToString());
+            }
 
             foreach (var key in emailMessage.Headers.Keys)
             {
@@ -83,7 +86,7 @@ namespace Arragro.Providers.MailKitEmailProvider
                 throw;
             }
 
-            return arragroId;
+            return Guid.Parse(emailMessage.Headers["arragro-id"]);
         }
     }
 }
