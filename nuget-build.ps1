@@ -1,4 +1,4 @@
-$version = "3.1.0-alpha-036"
+$version = "3.1.0-alpha-028"
 $ErrorActionPreference = "Stop"
 
 $paths = @(

@@ -159,8 +159,9 @@ namespace Arragro.Core.Email.Razor.Services
             LogHelper(logger, "RazorViewToStringRenderer is using the following config: {applicationName} - {path}", applicationName, path);
             LogHelper(logger, "RazorViewToStringRenderer is registering the following dlls: {viewAssemblies}", viewAssemblies);
 
-            var diagnosticSource = new DiagnosticListener("Microsoft.AspNetCore");
-            serviceCollection.AddSingleton<DiagnosticSource>(diagnosticSource);
+            var diagnosticListener = new DiagnosticListener("Microsoft.AspNetCore");
+            serviceCollection.AddSingleton<DiagnosticSource>(diagnosticListener);
+            serviceCollection.AddSingleton(diagnosticListener);
 
             serviceCollection.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
             serviceCollection.AddSingleton(applicationEnvironment);
