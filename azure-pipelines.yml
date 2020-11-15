@@ -7,6 +7,7 @@ trigger:
 - master
 - dev
 - netstandard
+- net_core_5
 
 variables:
   ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
@@ -15,6 +16,8 @@ variables:
     MyRunNumber: '3.1.9-alpha-$(Build.BuildNumber)'
   ${{ if eq(variables['Build.SourceBranchName'], 'netstandard') }}:
     MyRunNumber: '3.1.9-alpha-$(Build.BuildNumber)'
+  ${{ if eq(variables['Build.SourceBranchName'], 'net_core_5') }}:
+    MyRunNumber: '5.0-alpha-$(Build.BuildNumber)'
 
 stages:
 - stage: Test
