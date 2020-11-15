@@ -1,5 +1,5 @@
 ﻿using Arragro.Core.Common.Helpers;
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +8,7 @@ namespace Arragro.Core.Common.RulesExceptions
 {
     public class RulesExceptionDto
     {
+        public IDictionary Data { get; set; }
         public IDictionary<string, List<object>> Errors { get; protected set; }
         public List<string> ErrorMessages { get; protected set; }
         public List<RulesExceptionListContainer> RulesExceptionListContainers { get; protected set; }
@@ -93,6 +94,7 @@ namespace Arragro.Core.Common.RulesExceptions
 
         public RulesExceptionDto(RulesException rulesException) : this()
         {
+            Data = rulesException.Data;
             Errors = rulesException.GetErrorDictionary();
             if (!string.IsNullOrEmpty(rulesException.ErrorMessage))
                 ErrorMessages.Add(rulesException.ErrorMessage);
