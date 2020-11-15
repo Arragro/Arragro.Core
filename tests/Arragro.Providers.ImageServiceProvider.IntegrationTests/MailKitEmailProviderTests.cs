@@ -37,7 +37,6 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
                 Minio.StartMinio,
                 Postgres.StartPostgres
             }).Wait();
-
         }
 
         public void Dispose()

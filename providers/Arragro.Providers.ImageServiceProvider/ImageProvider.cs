@@ -1,5 +1,8 @@
 ﻿using Arragro.Core.Common.Interfaces.Providers;
 using Arragro.Core.Common.Models;
+using Microsoft.Extensions.DependencyInjection;
+using Polly;
+using Polly.Extensions.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,19 +12,46 @@ using System.Threading.Tasks;
 
 namespace Arragro.Providers.ImageServiceProvider
 {
+    public static class ImageProviderExtentions
+    {
+        public static void ConfigureImageProvider(
+            this IServiceCollection services,
+            string imageServiceUrl,
+            int timout = 3000)
+        {
+            services.AddHttpClient(nameof(ImageProvider), config =>
+            {
+                config.BaseAddress = new Uri(imageServiceUrl);
+                config.DefaultRequestHeaders.Accept.Clear();
+                config.Timeout = TimeSpan.FromMilliseconds(timout);
+            }).AddPolicyHandler(GetRetryPolicy());
+
+            services.AddTransient<IImageProvider, ImageProvider>();
+        }
+
+        private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return HttpPolicyExtensions
+              // Handle HttpRequestExceptions, 408 and 5xx status codes
+              .HandleTransientHttpError()
+              // Handle 404 not found
+              //.OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+              // Handle 401 Unauthorized
+              //.OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+              // What to do if any of the above erros occur:
+              // Retry 3 times, each time wait 1,2 and 4 seconds before retrying.
+              .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+        }
+    }
+
     public class ImageProvider : IImageProvider
     {
         private readonly HttpClient _httpClient;
 
         public ImageProvider(
-            string imageServiceUrl,
-            int timout = 3000)
+            IHttpClientFactory httpClientFactory)
         {
-            _httpClient = new HttpClient();
-
-            _httpClient.BaseAddress = new Uri(imageServiceUrl);
-            _httpClient.DefaultRequestHeaders.Accept.Clear();
-            _httpClient.Timeout = TimeSpan.FromMilliseconds(timout);
+            _httpClient = httpClientFactory.CreateClient(nameof(ImageProvider));
         }
 
         private string GetHeaderValue(HttpResponseMessage response, string name)
