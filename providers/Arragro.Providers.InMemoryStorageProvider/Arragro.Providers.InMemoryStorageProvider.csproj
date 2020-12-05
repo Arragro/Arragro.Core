@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNet.Glob" Version="3.0.5" />
+    <PackageReference Include="DotNet.Glob" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="3.1.0" />
   </ItemGroup>
 

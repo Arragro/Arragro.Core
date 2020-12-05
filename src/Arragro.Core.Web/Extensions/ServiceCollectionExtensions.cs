@@ -30,7 +30,7 @@ namespace Arragro.Core.Web.Extensions
 
                     var redis = ConnectionMultiplexer.Connect(baseSettings.DataProtectionSettings.RedisConnection);
 
-                    dataProtection.PersistKeysToRedis(redis, "DataProtection-Keys");
+                    dataProtection.PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
                 }
 
                 if (baseSettings.DataProtectionSettings.DataProtectionStorage == DataProtectionStorage.FileSystem &&
