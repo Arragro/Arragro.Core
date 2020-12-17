@@ -18,14 +18,14 @@ namespace Arragro.Core.Docker
         {
             var commandTokens = command.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var createdExec = await client.Exec.ExecCreateContainerAsync(containerId, new ContainerExecCreateParameters
+            var createdExec = await source.ExecCreateContainerAsync(containerId, new ContainerExecCreateParameters
             {
                 AttachStderr = true,
                 AttachStdout = true,
                 Cmd = commandTokens
             });
 
-            var multiplexedStream = await client.Exec.StartAndAttachContainerExecAsync(createdExec.ID, false);
+            var multiplexedStream = await source.StartAndAttachContainerExecAsync(createdExec.ID, false);
 
             return await multiplexedStream.ReadOutputToEndAsync(CancellationToken.None);
         }
