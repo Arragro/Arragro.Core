@@ -6,12 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\ArragroCMSLogo.svg" />
-    <None Remove="Resources\bear-hands.jpg" />
-    <None Remove="Resources\gold.gif" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Resources\ArragroCMSLogo.svg" />
     <EmbeddedResource Include="Resources\bear-hands.jpg" />
     <EmbeddedResource Include="Resources\gold.gif" />
@@ -26,6 +20,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="3.1.6" />
   </ItemGroup>
 
   <ItemGroup>
