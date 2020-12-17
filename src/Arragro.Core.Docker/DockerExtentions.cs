@@ -14,7 +14,7 @@ namespace Arragro.Core.Docker
     {
         public static ConcurrentBag<DockerContainerResult> DockerContainerResults = new ConcurrentBag<DockerContainerResult>();
 
-        public static async Task<(string stdout, string stderr)> RunCommandInContainerAsync(this IContainerOperations source, string containerId, string command)
+        public static async Task<(string stdout, string stderr)> RunCommandInContainerAsync(this IExecOperations source, string containerId, string command)
         {
             var commandTokens = command.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -33,7 +33,7 @@ namespace Arragro.Core.Docker
         public static async Task EnsureImageExistsAsync(DockerClient client, string imageName, string imageTag)
         {
             var images = await client.Images.ListImagesAsync(new ImagesListParameters { All = true, MatchName = imageName });
-            if (!images.Any(x => x.RepoTags.Any(y => y == $"{imageName}:{imageTag}")))
+            if (!images.Any(x => x != null && x.RepoTags != null && x.RepoTags.Any(y => y == $"{imageName}:{imageTag}")))
             {
                 // Download image
                 await client.Images.CreateImageAsync(new ImagesCreateParameters() { FromImage = imageName, Tag = imageTag }, new AuthConfig(), new Progress<JSONMessage>());
