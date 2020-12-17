@@ -18,11 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../../arragro-icon.png" Pack="true" Visible="false" PackagePath="" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Sendgrid" Version="9.21.0" />
+    <PackageReference Include="Sendgrid" Version="9.21.2" />
   </ItemGroup>
 
   <ItemGroup>

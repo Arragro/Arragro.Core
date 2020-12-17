@@ -86,7 +86,7 @@ namespace Arragro.Core.Docker
                     var x = ex;
                 }
 
-                if (isReadyCounter == 5)
+                if (isReadyCounter == 20)
                     throw new Exception("SqlServer container never ready.");
 
                 if (!isContainerReady)
