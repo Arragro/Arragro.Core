@@ -10,11 +10,11 @@ trigger:
 
 variables:
   ${{ if eq(variables['Build.SourceBranchName'], 'master') }}:
-    MyRunNumber: '3.1.98'
+    MyRunNumber: '3.1.10'
   ${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:
-    MyRunNumber: '3.1.9-alpha-$(Build.BuildNumber)'
+    MyRunNumber: '3.1.10-alpha-$(Build.BuildNumber)'
   ${{ if eq(variables['Build.SourceBranchName'], 'netstandard') }}:
-    MyRunNumber: '3.1.9-alpha-$(Build.BuildNumber)'
+    MyRunNumber: '3.1.10-alpha-$(Build.BuildNumber)'
 
 stages:
 - stage: Test
@@ -24,10 +24,6 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-    - task: UseDotNet@2
-      inputs:
-        packageType: 'sdk'
-        version: '3.1.404'
     - task: DotNetCoreCLI@2
       displayName: 'dotnet restore'
       inputs:
