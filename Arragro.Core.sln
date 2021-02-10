@@ -69,6 +69,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Providers.S3Storage
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.CronJobService", "src\Arragro.Core.CronJobService\Arragro.Core.CronJobService.csproj", "{1C0E30F5-2E79-4597-83FE-1FBF1C86B592}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Web.Middleware", "src\Arragro.Core.Web.Middleware\Arragro.Core.Web.Middleware.csproj", "{6B030C57-C52F-4A0E-9FE3-6FFE6EC549F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -163,6 +165,10 @@ Global
 		{1C0E30F5-2E79-4597-83FE-1FBF1C86B592}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C0E30F5-2E79-4597-83FE-1FBF1C86B592}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C0E30F5-2E79-4597-83FE-1FBF1C86B592}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B030C57-C52F-4A0E-9FE3-6FFE6EC549F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B030C57-C52F-4A0E-9FE3-6FFE6EC549F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B030C57-C52F-4A0E-9FE3-6FFE6EC549F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B030C57-C52F-4A0E-9FE3-6FFE6EC549F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

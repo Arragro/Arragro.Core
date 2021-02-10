@@ -77,6 +77,7 @@ stages:
             ".\src\Arragro.Core.CronJobService",
             ".\src\Arragro.Core.EntityFrameworkCore",
             ".\src\Arragro.Core.Web",
+            ".\src\Arragro.Core.Web.Middleware",
             ".\src\Arragro.Core.DistributedCache",
             ".\src\Arragro.Core.Identity",
             ".\src\Arragro.Core.Email.Razor",
