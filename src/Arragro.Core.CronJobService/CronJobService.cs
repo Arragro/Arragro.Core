@@ -1,6 +1,8 @@
 ﻿using Cronos;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,19 +13,25 @@ namespace Arragro.Core.CronJobService
         private System.Timers.Timer _timer;
         private readonly CronExpression _expression;
         private readonly TimeZoneInfo _timeZoneInfo;
+        private readonly ILogger _logger;
 
-        protected CronJobService(string cronExpression, bool includeSeconds, TimeZoneInfo timeZoneInfo)
+        protected CronJobService(
+            string cronExpression, 
+            bool includeSeconds, 
+            TimeZoneInfo timeZoneInfo,
+            ILogger logger)
         {
             _expression = CronExpression.Parse(cronExpression, includeSeconds ? CronFormat.IncludeSeconds : CronFormat.Standard);
             _timeZoneInfo = timeZoneInfo;
+            _logger = logger;
         }
 
-        public virtual async Task StartAsync(CancellationToken cancellationToken)
+        public virtual async Task StartAsync(string purpose, CancellationToken cancellationToken)
         {
-            await ScheduleJob(cancellationToken);
+            await ScheduleJob(purpose, cancellationToken);
         }
 
-        protected virtual async Task ScheduleJob(CancellationToken cancellationToken)
+        protected virtual async Task ScheduleJob(string purpose, CancellationToken cancellationToken)
         {
             var next = _expression.GetNextOccurrence(DateTimeOffset.Now, _timeZoneInfo);
             if (next.HasValue)
@@ -37,12 +45,19 @@ namespace Arragro.Core.CronJobService
 
                     if (!cancellationToken.IsCancellationRequested)
                     {
+                        var stopwatch = new Stopwatch();
+                        stopwatch.Start();
+                        _logger.LogInformation($"Starting {purpose}");
+
                         await DoWork(cancellationToken);
+
+                        stopwatch.Stop();
+                        _logger.LogInformation($"Completed {purpose} in {stopwatch.ElapsedMilliseconds}ms");
                     }
 
                     if (!cancellationToken.IsCancellationRequested)
                     {
-                        await ScheduleJob(cancellationToken);    // reschedule next
+                        await ScheduleJob(purpose, cancellationToken);    // reschedule next
                     }
                 };
                 _timer.Start();
