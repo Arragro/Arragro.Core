@@ -17,7 +17,7 @@ namespace Arragro.Core.EntityFrameworkCore.Extensions
                 // Replace column names            
                 foreach (var property in entity.GetProperties())
                 {
-                    property.SetColumnName(property.GetColumnName(StoreObjectIdentifier.Table(tableName, null)).ToSnakeCase());
+                    property.SetColumnName(property.GetColumnName(StoreObjectIdentifier.Table(tableName, entity.GetSchema())).ToSnakeCase());
                 }
 
                 foreach (var key in entity.GetKeys())
@@ -32,7 +32,7 @@ namespace Arragro.Core.EntityFrameworkCore.Extensions
 
                 foreach (var index in entity.GetIndexes())
                 {
-                    index.SetDatabaseName(index.GetDatabaseName(StoreObjectIdentifier.Table(tableName, null)).ToSnakeCase());
+                    index.SetDatabaseName(index.GetDatabaseName(StoreObjectIdentifier.Table(tableName, entity.GetSchema())).ToSnakeCase());
                 }
             }
 
