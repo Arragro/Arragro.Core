@@ -26,12 +26,12 @@ namespace Arragro.Core.CronJobService
             _logger = logger;
         }
 
-        public virtual async Task StartAsync(string purpose, CancellationToken cancellationToken)
+        public virtual async Task StartAsync(CancellationToken cancellationToken)
         {
-            await ScheduleJob(purpose, cancellationToken);
+            await ScheduleJob(cancellationToken);
         }
 
-        protected virtual async Task ScheduleJob(string purpose, CancellationToken cancellationToken)
+        protected virtual async Task ScheduleJob(CancellationToken cancellationToken)
         {
             var next = _expression.GetNextOccurrence(DateTimeOffset.Now, _timeZoneInfo);
             if (next.HasValue)
@@ -45,19 +45,12 @@ namespace Arragro.Core.CronJobService
 
                     if (!cancellationToken.IsCancellationRequested)
                     {
-                        var stopwatch = new Stopwatch();
-                        stopwatch.Start();
-                        _logger.LogInformation($"Starting {purpose}");
-
                         await DoWork(cancellationToken);
-
-                        stopwatch.Stop();
-                        _logger.LogInformation($"Completed {purpose} in {stopwatch.ElapsedMilliseconds}ms");
                     }
 
                     if (!cancellationToken.IsCancellationRequested)
                     {
-                        await ScheduleJob(purpose, cancellationToken);    // reschedule next
+                        await ScheduleJob(cancellationToken);    // reschedule next
                     }
                 };
                 _timer.Start();

@@ -1,5 +1,6 @@
 ﻿using Arragro.Core.Common.Extentions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Arragro.Core.EntityFrameworkCore.Extensions
 {
@@ -9,13 +10,14 @@ namespace Arragro.Core.EntityFrameworkCore.Extensions
         {
             foreach (var entity in modelBuilder.Model.GetEntityTypes())
             {
+                var tableName = entity.GetTableName().ToSnakeCase();
                 // Replace table names
                 entity.SetTableName(entity.GetTableName().ToSnakeCase());
 
                 // Replace column names            
                 foreach (var property in entity.GetProperties())
                 {
-                    property.SetColumnName(property.GetColumnName().ToSnakeCase());
+                    property.SetColumnName(property.GetColumnName(StoreObjectIdentifier.Table(tableName, null)).ToSnakeCase());
                 }
 
                 foreach (var key in entity.GetKeys())
@@ -30,7 +32,7 @@ namespace Arragro.Core.EntityFrameworkCore.Extensions
 
                 foreach (var index in entity.GetIndexes())
                 {
-                    index.SetName(index.GetName().ToSnakeCase());
+                    index.SetDatabaseName(index.GetDatabaseName(StoreObjectIdentifier.Table(tableName, null)).ToSnakeCase());
                 }
             }
 
