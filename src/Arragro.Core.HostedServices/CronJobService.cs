@@ -6,14 +6,14 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Arragro.Core.CronJobService
+namespace Arragro.Core.HostedServices
 {
     public abstract class CronJobService : IHostedService, IDisposable
     {
-        private System.Timers.Timer _timer;
-        private readonly CronExpression _expression;
-        private readonly TimeZoneInfo _timeZoneInfo;
-        private readonly ILogger _logger;
+        protected System.Timers.Timer _timer;
+        protected readonly CronExpression _expression;
+        protected readonly TimeZoneInfo _timeZoneInfo;
+        protected readonly ILogger _logger;
 
         protected CronJobService(
             string cronExpression, 

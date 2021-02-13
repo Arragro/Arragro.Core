@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Arragro.Core.CronJobService
+namespace Arragro.Core.HostedServices
 {
     public interface IScheduleConfig<T>
     {

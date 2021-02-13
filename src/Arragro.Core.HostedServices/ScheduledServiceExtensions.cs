@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Arragro.Core.CronJobService
+namespace Arragro.Core.HostedServices
 {
     public static class ScheduledServiceExtensions
     {
