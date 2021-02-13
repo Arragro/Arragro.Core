@@ -74,7 +74,7 @@ stages:
         script: |
           $paths = @(
             ".\src\Arragro.Core.Common",
-            ".\src\Arragro.Core.CronJobService",
+            ".\src\Arragro.Core.HostedServices",
             ".\src\Arragro.Core.EntityFrameworkCore",
             ".\src\Arragro.Core.Web",
             ".\src\Arragro.Core.Web.Middleware",
