@@ -27,7 +27,7 @@ namespace Arragro.Core.HostedServices
 
         protected override async Task ScheduleJob(CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Scheduled Job running");
+            _logger.LogInformation($"QueueJobService Scheduled Job running for {_queueJobServiceConfiguration.QueueName}");
             var next = _expression.GetNextOccurrence(DateTimeOffset.Now, _timeZoneInfo);
             if (next.HasValue)
             {
