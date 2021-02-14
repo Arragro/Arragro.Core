@@ -50,7 +50,7 @@ namespace Arragro.Core.HostedServices
                                     _logger.LogInformation($"De-queued message: '{message.MessageId}'");
                                     _logger.LogDebug($"De-queued message: '{message.MessageText}'");
 
-                                    await DoWork(cancellationToken);
+                                    await DoWork(message, cancellationToken);
 
                                     // Delete the message
                                     _queueClient.DeleteMessage(message.MessageId, message.PopReceipt);
