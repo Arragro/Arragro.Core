@@ -19,7 +19,7 @@ namespace Arragro.Core.HostedServices
             bool includeSeconds,
             TimeZoneInfo timeZoneInfo,
             QueueJobServiceConfiguration queueJobServiceConfiguration,
-            ILogger logger) : base (cronExpression, includeSeconds, timeZoneInfo, logger)
+            ILogger<QueueJobService> logger) : base (cronExpression, includeSeconds, timeZoneInfo, logger)
         {
             _queueJobServiceConfiguration = queueJobServiceConfiguration;
             _queueClient = new QueueClient(_queueJobServiceConfiguration.ConnectionString, _queueJobServiceConfiguration.QueueName);
