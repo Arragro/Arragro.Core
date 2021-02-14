@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Arragro.Core.Email.Razor.Models
+namespace Arragro.Core.Common.Models
 {
     public class EmailQueueModel
     {
