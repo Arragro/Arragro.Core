@@ -27,6 +27,7 @@ namespace Arragro.Core.HostedServices
 
         protected override async Task ScheduleJob(CancellationToken cancellationToken)
         {
+            _logger.LogInformation($"Scheduled Job running");
             var next = _expression.GetNextOccurrence(DateTimeOffset.Now, _timeZoneInfo);
             if (next.HasValue)
             {
@@ -43,21 +44,29 @@ namespace Arragro.Core.HostedServices
                         {
                             // Receive and process 20 messages
                             QueueMessage[] receivedMessages = await _queueClient.ReceiveMessagesAsync(20, cancellationToken: cancellationToken);
-                            do
+                            if (receivedMessages.Length > 0)
                             {
-                                foreach (var message in receivedMessages)
+                                do
                                 {
-                                    _logger.LogInformation($"De-queued message: '{message.MessageId}'");
-                                    _logger.LogDebug($"De-queued message: '{message.MessageText}'");
+                                    _logger.LogInformation($"There are {receivedMessages.Length} messages to process");
+                                    foreach (var message in receivedMessages)
+                                    {
+                                        _logger.LogInformation($"De-queued message: '{message.MessageId}'");
+                                        _logger.LogDebug($"De-queued message: '{message.MessageText}'");
 
-                                    await DoWork(message, cancellationToken);
+                                        await DoWork(message, cancellationToken);
 
-                                    // Delete the message
-                                    _queueClient.DeleteMessage(message.MessageId, message.PopReceipt);
-                                }
+                                        // Delete the message
+                                        _queueClient.DeleteMessage(message.MessageId, message.PopReceipt);
+                                    }
 
-                                receivedMessages = await _queueClient.ReceiveMessagesAsync(20, cancellationToken: cancellationToken);
-                            } while (receivedMessages.Length > 0);
+                                    receivedMessages = await _queueClient.ReceiveMessagesAsync(20, cancellationToken: cancellationToken);
+                                } while (receivedMessages.Length > 0);
+                            }
+                        }
+                        else
+                        {
+                            _logger.LogInformation($"There are no messages to process");
                         }
                     }
 
