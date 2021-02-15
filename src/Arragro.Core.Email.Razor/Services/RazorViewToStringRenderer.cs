@@ -173,7 +173,7 @@ namespace Arragro.Core.Email.Razor.Services
                 LogHelper(logger, "RazorViewToStringRenderer is registering the following assemblyPart: {path}", $"{path}\\{viewAssembly}");
                 mvcBuilder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(Assembly.LoadFile($"{path}\\{viewAssembly}")));
             }
-            serviceCollection.AddSingleton<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
+            serviceCollection.AddScoped<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
             return mvcBuilder;
         }
 
