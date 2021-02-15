@@ -81,6 +81,7 @@ namespace Arragro.Core.HostedServices
                                                 var response = await _queueClientFailure.SendMessageAsync(message.MessageText);
                                                 _logger.LogError(ex, $"{_queueName} failed to process message {message.MessageId}, moved to failure queue with MessageId {response.Value.MessageId}.");
                                                 await _queueClient.DeleteMessageAsync(message.MessageId, message.PopReceipt);
+                                                _failures.Remove(message.MessageId);
                                             }
                                             else
                                             {
