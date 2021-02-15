@@ -72,9 +72,8 @@ namespace Arragro.Core.HostedServices
                                         }
                                         catch (Exception ex)
                                         {
-                                            var failure = _failures[message.MessageId];
                                             if (_failures.ContainsKey(message.MessageId))
-                                                _failures[message.MessageId] = failure + 1;
+                                                _failures[message.MessageId] = _failures[message.MessageId] + 1;
                                             else
                                                 _failures.Add(message.MessageId, 1);
                                             if (_failures[message.MessageId] > 5)
