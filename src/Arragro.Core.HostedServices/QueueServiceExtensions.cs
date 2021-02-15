@@ -5,16 +5,23 @@ namespace Arragro.Core.HostedServices
 {
     public static class QueueServiceExtensions
     {
-        public static IServiceCollection AddQueueJob<T>(this IServiceCollection services, string cronExpression = null, bool? includeSeconds = null) where T : QueueJobService
+        public static IServiceCollection AddQueueJob<T>(
+            this IServiceCollection services, 
+            string connectionString,
+            string queueName,
+            string cronExpression = null, 
+            bool? includeSeconds = null) where T : QueueJobService
         {
-            var config = new ScheduleConfig<T>
+            var config = new QueueConfig<T>
             {
+                ConnectionString = connectionString,
+                QueueName = queueName,
                 CronExpression = cronExpression ?? "*/30 * * * * *",
                 IncludeSeconds = includeSeconds ?? true,
                 TimeZoneInfo = TimeZoneInfo.Utc
             };
 
-            services.AddSingleton<IScheduleConfig<T>>(config);
+            services.AddSingleton<IQueueConfig<T>>(config);
             services.AddHostedService<T>();
             return services;
         }

@@ -3,6 +3,7 @@ using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,23 +12,31 @@ namespace Arragro.Core.HostedServices
 
     public abstract class QueueJobService : CronJobService
     {
-        private readonly QueueJobServiceConfiguration _queueJobServiceConfiguration;
         private readonly QueueClient _queueClient;
+        private readonly QueueClient _queueClientFailure;
+        private readonly string _queueName;
+        private static IDictionary<string, int> _failures = new Dictionary<string, int>();
 
         protected QueueJobService(
+            string queueName,
+            string connectionString,
             string cronExpression,
             bool includeSeconds,
             TimeZoneInfo timeZoneInfo,
-            QueueJobServiceConfiguration queueJobServiceConfiguration,
             ILogger<QueueJobService> logger) : base (cronExpression, includeSeconds, timeZoneInfo, logger)
         {
-            _queueJobServiceConfiguration = queueJobServiceConfiguration;
-            _queueClient = new QueueClient(_queueJobServiceConfiguration.ConnectionString, _queueJobServiceConfiguration.QueueName);
+            _queueClient = new QueueClient(connectionString, queueName);
+            _queueClientFailure = new QueueClient(connectionString, $"{queueName}-failures");
+
+            _queueClient.CreateIfNotExists();
+            _queueClientFailure.CreateIfNotExists();
+
+            _queueName = queueName;
         }
 
         protected override async Task ScheduleJob(CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"QueueJobService Scheduled Job running for {_queueJobServiceConfiguration.QueueName}");
+            _logger.LogInformation($"QueueJobService Scheduled Job running for {_queueName}");
             var next = _expression.GetNextOccurrence(DateTimeOffset.Now, _timeZoneInfo);
             if (next.HasValue)
             {
@@ -54,10 +63,31 @@ namespace Arragro.Core.HostedServices
                                         _logger.LogInformation($"De-queued message: '{message.MessageId}'");
                                         _logger.LogDebug($"De-queued message: '{message.MessageText}'");
 
-                                        await DoWork(message, cancellationToken);
+                                        try
+                                        {
+                                            await DoWork(message, cancellationToken);
 
-                                        // Delete the message
-                                        _queueClient.DeleteMessage(message.MessageId, message.PopReceipt);
+                                            // Delete the message
+                                            _queueClient.DeleteMessage(message.MessageId, message.PopReceipt);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            var failure = _failures[message.MessageId];
+                                            if (_failures.ContainsKey(message.MessageId))
+                                                _failures[message.MessageId] = failure + 1;
+                                            else
+                                                _failures.Add(message.MessageId, 1);
+                                            if (_failures[message.MessageId] > 5)
+                                            {
+                                                var response = await _queueClientFailure.SendMessageAsync(message.MessageText);
+                                                _logger.LogError(ex, $"{_queueName} failed to process message {message.MessageId}, moved to failure queue with MessageId {response.Value.MessageId}.");
+                                                await _queueClient.DeleteMessageAsync(message.MessageId, message.PopReceipt);
+                                            }
+                                            else
+                                            {
+                                                _logger.LogError(ex, $"{_queueName} failed to process message {message.MessageId}.");
+                                            }
+                                        }
                                     }
 
                                     receivedMessages = await _queueClient.ReceiveMessagesAsync(20, cancellationToken: cancellationToken);
