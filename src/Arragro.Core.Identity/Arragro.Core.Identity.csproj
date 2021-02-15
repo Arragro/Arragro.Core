@@ -20,6 +20,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Program.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="../../arragro-icon.png" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
 
