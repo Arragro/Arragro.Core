@@ -1,10 +1,12 @@
 ﻿using Arragro.Core.Common.CacheProvider;
 using Arragro.Core.Common.Interfaces.Providers;
 using Arragro.Core.Common.Models;
+using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using System;
 using System.IO;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -93,7 +95,7 @@ namespace Arragro.Providers.AzureStorageProvider
 
             var blob = _assetContainerClient.GetBlobClient($"{folderId}/{fileId}");
 
-            if (await blob.ExistsAsync())
+            if (await blob.ExistsWorkAroundAsync())
             {
                 CacheProviderManager.CacheProvider.Set(key, blob.Uri, new Arragro.Core.Common.CacheProvider.CacheSettings(new TimeSpan(0, 30, 0), true));
                 return blob.Uri;
@@ -124,7 +126,7 @@ namespace Arragro.Providers.AzureStorageProvider
                 return cacheItem.Item;
 
             var blob = _assetContainerClient.GetBlobClient($"{folderId}/thumbnails/{fileId}");
-            if (await blob.ExistsAsync())
+            if (await blob.ExistsWorkAroundAsync())
             {
                 CacheProviderManager.CacheProvider.Set(key, blob.Uri, new Arragro.Core.Common.CacheProvider.CacheSettings(new TimeSpan(0, 30, 0), true));
                 return blob.Uri;
@@ -183,11 +185,11 @@ namespace Arragro.Providers.AzureStorageProvider
             var newFileName =$"{folderId}/{newFileId}";
 
             var blobCopy = _assetContainerClient.GetBlobClient(newFileName);
-            if (!await blobCopy.ExistsAsync())
+            if (!await blobCopy.ExistsWorkAroundAsync())
             {
                 var blob = _assetContainerClient.GetBlobClient(fileName);
 
-                if (await blob.ExistsAsync())
+                if (await blob.ExistsWorkAroundAsync())
                 {
                     byte[] bytes;
 
@@ -235,17 +237,36 @@ namespace Arragro.Providers.AzureStorageProvider
             var newFileName = thumbnail ? $"{folderId}/thumbnails/{newFileId}" : $"{folderId}/{newFileId}";
 
             var blobCopy = _assetContainerClient.GetBlobClient(newFileName);
-            if (!await blobCopy.ExistsAsync())
+            if (!await blobCopy.ExistsWorkAroundAsync())
             {
                 var blob = _assetContainerClient.GetBlobClient(fileName);
 
-                if (await blob.ExistsAsync())
+                if (await blob.ExistsWorkAroundAsync())
                 {
                     await blobCopy.StartCopyFromUriAsync(blob.Uri);
                     await blob.DeleteIfExistsAsync();
                 }
             }
             return blobCopy.Uri;
+        }
+    }
+
+    internal static class TempWorkAroundExtentions
+    {
+        public static async Task<bool> ExistsWorkAroundAsync(this BlobClient blobClient)
+        {
+            try
+            {
+                return await blobClient.ExistsAsync();
+            }
+            catch (RequestFailedException ex)
+            {
+                if (ex.Status == (int)HttpStatusCode.NotFound)
+                {
+                    return false;
+                }
+                throw;
+            }
         }
     }
 }
