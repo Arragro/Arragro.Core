@@ -93,7 +93,7 @@ namespace Arragro.Providers.AzureStorageProvider
 
             var blob = _assetContainerClient.GetBlobClient($"{folderId}/{fileId}");
 
-            if (await blob.ExistsWorkAroundAsync())
+            if (await blob.ExistsAsync())
             {
                 CacheProviderManager.CacheProvider.Set(key, blob.Uri, new Arragro.Core.Common.CacheProvider.CacheSettings(new TimeSpan(0, 30, 0), true));
                 return blob.Uri;
@@ -124,7 +124,7 @@ namespace Arragro.Providers.AzureStorageProvider
                 return cacheItem.Item;
 
             var blob = _assetContainerClient.GetBlobClient($"{folderId}/thumbnails/{fileId}");
-            if (await blob.ExistsWorkAroundAsync())
+            if (await blob.ExistsAsync())
             {
                 CacheProviderManager.CacheProvider.Set(key, blob.Uri, new Arragro.Core.Common.CacheProvider.CacheSettings(new TimeSpan(0, 30, 0), true));
                 return blob.Uri;
@@ -183,11 +183,11 @@ namespace Arragro.Providers.AzureStorageProvider
             var newFileName =$"{folderId}/{newFileId}";
 
             var blobCopy = _assetContainerClient.GetBlobClient(newFileName);
-            if (!await blobCopy.ExistsWorkAroundAsync())
+            if (!await blobCopy.ExistsAsync())
             {
                 var blob = _assetContainerClient.GetBlobClient(fileName);
 
-                if (await blob.ExistsWorkAroundAsync())
+                if (await blob.ExistsAsync())
                 {
                     byte[] bytes;
 
@@ -235,11 +235,11 @@ namespace Arragro.Providers.AzureStorageProvider
             var newFileName = thumbnail ? $"{folderId}/thumbnails/{newFileId}" : $"{folderId}/{newFileId}";
 
             var blobCopy = _assetContainerClient.GetBlobClient(newFileName);
-            if (!await blobCopy.ExistsWorkAroundAsync())
+            if (!await blobCopy.ExistsAsync())
             {
                 var blob = _assetContainerClient.GetBlobClient(fileName);
 
-                if (await blob.ExistsWorkAroundAsync())
+                if (await blob.ExistsAsync())
                 {
                     await blobCopy.StartCopyFromUriAsync(blob.Uri);
                     await blob.DeleteIfExistsAsync();
