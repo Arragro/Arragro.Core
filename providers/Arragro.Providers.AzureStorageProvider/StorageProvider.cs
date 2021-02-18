@@ -1,8 +1,8 @@
 ﻿using Arragro.Core.Common.CacheProvider;
 using Arragro.Core.Common.Interfaces.Providers;
 using Arragro.Core.Common.Models;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using System;
 using System.IO;
 using System.Threading;
@@ -16,15 +16,9 @@ namespace Arragro.Providers.AzureStorageProvider
             string storageConnectionString,
             string assetsContainerName = "assets")
         {
-            var account = CloudStorageAccount.Parse(storageConnectionString);
-            var client = account.CreateCloudBlobClient();
-
-            var assetContainer = client.GetContainerReference(assetsContainerName);
-            await assetContainer.CreateIfNotExistsAsync();
-            await assetContainer.SetPermissionsAsync(new BlobContainerPermissions
-            {
-                PublicAccess = BlobContainerPublicAccessType.Blob
-            });
+            var assetContainerClient = new BlobContainerClient(storageConnectionString, assetsContainerName);
+            await assetContainerClient.CreateIfNotExistsAsync();
+            await assetContainerClient.SetAccessPolicyAsync(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
         }
     }
 
@@ -35,9 +29,7 @@ namespace Arragro.Providers.AzureStorageProvider
         protected readonly string _storageConnectionString;
         protected readonly int _cacheControlMaxAge;
 
-        protected readonly CloudStorageAccount _account;
-        protected readonly CloudBlobClient _client;
-        protected readonly CloudBlobContainer _assetContainer;
+        protected readonly BlobContainerClient _assetContainerClient;
 
         public StorageProvider(
             IImageProvider imageProcessor,
@@ -48,10 +40,7 @@ namespace Arragro.Providers.AzureStorageProvider
             _imageService = imageProcessor;
             _storageConnectionString = storageConnectionString;
             _cacheControlMaxAge = cacheControlMaxAge;
-             _account = CloudStorageAccount.Parse(_storageConnectionString);
-            _client = _account.CreateCloudBlobClient();
-
-            _assetContainer = _client.GetContainerReference(assetsContainerName);
+            _assetContainerClient = new BlobContainerClient(storageConnectionString, assetsContainerName);
         }
 
         protected const string THUMBNAIL_ASSETKEY = "ThumbNail:";
@@ -62,28 +51,31 @@ namespace Arragro.Providers.AzureStorageProvider
         public async Task<bool> Delete(FolderIdType folderId, FileIdType fileId, bool thumbNail = false)
         {
             var thumbNails = thumbNail ? "thumbnails/" : "";
-            var blob = _assetContainer.GetBlobReference($"{folderId}/{thumbNails}{fileId}");
+            var blob = _assetContainerClient.GetBlobClient($"{folderId}/{thumbNails}{fileId}");
             return await blob.DeleteIfExistsAsync();
+        }
+
+        private BlobHttpHeaders GetBlobHttpHeaders(BlobProperties blobProperties)
+        {
+            return new BlobHttpHeaders
+            {
+                ContentType = blobProperties.ContentType,
+                CacheControl = blobProperties.CacheControl
+            };
         }
 
         protected async Task DeleteFolder(string folder)
         {
-            var directory = _assetContainer.GetDirectoryReference(folder);
+            var resultSegment = _assetContainerClient.GetBlobsAsync(prefix: folder)
+                .AsPages(default);
 
-            BlobContinuationToken continuationToken = null;
-            CancellationToken cancellationToken = new CancellationToken();
-            BlobResultSegment resultSegment = null;
-
-            do
+            await foreach (Azure.Page<BlobItem> blobPage in resultSegment)
             {
-                resultSegment = await directory.ListBlobsSegmentedAsync(true, BlobListingDetails.All, 10, continuationToken, null, null, cancellationToken);
-                foreach (CloudBlob blobItem in resultSegment.Results)
+                foreach (BlobItem blobItem in blobPage.Values)
                 {
-                    await blobItem.DeleteIfExistsAsync();
+                    await _assetContainerClient.DeleteBlobIfExistsAsync(blobItem.Name);
                 }
-                continuationToken = resultSegment.ContinuationToken;
             }
-            while (continuationToken != null);
         }
 
         public async Task Delete(FolderIdType folderId)
@@ -99,9 +91,7 @@ namespace Arragro.Providers.AzureStorageProvider
             if (cacheItem != null && cacheItem.Item != null)
                 return cacheItem.Item;
 
-            CloudBlob blob;
-
-            blob = _assetContainer.GetBlobReference($"{folderId}/{fileId}");
+            var blob = _assetContainerClient.GetBlobClient($"{folderId}/{fileId}");
 
             if (await blob.ExistsAsync())
             {
@@ -114,11 +104,14 @@ namespace Arragro.Providers.AzureStorageProvider
 
         protected async Task<Uri> Upload(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
         {
-            var blob = _assetContainer.GetBlockBlobReference($"{folderId}/{fileId}");
+            var blob = _assetContainerClient.GetBlobClient($"{folderId}/{fileId}");
             using (var stream = new MemoryStream(data))
             {
-                blob.Properties.ContentType = mimeType;
-                await blob.UploadFromStreamAsync(stream);
+                await blob.UploadAsync(stream, new BlobHttpHeaders 
+                { 
+                    ContentType = mimeType,
+                    CacheControl = $"public, max-age={_cacheControlMaxAge}"
+                });
                 return blob.Uri;
             }
         }
@@ -130,7 +123,7 @@ namespace Arragro.Providers.AzureStorageProvider
             if (cacheItem != null && cacheItem.Item != null)
                 return cacheItem.Item;
 
-            CloudBlob blob = _assetContainer.GetBlobReference($"{folderId}/thumbnails/{fileId}");
+            var blob = _assetContainerClient.GetBlobClient($"{folderId}/thumbnails/{fileId}");
             if (await blob.ExistsAsync())
             {
                 CacheProviderManager.CacheProvider.Set(key, blob.Uri, new Arragro.Core.Common.CacheProvider.CacheSettings(new TimeSpan(0, 30, 0), true));
@@ -142,49 +135,37 @@ namespace Arragro.Providers.AzureStorageProvider
 
         public async Task ResetCacheControl()
         {
-            var blobs = await _assetContainer.ListBlobsSegmentedAsync((BlobContinuationToken)null);
-            do
+            var resultSegment = _assetContainerClient.GetBlobsAsync()
+                .AsPages(default);
+
+            await foreach (Azure.Page<BlobItem> blobPage in resultSegment)
             {
-                foreach (IListBlobItem blob in blobs.Results)
+                foreach (BlobItem blobItem in blobPage.Values)
                 {
-                    await this.ResetCloudBlobCacheControl(blob, _cacheControlMaxAge);
+                    await this.ResetCloudBlobCacheControl(blobItem.Name, _cacheControlMaxAge);
                 }
-                blobs = await this._assetContainer.ListBlobsSegmentedAsync(blobs.ContinuationToken);
             }
-            while (blobs.ContinuationToken != null);
         }
 
-        protected async Task ResetCloudBlobCacheControl(IListBlobItem blobItem, int cacheControlMaxAge)
+        protected async Task ResetCloudBlobCacheControl(string blobName, int cacheControlMaxAge)
         {
-            if (blobItem is CloudBlockBlob)
-            {
-                CloudBlockBlob blob = blobItem as CloudBlockBlob;
-                blob.Properties.CacheControl = string.Format("public, max-age={0}", cacheControlMaxAge);
-                await blob.SetPropertiesAsync();
-            }
-            else
-            {
-                var blobDirectory = blobItem as CloudBlobDirectory;
-                var blobs = await this._assetContainer.ListBlobsSegmentedAsync(blobDirectory.Prefix, null);
-                do
-                {
-                    foreach (IListBlobItem blob in blobs.Results)
-                    {
-                        await ResetCloudBlobCacheControl(blob, cacheControlMaxAge);
-                    }
-                    blobs = await this._assetContainer.ListBlobsSegmentedAsync(blobDirectory.Prefix, blobs.ContinuationToken);
-                }
-                while (blobs.ContinuationToken != null);
-            }
+            var blobClient = _assetContainerClient.GetBlobClient(blobName);
+            var properties = await blobClient.GetPropertiesAsync();
+            var httpHeaders = GetBlobHttpHeaders(properties);
+            httpHeaders.CacheControl = $"public, max-age={cacheControlMaxAge}";
+            await blobClient.SetHttpHeadersAsync(httpHeaders);
         }
 
         protected async Task<Uri> UploadThumbnail(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
         {
-            var blob = _assetContainer.GetBlockBlobReference($"{folderId}/thumbnails/{fileId}");
+            var blob = _assetContainerClient.GetBlobClient($"{folderId}/thumbnails/{fileId}");
             using (var stream = new MemoryStream(data))
             {
-                blob.Properties.ContentType = mimeType;
-                await blob.UploadFromStreamAsync(stream);
+                await blob.UploadAsync(stream, new BlobHttpHeaders
+                {
+                    ContentType = mimeType,
+                    CacheControl = $"public, max-age={_cacheControlMaxAge}"
+                });
                 return blob.Uri;
             }
         }
@@ -201,10 +182,10 @@ namespace Arragro.Providers.AzureStorageProvider
             var fileName =$"{folderId}/{fileId}";
             var newFileName =$"{folderId}/{newFileId}";
 
-            var blobCopy = _assetContainer.GetBlobReference(newFileName);
+            var blobCopy = _assetContainerClient.GetBlobClient(newFileName);
             if (!await blobCopy.ExistsAsync())
             {
-                CloudBlockBlob blob = _assetContainer.GetBlockBlobReference(fileName);
+                var blob = _assetContainerClient.GetBlobClient(fileName);
 
                 if (await blob.ExistsAsync())
                 {
@@ -212,14 +193,16 @@ namespace Arragro.Providers.AzureStorageProvider
 
                     using (var ms = new MemoryStream())
                     {
-                        await blob.DownloadToStreamAsync(ms);
+                        var download = await blob.DownloadAsync();
+                        await download.Value.Content.CopyToAsync(ms);
                         bytes = ms.ToArray();
                     }
 
+                    var properties = await blob.GetPropertiesAsync();
                     var imageResult = await _imageService.GetImage(bytes, width, quality, asProgressive);
-                    var uri = await Upload(folderId, newFileId, imageResult.Bytes, blob.Properties.ContentType);
+                    var uri = await Upload(folderId, newFileId, imageResult.Bytes, properties.Value.ContentType);
                     var thumbNailImageResult = await _imageService.GetImage(bytes, 250, 60, true);
-                    var thumbnailUri = await Upload(folderId, newFileId, thumbNailImageResult.Bytes, blob.Properties.ContentType, true);
+                    var thumbnailUri = await Upload(folderId, newFileId, thumbNailImageResult.Bytes, properties.Value.ContentType, true);
 
                     return new CreateImageFromImageResult
                     {
@@ -251,14 +234,14 @@ namespace Arragro.Providers.AzureStorageProvider
             var fileName = thumbnail ? $"{folderId}/thumbnails/{fileId}" : $"{folderId}/{fileId}";
             var newFileName = thumbnail ? $"{folderId}/thumbnails/{newFileId}" : $"{folderId}/{newFileId}";
 
-            var blobCopy = _assetContainer.GetBlobReference(newFileName);
+            var blobCopy = _assetContainerClient.GetBlobClient(newFileName);
             if (!await blobCopy.ExistsAsync())
             {
-                CloudBlockBlob blob = _assetContainer.GetBlockBlobReference(fileName);
+                var blob = _assetContainerClient.GetBlobClient(fileName);
 
                 if (await blob.ExistsAsync())
                 {
-                    await blobCopy.StartCopyAsync(blob.Uri);
+                    await blobCopy.StartCopyFromUriAsync(blob.Uri);
                     await blob.DeleteIfExistsAsync();
                 }
             }
