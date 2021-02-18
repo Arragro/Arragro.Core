@@ -10,7 +10,7 @@ namespace Arragro.Core.Docker
     {
         public static async Task<ContainerListResponse> StartAzuriteTables(DockerClient client)
         {
-            const string ContainerName = "azurite";
+            const string ContainerName = "azurite-tables";
             const string ImageName = "touchify/azurite";
             const string ImageTag = "2.7.1";
 
@@ -55,7 +55,7 @@ namespace Arragro.Core.Docker
     {
         public static async Task<ContainerListResponse> StartAzuriteMicrosoft(DockerClient client)
         {
-            const string ContainerName = "azurite";
+            const string ContainerName = "azurite-microsoft";
             const string ImageName = "mcr.microsoft.com/azure-storage/azurite";
             const string ImageTag = "3.11.0";
 
