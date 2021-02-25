@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 
 namespace Arragro.Core.EntityFrameworkCore.Extensions
@@ -24,6 +26,13 @@ namespace Arragro.Core.EntityFrameworkCore.Extensions
         public static bool Exists(this DbContext context)
         {
             return (context.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists();
+        }
+
+        public static DbTransaction GetDbTransaction(this DbContext context)
+        {
+            if (context.Database.CurrentTransaction == null)
+                return null;
+            return context.Database.CurrentTransaction.GetDbTransaction();
         }
     }
 }
