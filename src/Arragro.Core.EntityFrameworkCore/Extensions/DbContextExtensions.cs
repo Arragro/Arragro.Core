@@ -37,7 +37,7 @@ namespace Arragro.Core.EntityFrameworkCore.Extensions
             return context.Database.CurrentTransaction.GetDbTransaction();
         }
 
-        public static async Task<TResult> ExecuteDbCommandCommandAsync<TResult>(this DbContext context, Func<Task<TResult>> func)
+        public static async Task<TResult> ExecuteDbCommandCommandAsync<TResult>(this DbContext context, Func<IDbConnection, Task<TResult>> func)
         {
             var conn = context.Database.GetDbConnection();
             var connClose = false;
@@ -47,7 +47,7 @@ namespace Arragro.Core.EntityFrameworkCore.Extensions
                 connClose = true;
             }
 
-            var result = await func();
+            var result = await func(conn);
 
             if (connClose)
                 conn.Close();
@@ -55,7 +55,7 @@ namespace Arragro.Core.EntityFrameworkCore.Extensions
             return result;
         }
 
-        public static TResult ExecuteDbCommandCommand<TResult>(this DbContext context, Func<TResult> func)
+        public static TResult ExecuteDbCommandCommand<TResult>(this DbContext context, Func<IDbConnection, TResult> func)
         {
             var conn = context.Database.GetDbConnection();
             var connClose = false;
@@ -65,7 +65,7 @@ namespace Arragro.Core.EntityFrameworkCore.Extensions
                 connClose = true;
             }
 
-            var result = func();
+            var result = func(conn);
 
             if (connClose)
                 conn.Close();
