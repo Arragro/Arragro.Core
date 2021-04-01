@@ -33,7 +33,7 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             DockerExtentions.StartDockerServicesAsync(new List<Func<DockerClient, Task<ContainerListResponse>>>
             {
                 Mailhog.StartMailhog,
-                Azurite.StartAzurite,
+                AzuriteMicrosoft.StartAzuriteMicrosoft,
                 Minio.StartMinio,
                 Postgres.StartPostgres
             }).Wait();
