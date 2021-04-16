@@ -24,13 +24,14 @@ namespace Arragro.Core.Identity
     {
         public ArragroCoreIdentityBaseContext(DbContextOptions options) : base(options) { }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected void OnModelCreating(ModelBuilder modelBuilder, bool useSnakeCasing = true)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.HasDefaultSchema("identity");
 
-            modelBuilder.SnakeCaseTablesAndProperties();
+            if (useSnakeCasing)
+                modelBuilder.SnakeCaseTablesAndProperties();
 
             if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
             {
@@ -52,6 +53,10 @@ namespace Arragro.Core.Identity
                     }
                 }
             }
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            OnModelCreating(modelBuilder, true);
         }
     }
 
