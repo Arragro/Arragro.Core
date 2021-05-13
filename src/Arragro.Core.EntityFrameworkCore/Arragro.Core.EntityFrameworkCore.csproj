@@ -27,13 +27,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Arragro.Core.Common\Arragro.Core.Common.csproj" />
+    <ProjectReference Include="..\Arragro.Core.HostedServices\Arragro.Core.HostedServices.csproj" />
   </ItemGroup>
 
 </Project>
