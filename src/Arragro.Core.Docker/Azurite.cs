@@ -130,7 +130,7 @@ namespace Arragro.Core.Docker
                 ExposedPorts = new Dictionary<string, object>() {
                     { "10000/tcp", new { HostPort = 10000.ToString() } },
                     { "10001/tcp", new { HostPort = 10001.ToString() } },
-                    { "10002/tcp", new { HostPort = 10001.ToString() } }
+                    { "10002/tcp", new { HostPort = 10002.ToString() } }
                 } as IDictionary<string, EmptyStruct>,
                 HostConfig = hostConfig
             });
