@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Arragro.Core.Web.Auth.Hmac
 {
-    public class MemoryHmacAuthenticationProvider : IHmacAuthorizationProvider
+    internal class MemoryHmacAuthenticationProvider : IHmacAuthorizationProvider
     {
         private IDictionary<string, string> _hmacAuthenticatedApps;
 

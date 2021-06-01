@@ -1,9 +1,8 @@
 ﻿using Arragro.Core.Client.Auth.Hmac;
-using Arragro.Core.Web.Auth.Hmac;
+using Arragro.Core.Web.Auth.Hmac.Models;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
@@ -15,13 +14,15 @@ namespace Arragro.Core.Web.Auth.IntegrationTests
 {
     public class HmacTests
     {
-        private string _applicationId;
-        private string _vendorKey;
+        private HmacApplicationSetting _hmacApplicationSetting;
 
         public HmacTests()
         {
-            _applicationId = Guid.NewGuid().ToString();
-            _vendorKey = GenerateHmacKey();
+            _hmacApplicationSetting = new HmacApplicationSetting
+            {
+                ApplicationId = Guid.NewGuid().ToString(),
+                ValidationKey = GenerateHmacKey()
+            };
         }
 
         private string GenerateHmacKey()
@@ -38,33 +39,37 @@ namespace Arragro.Core.Web.Auth.IntegrationTests
         public Task Request_Authorized()
         {
             return this.TestRequestAsync(
-                new Dictionary<string, string>() { { _applicationId, _vendorKey } },
-                _applicationId, 
-                _vendorKey,
+                _hmacApplicationSetting,
+                _hmacApplicationSetting.ApplicationId,
+                _hmacApplicationSetting.ValidationKey,
                 HttpStatusCode.OK);
         }
 
         [Theory]
         [InlineData("appIdTest", "y3ScPfAzPjMU/8mNjbAe0uBwCrR1DuElHx8D64015hY=")]
         [InlineData("wrongAppId", "h++EfSifTAveqQ01SXuSDLrDbr7HsfCE/hI9rEZOYwk=")]
-        public Task Request_Unauthorized(string appId, string apiKey)
+        public Task Request_Unauthorized(string appId, string valiidationKey)
         {
             return TestRequestAsync(
-                new Dictionary<string, string>() { { "appIdTest", "h++EfSifTAveqQ01SXuSDLrDbr7HsfCE/hI9rEZOYwk=" } },
+                new HmacApplicationSetting
+                {
+                    ApplicationId = "appIdTest", 
+                    ValidationKey = "h++EfSifTAveqQ01SXuSDLrDbr7HsfCE/hI9rEZOYwk=" 
+                },
                 appId,
-                apiKey,
+                valiidationKey,
                 HttpStatusCode.Unauthorized);
         }
 
         [Theory]
         [InlineData("appId", "asdfsadfsdf")]
         [InlineData("wrongAppId", "asdfsadfsdf")]
-        public Task Request_ApiKeyBadFormat_ThrowsException(string appId, string apiKey)
+        public Task Request_ApiKeyBadFormat_ThrowsException(string appId, string validationKey)
         {
             return Assert.ThrowsAsync<ArgumentException>(() => TestRequestAsync(
-                new Dictionary<string, string>() { { _applicationId, _vendorKey } },
+                _hmacApplicationSetting,
                 appId,
-                apiKey,
+                validationKey,
                 HttpStatusCode.Unauthorized));
         }
 
@@ -72,24 +77,24 @@ namespace Arragro.Core.Web.Auth.IntegrationTests
         public async Task Request_Authorized_UsernameAppIdSet()
         {
             var result = await TestRequestAsync(
-                new Dictionary<string, string>() { { _applicationId, _vendorKey } },
-                _applicationId, 
-                _vendorKey,
+                _hmacApplicationSetting,
+                _hmacApplicationSetting.ApplicationId,
+                _hmacApplicationSetting.ValidationKey,
                 HttpStatusCode.OK,
                 "api/test/name");
 
             var content = await result.Content.ReadAsStringAsync();
 
-            Assert.Equal(_applicationId, content);
+            Assert.Equal(_hmacApplicationSetting.ApplicationId, content);
         }
 
         [Fact]
         public async Task Request_Authorized_Claims()
         {
             var result = await TestRequestAsync(
-                new Dictionary<string, string>() { { _applicationId, _vendorKey } },
-                _applicationId, 
-                _vendorKey,
+                _hmacApplicationSetting,
+                _hmacApplicationSetting.ApplicationId, 
+                _hmacApplicationSetting.ValidationKey,
                 HttpStatusCode.OK,
                 "api/test/claims");
 
@@ -98,21 +103,18 @@ namespace Arragro.Core.Web.Auth.IntegrationTests
 
             Assert.Equal(1, content.Count);
             Assert.Equal(ClaimTypes.NameIdentifier, content[0].name.Value);
-            Assert.Equal(_applicationId, content[0].value.Value);
+            Assert.Equal(_hmacApplicationSetting.ApplicationId, content[0].value.Value);
         }
 
 
         private async Task<HttpResponseMessage> TestRequestAsync(
-            IDictionary<string, string> authenticatedApps,
-            string appId,
+            HmacApplicationSetting hmacApplicationSetting,
+            string appId, 
             string validationKey,
             HttpStatusCode expectedStatusCode,
             string endpoint = "api/test")
         {
-            using (var client = GetHttpClient(
-                authenticatedApps,
-                appId,
-                validationKey))
+            using (var client = GetHttpClient(hmacApplicationSetting, appId, validationKey))
             {
                 var response = await client.GetAsync(endpoint);
                 Assert.True(response.StatusCode == expectedStatusCode);
@@ -121,9 +123,9 @@ namespace Arragro.Core.Web.Auth.IntegrationTests
             }
         }
 
-        private HttpClient GetHttpClient(IDictionary<string, string> hmacAuthenticatedApps, string appId, string validationKey)
+        private HttpClient GetHttpClient(HmacApplicationSetting hmacApplicationSetting, string appId, string validationKey)
         {
-            var factory = new HmacWebApplicationFactory(new MemoryHmacAuthenticationProvider(hmacAuthenticatedApps))
+            var factory = new HmacWebApplicationFactory(hmacApplicationSetting)
                 .WithWebHostBuilder(builder => builder.UseSolutionRelativeContentRoot("../../"));
             return factory.CreateDefaultClient(new ValidationKeyDelegatingHandler(appId, validationKey));
         }

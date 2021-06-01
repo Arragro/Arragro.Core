@@ -1,23 +1,22 @@
 ﻿using Arragro.Core.DistributedCache;
 using Arragro.Core.Web.Auth.Hmac;
-using Arragro.Core.Web.Auth.Hmac.Configuration;
 using Arragro.Core.Web.Auth.Hmac.Interfaces;
+using Arragro.Core.Web.Auth.Hmac.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 
 namespace Arragro.Core.Web.Auth.IntegrationTests
 {
     public class HmacWebApplicationFactory : WebApplicationFactory<TestStartup>
     {
-        private readonly IHmacAuthorizationProvider _hmacAuthorizationProvider;
+        private readonly HmacApplicationSetting _hmacApplicationSetting;
 
-        public HmacWebApplicationFactory(IHmacAuthorizationProvider hmacAuthorizationProvider)
+        public HmacWebApplicationFactory(HmacApplicationSetting hmacApplicationSetting)
         {
-            _hmacAuthorizationProvider = hmacAuthorizationProvider;
+            _hmacApplicationSetting = hmacApplicationSetting;
         }
 
         protected override IWebHostBuilder CreateWebHostBuilder()
@@ -34,12 +33,11 @@ namespace Arragro.Core.Web.Auth.IntegrationTests
                     .AddDistributedMemoryCache()
                     .AddTransient<IDistributedCacheManager, DistributedCacheManager>()
                     .AddSingleton(new DistributedCacheEntryOptions { SlidingExpiration = new TimeSpan(0, 5, 0) })
-                    .AddSingleton(_hmacAuthorizationProvider)
                     .AddAuthentication(o =>
                     {
                         o.DefaultScheme = HmacAuthenticationDefaults.AuthenticationScheme;
                     })
-                    .AddHmacAuthentication();
+                    .AddHmacAuthentication(_hmacApplicationSetting);
             });
 
             base.ConfigureWebHost(builder);
