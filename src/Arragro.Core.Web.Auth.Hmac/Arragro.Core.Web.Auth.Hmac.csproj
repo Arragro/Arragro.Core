@@ -15,6 +15,10 @@
         <RepositoryUrl>https://github.com/Arragro/Arragro.Core</RepositoryUrl>
         <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../arragro-icon.png" Pack="true" Visible="false" PackagePath="" />
+    </ItemGroup>
     
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />

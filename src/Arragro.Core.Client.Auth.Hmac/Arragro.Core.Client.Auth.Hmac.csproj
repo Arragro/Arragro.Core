@@ -16,4 +16,8 @@
       <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
   </PropertyGroup>
 
+    <ItemGroup>
+        <None Include="../../arragro-icon.png" Pack="true" Visible="false" PackagePath="" />
+    </ItemGroup>
+
 </Project>
