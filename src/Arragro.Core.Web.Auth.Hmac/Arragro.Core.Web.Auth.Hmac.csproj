@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <AssemblyName>Arragro.Core.Web.Auth.Hmac</AssemblyName>
+        <PackageId>Arragro.Core.Web.Auth.Hmac</PackageId>
+        <Title>Arragro Core Web Auth Hmac</Title>
+        <Copyright>Arragro 2017 (c) Arragro Ltd.</Copyright>
+        <Description>HMAC authorization used in web applications.</Description>
+        <PackageTags>dotnet core netstandard hmac web</PackageTags>
+        <Authors>Mike Jewell,Reece Beardsall</Authors>
+        <PackageIcon>arragro-icon.png</PackageIcon>
+        <PackageLicenseUrl>&gt;http://opensource.org/licenses/MIT</PackageLicenseUrl>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/Arragro/Arragro.Core</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\Arragro.Core.DistributedCache\Arragro.Core.DistributedCache.csproj" />
+    </ItemGroup>
+
+</Project>

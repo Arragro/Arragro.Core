@@ -30,7 +30,7 @@ stages:
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
-        version: '5.0.100'
+        version: '5.0.300'
     - task: DotNetCoreCLI@2
       displayName: 'dotnet restore'
       inputs:
@@ -47,6 +47,7 @@ stages:
         projects: |
          **/Arragro.Core.Common.Tests/*.csproj
          **/Arragro.Core.EntityFrameworkCore.IntegrationTests/*.csproj
+         **/Arragro.Core.Web.Auth.IntegrationTests/*.csproj
 
 - stage: Build_and_Deploy 
   jobs:
@@ -58,7 +59,7 @@ stages:
     - task: UseDotNet@2
       inputs:
         packageType: 'sdk'
-        version: '5.0.100'
+        version: '5.0.300'
     - task: DotNetCoreCLI@2
       displayName: 'dotnet restore'
       inputs:
@@ -84,6 +85,8 @@ stages:
             ".\src\Arragro.Core.Docker",
             ".\src\Arragro.Core.MailhogClient",
             ".\src\Arragro.Core.MailDevClient",
+            ".\src\Arragro.Core.Client.Auth.Hmac",
+            ".\src\Arragro.Core.Web.Auth.Hmac",
             ".\providers\Arragro.Providers.AzureStorageProvider",
             ".\providers\Arragro.Providers.ImageMagickProvider",
             ".\providers\Arragro.Providers.ImageServiceProvider",

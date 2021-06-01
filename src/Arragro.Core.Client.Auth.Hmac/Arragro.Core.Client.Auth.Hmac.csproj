@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+      <TargetFramework>netstandard2.1</TargetFramework>
+      <AssemblyName>Arragro.Core.Client.Auth.Hmac</AssemblyName>
+      <PackageId>Arragro.Core.Client.Auth.Hmac</PackageId>
+      <Title>Arragro Core Client Auth Hmac</Title>
+      <Copyright>Arragro 2017 (c) Arragro Ltd.</Copyright>
+      <Description>Http client library for HMAC authorization, used against a server that has implemented Arragro.Core.Web.Auth.Hmac.</Description>
+      <PackageTags>dotnet core netstandard hmac httpclient</PackageTags>
+      <Authors>Mike Jewell,Reece Beardsall</Authors>
+      <PackageIcon>arragro-icon.png</PackageIcon>
+      <PackageLicenseUrl>&gt;http://opensource.org/licenses/MIT</PackageLicenseUrl>
+      <RepositoryType>git</RepositoryType>
+      <RepositoryUrl>https://github.com/Arragro/Arragro.Core</RepositoryUrl>
+      <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
+  </PropertyGroup>
+
+</Project>
