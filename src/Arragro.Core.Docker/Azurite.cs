@@ -106,7 +106,7 @@ namespace Arragro.Core.Docker
         {
             const string ContainerName = "azurite-microsoft";
             const string ImageName = "mcr.microsoft.com/azure-storage/azurite";
-            const string ImageTag = "3.13.0";
+            const string ImageTag = "3.12.0";
 
             await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, ImageTag, ContainerName);
 
