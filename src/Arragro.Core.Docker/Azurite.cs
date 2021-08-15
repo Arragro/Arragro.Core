@@ -58,7 +58,7 @@ namespace Arragro.Core.Docker
         {
             const string ContainerName = "azurite-microsoft";
             const string ImageName = "mcr.microsoft.com/azure-storage/azurite";
-            const string ImageTag = "3.12.0";
+            const string ImageTag = "3.14.0";
 
             await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, ImageTag, ContainerName);
 
@@ -102,7 +102,7 @@ namespace Arragro.Core.Docker
 
     public static class AzuriteMicrosoftWithTables
     {
-        public static async Task<ContainerListResponse> StartAzuriteMicrosoft(DockerClient client, string imageTag = "3.12.0")
+        public static async Task<ContainerListResponse> StartAzuriteMicrosoft(DockerClient client, string imageTag = "3.14.0")
         {
             const string ContainerName = "azurite-microsoft";
             const string ImageName = "mcr.microsoft.com/azure-storage/azurite";

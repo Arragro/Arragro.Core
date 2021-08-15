@@ -12,7 +12,7 @@ namespace Arragro.Core.Docker
         {
             const string ContainerName = "pgadmin-integration-tests";
             const string ImageName = "dpage/pgadmin4";
-            const string ImageTag = "4.24";
+            const string ImageTag = "5.6";
 
             await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, ImageTag, ContainerName);
 

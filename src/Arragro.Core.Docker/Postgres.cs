@@ -13,7 +13,7 @@ namespace Arragro.Core.Docker
         {
             const string ContainerName = "postgres-integration-tests";
             const string ImageName = "postgres";
-            const string ImageTag = "11.8-alpine";
+            const string ImageTag = "11.13-alpine";
 
             await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, ImageTag, ContainerName);
 
