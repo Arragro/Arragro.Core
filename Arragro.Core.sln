@@ -69,11 +69,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Providers.S3Storage
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.HostedServices", "src\Arragro.Core.HostedServices\Arragro.Core.HostedServices.csproj", "{F6B61422-46F8-4420-A9C7-994952C5EDE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arragro.Core.Web.Auth.Hmac", "src\Arragro.Core.Web.Auth.Hmac\Arragro.Core.Web.Auth.Hmac.csproj", "{E49C3C7B-EA48-4C26-9CC7-8D1165F7AE89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Web.Auth.Hmac", "src\Arragro.Core.Web.Auth.Hmac\Arragro.Core.Web.Auth.Hmac.csproj", "{E49C3C7B-EA48-4C26-9CC7-8D1165F7AE89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arragro.Core.Client.Auth.Hmac", "src\Arragro.Core.Client.Auth.Hmac\Arragro.Core.Client.Auth.Hmac.csproj", "{773FB106-0ECD-4D1C-860B-35CFACE813D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Client.Auth.Hmac", "src\Arragro.Core.Client.Auth.Hmac\Arragro.Core.Client.Auth.Hmac.csproj", "{773FB106-0ECD-4D1C-860B-35CFACE813D2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Web.Auth.IntegrationTests", "tests\Arragro.Core.Web.Auth.IntegrationTests\Arragro.Core.Web.Auth.IntegrationTests.csproj", "{03EC1B55-95AD-4210-B387-356A2D34BDCF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Fastly", "src\Arragro.Core.Fastly\Arragro.Core.Fastly.csproj", "{B266C8B0-74EC-4DC3-B1F2-739B8F1FDBE6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -181,6 +183,10 @@ Global
 		{03EC1B55-95AD-4210-B387-356A2D34BDCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03EC1B55-95AD-4210-B387-356A2D34BDCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03EC1B55-95AD-4210-B387-356A2D34BDCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B266C8B0-74EC-4DC3-B1F2-739B8F1FDBE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B266C8B0-74EC-4DC3-B1F2-739B8F1FDBE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B266C8B0-74EC-4DC3-B1F2-739B8F1FDBE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B266C8B0-74EC-4DC3-B1F2-739B8F1FDBE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
