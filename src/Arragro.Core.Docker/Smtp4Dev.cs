@@ -12,7 +12,7 @@ namespace Arragro.Core.Docker
         {
             const string ContainerName = "smtp4dev-integration-tests";
             const string ImageName = "rnwood/smtp4dev";
-            const string ImageTag = "linux-amd64-3.1.3-ci20210811114";
+            const string ImageTag = "linux-amd64-prerelease";
 
             await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, ImageTag, ContainerName);
 

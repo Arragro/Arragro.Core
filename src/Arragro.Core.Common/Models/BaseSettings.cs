@@ -44,6 +44,10 @@ namespace Arragro.Core.Common.Models
         /// </summary>
         public string RedisConnection { get; set; } = null;
         /// <summary>
+        /// The key Redis uses for dataprotection
+        /// </summary>
+        public string RedisKey { get; set; } = "DataProtection-Keys";
+        /// <summary>
         /// Path to the file storeage is FileSystem is set on DataProtectionStorage
         /// </summary>
         public string DataProtectionStoragePath { get; set; } = null;
