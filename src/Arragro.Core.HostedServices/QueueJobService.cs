@@ -118,7 +118,7 @@ namespace Arragro.Core.HostedServices
 
         public virtual async Task DoWork(QueueMessage message, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"{_queueName} - De-queued message: '{message.MessageText}'");
+            _logger.LogInformation($"{_queueName} - De-queued message: '{message.MessageId}'");
             await Task.Delay(5000, cancellationToken);  // do the work
         }
     }

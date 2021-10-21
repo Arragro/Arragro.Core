@@ -15,6 +15,7 @@ namespace Arragro.Core.HostedServices
         protected readonly TimeZoneInfo _timeZoneInfo;
         protected readonly ILogger _logger;
         private readonly string _jobName;
+        private readonly bool _logNextOccurance;
 
         protected CronJobService(
             string cronExpression,
@@ -22,16 +23,17 @@ namespace Arragro.Core.HostedServices
             TimeZoneInfo timeZoneInfo,
             ILogger logger,
             string jobName,
-            bool logInfo = true)
+            bool logInfo = true,
+            bool logNextOccurance = true)
         {
             _expression = CronExpression.Parse(cronExpression, includeSeconds ? CronFormat.IncludeSeconds : CronFormat.Standard);
             _timeZoneInfo = timeZoneInfo;
             _logger = logger;
             _jobName = jobName;
-
+            _logNextOccurance = logNextOccurance;
             if (logInfo)
             {
-                var nextOccurrences = _expression.GetOccurrences(DateTime.UtcNow, DateTime.UtcNow.AddDays(1));
+                var nextOccurrences = _expression.GetOccurrences(DateTime.UtcNow, DateTime.UtcNow.AddDays(3));
                 logger.LogInformation($"Configured Cron Job for: {_jobName}, next occurrences: {string.Join(", ", nextOccurrences.Take(5).Select(x => x.ToString("yyyy-MM-ddTHH:mm:ss")))}");
             }
         }
@@ -63,8 +65,12 @@ namespace Arragro.Core.HostedServices
                         await ScheduleJob(cancellationToken);    // reschedule next
                     }
                 };
-                    
-                _logger.LogInformation($"Timer for: {_jobName}, next occurrance: {next.Value.ToString("yyyy-MM-ddTHH:mm:ss")}");
+                
+                if (_logNextOccurance)
+                    _logger.LogInformation($"Timer for: {_jobName}, next occurrance: {next.Value.ToString("yyyy-MM-ddTHH:mm:ss")}");
+                else
+                    _logger.LogDebug($"Timer for: {_jobName}, next occurrance: {next.Value.ToString("yyyy-MM-ddTHH:mm:ss")}");
+
                 _timer.Start();
             }
             await Task.CompletedTask;
