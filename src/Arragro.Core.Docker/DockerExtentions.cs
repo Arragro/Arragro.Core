@@ -32,7 +32,14 @@ namespace Arragro.Core.Docker
 
         public static async Task EnsureImageExistsAsync(DockerClient client, string imageName, string imageTag)
         {
-            var images = await client.Images.ListImagesAsync(new ImagesListParameters { All = true, MatchName = imageName });
+            var images = await client.Images.ListImagesAsync(new ImagesListParameters { All = true,
+                Filters = new Dictionary<string, IDictionary<string, bool>>
+                {
+                    ["reference"] = new Dictionary<string, bool>
+                    {
+                        [imageName] = true
+                    }
+                }});
             if (!images.Any(x => x != null && x.RepoTags != null && x.RepoTags.Any(y => y == $"{imageName}:{imageTag}")))
             {
                 // Download image

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,16 +14,26 @@ namespace Arragro.Core.HostedServices
         protected readonly CronExpression _expression;
         protected readonly TimeZoneInfo _timeZoneInfo;
         protected readonly ILogger _logger;
+        private readonly string _jobName;
 
         protected CronJobService(
-            string cronExpression, 
-            bool includeSeconds, 
+            string cronExpression,
+            bool includeSeconds,
             TimeZoneInfo timeZoneInfo,
-            ILogger logger)
+            ILogger logger,
+            string jobName,
+            bool logInfo = true)
         {
             _expression = CronExpression.Parse(cronExpression, includeSeconds ? CronFormat.IncludeSeconds : CronFormat.Standard);
             _timeZoneInfo = timeZoneInfo;
             _logger = logger;
+            _jobName = jobName;
+
+            if (logInfo)
+            {
+                var nextOccurrences = _expression.GetOccurrences(DateTime.UtcNow, DateTime.UtcNow.AddDays(1));
+                logger.LogInformation($"Configured Cron Job for: {_jobName}, next occurrences: {string.Join(", ", nextOccurrences.Take(5).Select(x => x.ToString("yyyy-MM-ddTHH:mm:ss")))}");
+            }
         }
 
         public virtual async Task StartAsync(CancellationToken cancellationToken)
@@ -53,6 +63,8 @@ namespace Arragro.Core.HostedServices
                         await ScheduleJob(cancellationToken);    // reschedule next
                     }
                 };
+                    
+                _logger.LogInformation($"Timer for: {_jobName}, next occurrance: {next.Value.ToString("yyyy-MM-ddTHH:mm:ss")}");
                 _timer.Start();
             }
             await Task.CompletedTask;

@@ -23,7 +23,7 @@ namespace Arragro.Core.HostedServices
             string cronExpression,
             bool includeSeconds,
             TimeZoneInfo timeZoneInfo,
-            ILogger<QueueJobService> logger) : base (cronExpression, includeSeconds, timeZoneInfo, logger)
+            ILogger<QueueJobService> logger) : base (cronExpression, includeSeconds, timeZoneInfo, logger, queueName)
         {
             _queueClient = new QueueClient(connectionString, queueName);
             _queueClientFailure = new QueueClient(connectionString, $"{queueName}-failures");
@@ -32,11 +32,13 @@ namespace Arragro.Core.HostedServices
             _queueClientFailure.CreateIfNotExists();
 
             _queueName = queueName;
+
+            logger.LogInformation($"Configured Queue Job for: {queueName}");
         }
 
         protected override async Task ScheduleJob(CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"QueueJobService Scheduled Job running for {_queueName}");
+            _logger.LogDebug($"{_queueName} QueueJobService Scheduled Job running for {_queueName}");
             var next = _expression.GetNextOccurrence(DateTimeOffset.Now, _timeZoneInfo);
             if (next.HasValue)
             {
@@ -57,11 +59,10 @@ namespace Arragro.Core.HostedServices
                             {
                                 do
                                 {
-                                    _logger.LogInformation($"There are {receivedMessages.Length} messages to process");
+                                    _logger.LogDebug($"{_queueName} There are {receivedMessages.Length} messages to process");
                                     foreach (var message in receivedMessages)
                                     {
-                                        _logger.LogInformation($"De-queued message: '{message.MessageId}'");
-                                        _logger.LogDebug($"De-queued message: '{message.MessageText}'");
+                                        _logger.LogDebug($"{_queueName} De-queued message: '{message.MessageId}'");
 
                                         try
                                         {
@@ -96,7 +97,7 @@ namespace Arragro.Core.HostedServices
                         }
                         else
                         {
-                            _logger.LogInformation($"There are no messages to process");
+                            _logger.LogDebug($"There are no messages to process");
                         }
                     }
 
@@ -117,7 +118,7 @@ namespace Arragro.Core.HostedServices
 
         public virtual async Task DoWork(QueueMessage message, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"De-queued message: '{message.MessageText}'");
+            _logger.LogInformation($"{_queueName} - De-queued message: '{message.MessageText}'");
             await Task.Delay(5000, cancellationToken);  // do the work
         }
     }
