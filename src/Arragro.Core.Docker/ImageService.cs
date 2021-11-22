@@ -12,7 +12,7 @@ namespace Arragro.Core.Docker
         {
             const string ContainerName = "imageservice";
             const string ImageName = "docker.arragro.com/imageservice";
-            const string ImageTag = "v0.0.7-alpha";
+            const string ImageTag = "v0.0.6-alpha";
 
             await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, ImageTag, ContainerName);
 

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <AssemblyName>Arragro.Core.Web.Auth.Hmac</AssemblyName>
         <PackageId>Arragro.Core.Web.Auth.Hmac</PackageId>
         <Title>Arragro Core Web Auth Hmac</Title>

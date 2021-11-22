@@ -43,7 +43,7 @@ namespace Arragro.Core.Docker
             if (!images.Any(x => x != null && x.RepoTags != null && x.RepoTags.Any(y => y == $"{imageName}:{imageTag}")))
             {
                 // Download image
-                await client.Images.CreateImageAsync(new ImagesCreateParameters() { FromImage = imageName, Tag = imageTag }, new AuthConfig(), new Progress<JSONMessage>());
+                await client.Images.CreateImageAsync(new ImagesCreateParameters { FromImage = $"{imageName}:{imageTag}" }, null, new Progress<JSONMessage>());
             }
         }
 

@@ -27,12 +27,8 @@ namespace Arragro.Core.Web.Auth.IntegrationTests
 
         private string GenerateHmacKey()
         {
-            using (var cryptoProvider = new RNGCryptoServiceProvider())
-            {
-                byte[] secretKeyByteArray = new byte[32];
-                cryptoProvider.GetBytes(secretKeyByteArray);
-                return Convert.ToBase64String(secretKeyByteArray);
-            }
+            var secretKeyByteArray = RandomNumberGenerator.GetBytes(32);
+            return Convert.ToBase64String(secretKeyByteArray);
         }
 
         [Fact]
