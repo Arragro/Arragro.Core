@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sendgrid" Version="9.25.0" />
+    <PackageReference Include="Sendgrid" Version="9.25.3" />
   </ItemGroup>
 
   <ItemGroup>
