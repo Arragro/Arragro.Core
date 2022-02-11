@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>Arragro.Core.Openiddict.EntityFrameworkCore</AssemblyName>
+    <PackageId>Arragro.Core.Openiddict.EntityFrameworkCore</PackageId>
+    <Title>Arragro Core Openiddict EntityFrameworkCore</Title>
+    <Copyright>Arragro 2017 (c) Arragro Ltd.</Copyright>
+    <Description>Core Openiddict EntityFrameworkCore library for Arragro.</Description>
+    <PackageTags>dotnet core netstandard identity</PackageTags>
+    <Authors>Mike Jewell,Reece Beardsall</Authors>
+    <PackageIcon>arragro-icon.png</PackageIcon>
+    <PackageLicenseUrl>&gt;http://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/Arragro/Arragro.Core</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
+    <OutputType>Library</OutputType>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+	<PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.1.1" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Arragro.Core.EntityFrameworkCore\Arragro.Core.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <Folder Include="Migrations\Postgres\" />
+  </ItemGroup>
+
+</Project>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.202
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{20754D8E-F79C-4F5D-B055-DDDE4C07723D}"
 	ProjectSection(SolutionItems) = preProject
@@ -76,6 +76,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Web.Auth.IntegrationTests", "tests\Arragro.Core.Web.Auth.IntegrationTests\Arragro.Core.Web.Auth.IntegrationTests.csproj", "{03EC1B55-95AD-4210-B387-356A2D34BDCF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Fastly", "src\Arragro.Core.Fastly\Arragro.Core.Fastly.csproj", "{B266C8B0-74EC-4DC3-B1F2-739B8F1FDBE6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Openiddict.EntityFrameworkCore", "src\Arragro.Core.Openiddict.EntityFrameworkCore\Arragro.Core.Openiddict.EntityFrameworkCore.csproj", "{EA8D22CE-C2EF-479A-8591-F06DDBEBE4F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -187,6 +189,10 @@ Global
 		{B266C8B0-74EC-4DC3-B1F2-739B8F1FDBE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B266C8B0-74EC-4DC3-B1F2-739B8F1FDBE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B266C8B0-74EC-4DC3-B1F2-739B8F1FDBE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA8D22CE-C2EF-479A-8591-F06DDBEBE4F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA8D22CE-C2EF-479A-8591-F06DDBEBE4F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA8D22CE-C2EF-479A-8591-F06DDBEBE4F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA8D22CE-C2EF-479A-8591-F06DDBEBE4F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
