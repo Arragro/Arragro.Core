@@ -63,7 +63,7 @@ namespace Arragro.Core.Openiddict.EntityFrameworkCore
             }
         }
 
-        public static void MigrateDatabases(this IServiceProvider services, bool migrateDatabaseOnStartup)
+        public static void MigrateOpenIddictDatabase(this IServiceProvider services, bool migrateDatabaseOnStartup)
         {
             using (var scope = services.CreateScope())
             {
