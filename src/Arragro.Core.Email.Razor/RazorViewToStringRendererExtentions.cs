@@ -20,7 +20,7 @@ namespace Arragro.Core.Email.Razor
 
     public static class RazorViewToStringRendererExtentions
     {
-        public static IMvcBuilder ConfigureRazorViewToStringRenderer(this IServiceCollection services, string executingAssembly = null)
+        public static IMvcBuilder ConfigureRazorViewToStringRenderer(this IServiceCollection services, Assembly[] razorAssemblies, string executingAssembly = null)
         {
             var applicationEnvironment = PlatformServices.Default.Application;
 
@@ -55,8 +55,6 @@ namespace Arragro.Core.Email.Razor
                 options.FileProviders.Add(fileProvider);
             });
 
-            var viewAssemblies = Directory.GetFiles(path, "*.Views.dll").Select(x => Path.GetFileName(x));
-
             services.AddLogging();
 
             //var serviceBuilder = services.BuildServiceProvider();
@@ -74,9 +72,9 @@ namespace Arragro.Core.Email.Razor
             var mvcBuilder = services.AddMvc()
                                 .AddViewLocalization()
                                 .AddDataAnnotationsLocalization();
-            foreach (var viewAssembly in viewAssemblies)
+            foreach (var viewAssembly in razorAssemblies)
             {
-                mvcBuilder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(Assembly.LoadFile($"{path}\\{viewAssembly}")));
+                mvcBuilder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(viewAssembly));
             }
             services.AddScoped<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
 

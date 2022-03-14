@@ -109,7 +109,7 @@ namespace Arragro.Core.Email.Razor.Services
                 logger.LogInformation(message, args);
         }
 
-        private static IMvcBuilder ConfigureAndGet(IServiceCollection serviceCollection, string executingAssembly = null, bool logging = false)
+        private static IMvcBuilder ConfigureAndGet(IServiceCollection serviceCollection, Assembly[] razorAssemblies, string executingAssembly = null, bool logging = false)
         {
             var applicationEnvironment = PlatformServices.Default.Application;
 
@@ -144,8 +144,6 @@ namespace Arragro.Core.Email.Razor.Services
                 options.FileProviders.Add(fileProvider);
             });
 
-            var viewAssemblies = Directory.GetFiles(path, "*.Views.dll").Select(x => Path.GetFileName(x));
-
             ILogger logger = null;
 
             if (logging)
@@ -157,7 +155,7 @@ namespace Arragro.Core.Email.Razor.Services
             }
 
             LogHelper(logger, "RazorViewToStringRenderer is using the following config: {applicationName} - {path}", applicationName, path);
-            LogHelper(logger, "RazorViewToStringRenderer is registering the following dlls: {viewAssemblies}", viewAssemblies);
+            LogHelper(logger, "RazorViewToStringRenderer is registering the following dlls: {viewAssemblies}", String.Join(", ", razorAssemblies.Select(x => x.FullName)));
 
             var diagnosticListener = new DiagnosticListener("Microsoft.AspNetCore");
             serviceCollection.AddSingleton<DiagnosticSource>(diagnosticListener);
@@ -168,35 +166,35 @@ namespace Arragro.Core.Email.Razor.Services
             var mvcBuilder = serviceCollection.AddMvc()
                                 .AddViewLocalization()
                                 .AddDataAnnotationsLocalization();
-            foreach (var viewAssembly in viewAssemblies)
+            foreach (var viewAssembly in razorAssemblies)
             {
                 LogHelper(logger, "RazorViewToStringRenderer is registering the following assemblyPart: {path}", $"{path}\\{viewAssembly}");
-                mvcBuilder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(Assembly.LoadFile($"{path}\\{viewAssembly}")));
+                mvcBuilder.PartManager.ApplicationParts.Add(new CompiledRazorAssemblyPart(viewAssembly));
             }
             serviceCollection.AddScoped<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
             return mvcBuilder;
         }
 
-        public static IMvcBuilder ConfigureAndGet(IServiceCollection serviceCollection, string executingAssembly = null)
+        public static IMvcBuilder ConfigureAndGet(IServiceCollection serviceCollection, Assembly[] razorAssemblies, string executingAssembly = null)
         {
-            return ConfigureAndGet(serviceCollection, executingAssembly, true);
+            return ConfigureAndGet(serviceCollection, razorAssemblies,  executingAssembly, true);
         }
 
-        public static IMvcBuilder ConfigureAndGet(string executingAssembly = null)
+        public static IMvcBuilder ConfigureAndGet(Assembly[] razorAssemblies, string executingAssembly = null)
         {
             var serviceCollection = new ServiceCollection();
-            return ConfigureAndGet(serviceCollection, executingAssembly);
+            return ConfigureAndGet(serviceCollection, razorAssemblies, executingAssembly);
         }
 
-        public static IMvcBuilder ConfigureAndGetNoLogging(IServiceCollection serviceCollection, string executingAssembly = null)
+        public static IMvcBuilder ConfigureAndGetNoLogging(IServiceCollection serviceCollection, Assembly[] razorAssemblies, string executingAssembly = null)
         {
-            return ConfigureAndGet(serviceCollection, executingAssembly, false);
+            return ConfigureAndGet(serviceCollection, razorAssemblies, executingAssembly, false);
         }
 
-        public static IMvcBuilder ConfigureAndGetNoLogging(string executingAssembly = null)
+        public static IMvcBuilder ConfigureAndGetNoLogging(Assembly[] razorAssemblies, string executingAssembly = null)
         {
             var serviceCollection = new ServiceCollection();
-            return ConfigureAndGetNoLogging(serviceCollection, executingAssembly);
+            return ConfigureAndGetNoLogging(serviceCollection, razorAssemblies, executingAssembly);
         }
     }
 
