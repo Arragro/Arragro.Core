@@ -13,9 +13,8 @@ namespace Arragro.Core.Docker
         {
             const string ContainerName = "postgres-integration-tests";
             const string ImageName = "postgres";
-            const string ImageTag = "12-alpine";
 
-            await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, ImageTag, ContainerName);
+            await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, imageTag, ContainerName);
 
             var config = new Config();
 
@@ -29,7 +28,7 @@ namespace Arragro.Core.Docker
 
             await client.Containers.CreateContainerAsync(new CreateContainerParameters(config)
             {
-                Image = ImageName + ":" + ImageTag,
+                Image = ImageName + ":" + imageTag,
                 Name = ContainerName,
                 Tty = false,
                 HostConfig = hostConfig,

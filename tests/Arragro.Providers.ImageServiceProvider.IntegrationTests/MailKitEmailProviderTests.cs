@@ -35,7 +35,7 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
                 Mailhog.StartMailhog,
                 (client) => AzuriteMicrosoftWithTables.StartAzuriteMicrosoft(client, "3.13.0"),
                 Minio.StartMinio,
-                Postgres.StartPostgres
+                (client) => Postgres.StartPostgres(client)
             }).Wait();
         }
 
