@@ -9,7 +9,7 @@ namespace Arragro.Core.Docker
 {
     public static class Postgres
     {
-        public static async Task<ContainerListResponse> StartPostgres(DockerClient client)
+        public static async Task<ContainerListResponse> StartPostgres(DockerClient client, string imageTag = "12-alpine")
         {
             const string ContainerName = "postgres-integration-tests";
             const string ImageName = "postgres";
