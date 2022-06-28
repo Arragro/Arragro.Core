@@ -57,6 +57,7 @@ namespace Arragro.Providers.ImageMagickProvider
                         image.Resize(width.Value, 0);
                     image.Strip();
                     image.Quality = quality;
+                    image.Density = new Density(72, 72);
                 }
 
                 using (var ms = new MemoryStream())
@@ -81,13 +82,14 @@ namespace Arragro.Providers.ImageMagickProvider
                 switch (info.Format)
                 {
                     case MagickFormat.Svg:
+                    case MagickFormat.Gif:
                         output = bytes;
                         break;
-                    case MagickFormat.Gif:
-                        output = ProcessGif(bytes, width, quality);
-                        if (output.Length > bytes.Length)
-                            output = bytes;
-                        break;
+                    //case MagickFormat.Gif:
+                    //    output = ProcessGif(bytes, width, quality);
+                    //    if (output.Length > bytes.Length)
+                    //        output = bytes;
+                    //    break;
                     default:
                         var result = ProcessImage(bytes, width, quality, asProgressiveJpeg);
                         output = result.Bytes;
@@ -115,13 +117,14 @@ namespace Arragro.Providers.ImageMagickProvider
                 var info = new MagickImageInfo(bytes); switch (info.Format)
                 {
                     case MagickFormat.Svg:
+                    case MagickFormat.Gif:
                         output = bytes;
                         break;
-                    case MagickFormat.Gif:
-                        output = ProcessGif(bytes, quality: quality);
-                        if (output.Length > bytes.Length)
-                            output = bytes;
-                        break;
+                    //case MagickFormat.Gif:
+                        //output = ProcessGif(bytes, quality: quality);
+                        //if (output.Length > bytes.Length)
+                        //    output = bytes;
+                        //break;
                     default:
                         var result = ProcessImage(bytes, quality: quality, asProgressiveJpeg: asProgressiveJpeg);
                         output = result.Bytes;
