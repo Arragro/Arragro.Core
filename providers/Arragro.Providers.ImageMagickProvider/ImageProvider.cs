@@ -30,7 +30,7 @@ namespace Arragro.Providers.ImageMagickProvider
                         image.Resize(width.Value, 0);
                     image.Strip();
                     image.Quality = quality;
-                    image.Density = new Density(72, 72);
+                    image.Density = new Density(72);
                     if (asProgressiveJpeg)
                     {
                         image.Write(ms, MagickFormat.Pjpeg);
