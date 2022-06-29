@@ -48,7 +48,7 @@ namespace Arragro.Providers.AzureStorageProvider
         protected const string ASSET_QUALITY_ASSETKEY = "Asset:Quality:";
         protected const string ASSET_QUALITY_WIDTH_ASSETKEY = "Asset:Quality:Width:";
 
-        public async Task<bool> Delete(FolderIdType folderId, FileIdType fileId, bool thumbNail = false)
+        public async Task<bool> DeleteAsync(FolderIdType folderId, FileIdType fileId, bool thumbNail = false)
         {
             var thumbNails = thumbNail ? "thumbnails/" : "";
             var blob = _assetContainerClient.GetBlobClient($"{folderId}/{thumbNails}{fileId}");
@@ -64,7 +64,7 @@ namespace Arragro.Providers.AzureStorageProvider
             };
         }
 
-        protected async Task DeleteFolder(string folder)
+        protected async Task DeleteFolderAsync(string folder)
         {
             var resultSegment = _assetContainerClient.GetBlobsAsync(prefix: folder)
                 .AsPages(default);
@@ -78,13 +78,13 @@ namespace Arragro.Providers.AzureStorageProvider
             }
         }
 
-        public async Task Delete(FolderIdType folderId)
+        public async Task DeleteAsync(FolderIdType folderId)
         {
-            await DeleteFolder($"{folderId}/thumbnails");
-            await DeleteFolder($"{folderId}");
+            await DeleteFolderAsync($"{folderId}/thumbnails");
+            await DeleteFolderAsync($"{folderId}");
         }
 
-        protected async Task<Uri> Get(FolderIdType folderId, FileIdType fileId)
+        protected async Task<Uri> GetAsync(FolderIdType folderId, FileIdType fileId)
         {
             var key = $"{ASSET_ASSETKEY}{folderId}:{fileId}";
             var cacheItem = CacheProviderManager.CacheProvider.Get<Uri>(key);
@@ -102,7 +102,7 @@ namespace Arragro.Providers.AzureStorageProvider
             return null;
         }
 
-        protected async Task<Uri> Upload(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
+        protected async Task<Uri> UploadAsync(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
         {
             var blob = _assetContainerClient.GetBlobClient($"{folderId}/{fileId}");
             using (var stream = new MemoryStream(data))
@@ -116,7 +116,7 @@ namespace Arragro.Providers.AzureStorageProvider
             }
         }
 
-        protected async Task<Uri> GetImageThumbnail(FolderIdType folderId, FileIdType fileId)
+        protected async Task<Uri> GetImageThumbnailAsync(FolderIdType folderId, FileIdType fileId)
         {
             var key = $"{THUMBNAIL_ASSETKEY}{folderId}:{fileId}";
             var cacheItem = CacheProviderManager.CacheProvider.Get<Uri>(key);
@@ -133,7 +133,7 @@ namespace Arragro.Providers.AzureStorageProvider
             return null;
         }
 
-        public async Task ResetCacheControl()
+        public async Task ResetCacheControlAsync()
         {
             var resultSegment = _assetContainerClient.GetBlobsAsync()
                 .AsPages(default);
@@ -142,12 +142,12 @@ namespace Arragro.Providers.AzureStorageProvider
             {
                 foreach (BlobItem blobItem in blobPage.Values)
                 {
-                    await this.ResetCloudBlobCacheControl(blobItem.Name, _cacheControlMaxAge);
+                    await this.ResetCloudBlobCacheControlAsync(blobItem.Name, _cacheControlMaxAge);
                 }
             }
         }
 
-        protected async Task ResetCloudBlobCacheControl(string blobName, int cacheControlMaxAge)
+        protected async Task ResetCloudBlobCacheControlAsync(string blobName, int cacheControlMaxAge)
         {
             var blobClient = _assetContainerClient.GetBlobClient(blobName);
             var properties = await blobClient.GetPropertiesAsync();
@@ -156,7 +156,7 @@ namespace Arragro.Providers.AzureStorageProvider
             await blobClient.SetHttpHeadersAsync(httpHeaders);
         }
 
-        protected async Task<Uri> UploadThumbnail(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
+        protected async Task<Uri> UploadThumbnailAsync(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
         {
             var blob = _assetContainerClient.GetBlobClient($"{folderId}/thumbnails/{fileId}");
             using (var stream = new MemoryStream(data))
@@ -170,14 +170,14 @@ namespace Arragro.Providers.AzureStorageProvider
             }
         }
 
-        public async Task<Uri> Get(FolderIdType folderId, FileIdType fileId, bool thumbnail = false)
+        public async Task<Uri> GetAsync(FolderIdType folderId, FileIdType fileId, bool thumbnail = false)
         {
             if (thumbnail)
-                return await GetImageThumbnail(folderId, fileId);
-            return await Get(folderId, fileId);
+                return await GetImageThumbnailAsync(folderId, fileId);
+            return await GetAsync(folderId, fileId);
         }
 
-        public async Task<CreateImageFromImageResult> CreateImageFromExistingImage(FolderIdType folderId, FileIdType fileId, FileIdType newFileId)
+        public async Task<CreateAssetFromExistingResult> CreateAssetFromExistingAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId)
         {
             var fileName =$"{folderId}/{fileId}";
             var newFileName =$"{folderId}/{newFileId}";
@@ -209,11 +209,15 @@ namespace Arragro.Providers.AzureStorageProvider
                         Size = imageProcessDetailsResult.Size,
                         Bytes = bytes
                     };
-                    var uri = await Upload(folderId, newFileId, bytes, properties.Value.ContentType);
+                    var uri = await UploadAsync(folderId, newFileId, bytes, properties.Value.ContentType);
                     var thumbNailImageResult = await _imageService.ResizeAndProcessImageAsync(bytes, 250, 60, true);
-                    var thumbnailUri = await Upload(folderId, newFileId, thumbNailImageResult.Bytes, properties.Value.ContentType, true);
+                    Uri thumbnailUri = null;
+                    if (imageResult.IsImage)
+                    {
+                        thumbnailUri = await UploadAsync(folderId, newFileId, thumbNailImageResult.Bytes, properties.Value.ContentType, true);
+                    }
 
-                    return new CreateImageFromImageResult
+                    return new CreateAssetFromExistingResult
                     {
                         ImageProcessResult = imageResult,
                         Uri = uri,
@@ -231,14 +235,14 @@ namespace Arragro.Providers.AzureStorageProvider
             }
         }
 
-        public async Task<Uri> Upload(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType, bool thumbnail = false)
+        public async Task<Uri> UploadAsync(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType, bool thumbnail = false)
         {
             if (thumbnail)
-                return await UploadThumbnail(folderId, fileId, data, mimeType);
-            return await Upload(folderId, fileId, data, mimeType);
+                return await UploadThumbnailAsync(folderId, fileId, data, mimeType);
+            return await UploadAsync(folderId, fileId, data, mimeType);
         }
 
-        public async Task<Uri> Rename(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, bool thumbnail = false)
+        public async Task<Uri> RenameAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, bool thumbnail = false)
         {
             var fileName = thumbnail ? $"{folderId}/thumbnails/{fileId}" : $"{folderId}/{fileId}";
             var newFileName = thumbnail ? $"{folderId}/thumbnails/{newFileId}" : $"{folderId}/{newFileId}";

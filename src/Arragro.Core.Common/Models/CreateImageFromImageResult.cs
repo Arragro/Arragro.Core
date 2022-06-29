@@ -2,7 +2,7 @@
 
 namespace Arragro.Core.Common.Models
 {
-    public class CreateImageFromImageResult
+    public class CreateAssetFromExistingResult
     {
         public ImageProcessResult ImageProcessResult { get; set; }
         public Uri Uri { get; set; }

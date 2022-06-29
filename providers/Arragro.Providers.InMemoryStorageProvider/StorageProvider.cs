@@ -35,7 +35,7 @@ namespace Arragro.Providers.InMemoryStorageProvider
             Cache.RemoveFromCache($"{ASSET_QUALITY_WIDTH_ASSETKEY}.*", true);
         }
 
-        public async Task<bool> Delete(FolderIdType folderId, FileIdType fileId, bool thumbNail = false)
+        public async Task<bool> DeleteAsync(FolderIdType folderId, FileIdType fileId, bool thumbNail = false)
         {
             return await Task.Run(() =>
             {
@@ -49,7 +49,7 @@ namespace Arragro.Providers.InMemoryStorageProvider
             });
         }
 
-        private async Task DeleteFolder(string folder)
+        private async Task DeleteFolderAsync(string folder)
         {
             await Task.Run(() =>
             {
@@ -58,13 +58,13 @@ namespace Arragro.Providers.InMemoryStorageProvider
             });
         }
 
-        public async Task Delete(FolderIdType folderId)
+        public async Task DeleteAsync(FolderIdType folderId)
         {
-            await DeleteFolder($"/{folderId}/thumbnails");
-            await DeleteFolder($"/{folderId}");
+            await DeleteFolderAsync($"/{folderId}/thumbnails");
+            await DeleteFolderAsync($"/{folderId}");
         }
 
-        private async Task<Uri> Get(FolderIdType folderId, FileIdType fileId)
+        private async Task<Uri> GetAsync(FolderIdType folderId, FileIdType fileId)
         {
             var fileInfo = _provider.GetFileInfo($"/{folderId}/{fileId}");
 
@@ -79,7 +79,7 @@ namespace Arragro.Providers.InMemoryStorageProvider
             return null;
         }
 
-        private async Task<Uri> GetImageThumbnail(FolderIdType folderId, FileIdType fileId)
+        private async Task<Uri> GetImageThumbnailAsync(FolderIdType folderId, FileIdType fileId)
         {
             var fileInfo = _provider.GetFileInfo($"/{folderId}/thumbnails/{fileId}");
 
@@ -94,7 +94,7 @@ namespace Arragro.Providers.InMemoryStorageProvider
             return null;
         }
 
-        private async Task<byte[]> GetImageBytes(IFileInfo fileInfo)
+        private async Task<byte[]> GetImageBytesAsync(IFileInfo fileInfo)
         {
             using (var ms = new MemoryStream())
             {
@@ -103,7 +103,7 @@ namespace Arragro.Providers.InMemoryStorageProvider
             }
         }
 
-        public async Task<Uri> Upload(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
+        public async Task<Uri> UploadAsync(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
         {
             await Task.Run(() =>
             {
@@ -116,7 +116,7 @@ namespace Arragro.Providers.InMemoryStorageProvider
             return new Uri($"http://inmemoryfileprovider.com/{folderId}/{fileId}");
         }
 
-        private async Task Upload(FolderIdType folderId, FileIdType fileId, int quality, int width, byte[] data, string mimeType)
+        private async Task UploadAsync(FolderIdType folderId, FileIdType fileId, int quality, int width, byte[] data, string mimeType)
         {
             await Task.Run(() =>
             {
@@ -128,7 +128,7 @@ namespace Arragro.Providers.InMemoryStorageProvider
             });
         }
 
-        public async Task<Uri> UploadThumbnail(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
+        public async Task<Uri> UploadThumbnailAsync(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
         {
             await Task.Run(() =>
             {
@@ -142,7 +142,7 @@ namespace Arragro.Providers.InMemoryStorageProvider
             return new Uri($"http://inmemoryfileprovider.com/{folderId}/thumbnails/{fileId}");
         }
         
-        public async Task ResetCacheControl()
+        public async Task ResetCacheControlAsync()
         {
             await Task.Run(() =>
             {
@@ -150,18 +150,18 @@ namespace Arragro.Providers.InMemoryStorageProvider
             });
         }
 
-        public async Task<Uri> Get(FolderIdType folderId, FileIdType fileId, bool thumbnail = false)
+        public async Task<Uri> GetAsync(FolderIdType folderId, FileIdType fileId, bool thumbnail = false)
         {
             if (thumbnail)
-                return await GetImageThumbnail(folderId, fileId);
-            return await Get(folderId, fileId);
+                return await GetImageThumbnailAsync(folderId, fileId);
+            return await GetAsync(folderId, fileId);
         }
 
-        public async Task<CreateImageFromImageResult> CreateImageFromExistingImage(FolderIdType folderId, FileIdType fileId, FileIdType newFileId)
+        public async Task<CreateAssetFromExistingResult> CreateAssetFromExistingAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId)
         {
             var fileName = $"{folderId}/{fileId}";
             var fileInfo = _provider.GetFileInfo(fileName);
-            var bytes = await GetImageBytes(fileInfo);
+            var bytes = await GetImageBytesAsync(fileInfo);
 
             var imageProcessDetailsResult = await _imageService.GetImageDetailsAsync(bytes);
             var imageResult = new ImageProcessResult
@@ -173,11 +173,15 @@ namespace Arragro.Providers.InMemoryStorageProvider
                 Size = imageProcessDetailsResult.Size,
                 Bytes = bytes
             };
-            var uri = await Upload(folderId, newFileId, bytes, "");
+            var uri = await UploadAsync(folderId, newFileId, bytes, "");
             imageResult = await _imageService.ResizeAndProcessImageAsync(bytes, 250, 60, true);
-            var thumbnailUri = await Upload(folderId, newFileId, imageResult.Bytes, "", true);
+            Uri thumbnailUri = null;
+            if (imageResult.IsImage)
+            {
+                thumbnailUri = await UploadAsync(folderId, newFileId, imageResult.Bytes, "", true);
+            }
 
-            return new CreateImageFromImageResult
+            return new CreateAssetFromExistingResult
             {
                 ImageProcessResult = imageResult,
                 Uri = uri,
@@ -185,22 +189,22 @@ namespace Arragro.Providers.InMemoryStorageProvider
             };
         }
 
-        public async Task<Uri> Upload(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType, bool thumbnail = false)
+        public async Task<Uri> UploadAsync(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType, bool thumbnail = false)
         {
             if (thumbnail)
-                return await UploadThumbnail(folderId, fileId, data, mimeType);
-            return await Upload(folderId, fileId, data, mimeType);
+                return await UploadThumbnailAsync(folderId, fileId, data, mimeType);
+            return await UploadAsync(folderId, fileId, data, mimeType);
         }
 
-        public async Task<Uri> Rename(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, bool thumbnail = false)
+        public async Task<Uri> RenameAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, bool thumbnail = false)
         {
             var fileName = thumbnail ? $"{folderId}/thumbnails/{fileId}" : $"{folderId}/{fileId}";
 
             var fileInfo = _provider.GetFileInfo(fileName);
-            var bytes = await GetImageBytes(fileInfo);
+            var bytes = await GetImageBytesAsync(fileInfo);
 
-            await Delete(folderId, fileId, thumbnail);
-            return await Upload(folderId, newFileId, bytes, "", thumbnail);
+            await DeleteAsync(folderId, fileId, thumbnail);
+            return await UploadAsync(folderId, newFileId, bytes, "", thumbnail);
         }
     }
 }

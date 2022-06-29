@@ -6,12 +6,12 @@ namespace Arragro.Core.Common.Interfaces.Providers
 {
     public interface IStorageProvider<FolderIdType, FileIdType> 
     {
-        Task<bool> Delete(FolderIdType folderId, FileIdType fileId, bool thumbNail = false);
-        Task Delete(FolderIdType folderId);
-        Task<Uri> Get(FolderIdType folderId, FileIdType fileId, bool thumbnail = false);
-        Task<CreateImageFromImageResult> CreateImageFromExistingImage(FolderIdType folderId, FileIdType fileId, FileIdType newFileId);
-        Task<Uri> Upload(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType, bool thumbnail = false);
-        Task<Uri> Rename(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, bool thumbnail = false);
-        Task ResetCacheControl();
+        Task<bool> DeleteAsync(FolderIdType folderId, FileIdType fileId, bool thumbNail = false);
+        Task DeleteAsync(FolderIdType folderId);
+        Task<Uri> GetAsync(FolderIdType folderId, FileIdType fileId, bool thumbnail = false);
+        Task<CreateAssetFromExistingResult> CreateAssetFromExistingAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId);
+        Task<Uri> UploadAsync(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType, bool thumbnail = false);
+        Task<Uri> RenameAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, bool thumbnail = false);
+        Task ResetCacheControlAsync();
     }
 }

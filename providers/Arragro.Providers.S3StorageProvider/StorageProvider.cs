@@ -91,7 +91,7 @@ namespace Arragro.Providers.S3StorageProvider
         protected const string ASSET_QUALITY_ASSETKEY = "Asset:Quality:";
         protected const string ASSET_QUALITY_WIDTH_ASSETKEY = "Asset:Quality:Width:";
 
-        public async Task<bool> Delete(FolderIdType folderId, FileIdType fileId, bool thumbNail = false)
+        public async Task<bool> DeleteAsync(FolderIdType folderId, FileIdType fileId, bool thumbNail = false)
         {
             var thumbNails = thumbNail ? "thumbnails/" : "";
             var fileName = $"{_prefix}/{folderId}/{thumbNails}{fileId}";
@@ -104,7 +104,7 @@ namespace Arragro.Providers.S3StorageProvider
             return deleteResponse.HttpStatusCode == System.Net.HttpStatusCode.OK;
         }
 
-        protected async Task DeleteFolder(string folder)
+        protected async Task DeleteFolderAsync(string folder)
         {
             string continuationToken = null;
 
@@ -131,10 +131,10 @@ namespace Arragro.Providers.S3StorageProvider
             } while (continuationToken != null);
         }
 
-        public async Task Delete(FolderIdType folderId)
+        public async Task DeleteAsync(FolderIdType folderId)
         {
-            await DeleteFolder($"{_prefix}/{folderId}/thumbnails");
-            await DeleteFolder($"{_prefix}/{folderId}");
+            await DeleteFolderAsync($"{_prefix}/{folderId}/thumbnails");
+            await DeleteFolderAsync($"{_prefix}/{folderId}");
         }
 
         protected Uri GetUri(string key)
@@ -144,7 +144,7 @@ namespace Arragro.Providers.S3StorageProvider
             return new Uri($"https://{_bucketName}.s3-{_regionEndpoint.SystemName}.amazonaws.com/{key}");
         }
 
-        protected async Task<Uri> Get(FolderIdType folderId, FileIdType fileId)
+        protected async Task<Uri> GetAsync(FolderIdType folderId, FileIdType fileId)
         {
             var key = $"{ASSET_ASSETKEY}{folderId}:{fileId}";
             var cacheItem = CacheProviderManager.CacheProvider.Get<Uri>(key);
@@ -168,7 +168,7 @@ namespace Arragro.Providers.S3StorageProvider
             return null;
         }
 
-        protected async Task<Uri> Upload(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
+        protected async Task<Uri> UploadAsync(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
         {
             using (var stream = new MemoryStream(data))
             {
@@ -192,7 +192,7 @@ namespace Arragro.Providers.S3StorageProvider
             }
         }
 
-        protected async Task<Uri> GetImageThumbnail(FolderIdType folderId, FileIdType fileId)
+        protected async Task<Uri> GetImageThumbnailAsync(FolderIdType folderId, FileIdType fileId)
         {
             var key = $"{THUMBNAIL_ASSETKEY}{folderId}:{fileId}";
             var cacheItem = CacheProviderManager.CacheProvider.Get<Uri>(key);
@@ -216,7 +216,7 @@ namespace Arragro.Providers.S3StorageProvider
             return null;
         }
 
-        public async Task ResetCacheControl()
+        public async Task ResetCacheControlAsync()
         {
             var listRequest = new ListObjectsV2Request
             {
@@ -230,14 +230,14 @@ namespace Arragro.Providers.S3StorageProvider
 
                 foreach (var blob in listResponse.S3Objects)
                 {
-                    await this.ResetCloudBlobCacheControl(blob, _cacheControlMaxAge);
+                    await this.ResetCloudBlobCacheControlAsync(blob, _cacheControlMaxAge);
                 }
                 listRequest.ContinuationToken = listResponse.ContinuationToken;
             }
             while (listRequest.ContinuationToken != null);
         }
 
-        protected async Task ResetCloudBlobCacheControl(S3Object s3Object, int cacheControlMaxAge)
+        protected async Task ResetCloudBlobCacheControlAsync(S3Object s3Object, int cacheControlMaxAge)
         {
             var copyRequest = new CopyObjectRequest
             {
@@ -251,7 +251,7 @@ namespace Arragro.Providers.S3StorageProvider
             await _client.CopyObjectAsync(copyRequest);
         }
 
-        protected async Task<Uri> UploadThumbnail(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
+        protected async Task<Uri> UploadThumbnailAsync(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType)
         {
             using (var stream = new MemoryStream(data))
             {
@@ -275,14 +275,14 @@ namespace Arragro.Providers.S3StorageProvider
             }
         }
 
-        public async Task<Uri> Get(FolderIdType folderId, FileIdType fileId, bool thumbnail = false)
+        public async Task<Uri> GetAsync(FolderIdType folderId, FileIdType fileId, bool thumbnail = false)
         {
             if (thumbnail)
-                return await GetImageThumbnail(folderId, fileId);
-            return await Get(folderId, fileId);
+                return await GetImageThumbnailAsync(folderId, fileId);
+            return await GetAsync(folderId, fileId);
         }
 
-        public async Task<CreateImageFromImageResult> CreateImageFromExistingImage(FolderIdType folderId, FileIdType fileId, FileIdType newFileId)
+        public async Task<CreateAssetFromExistingResult> CreateAssetFromExistingAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId)
         {
             var fileName = $"{_prefix}/{folderId}/{fileId}";
             var newFileName = $"{_prefix}/{folderId}/{newFileId}";
@@ -333,11 +333,15 @@ namespace Arragro.Providers.S3StorageProvider
                             Size = imageProcessDetailsResult.Size,
                             Bytes = bytes
                         };
-                        var uri = await Upload(folderId, newFileId, bytes, oldRequest.Headers.ContentType);
+                        var uri = await UploadAsync(folderId, newFileId, bytes, oldRequest.Headers.ContentType);
                         var thumbNailImageResult = await _imageService.ResizeAndProcessImageAsync(bytes, 250, 60, true);
-                        var thumbnailUri = await Upload(folderId, newFileId, thumbNailImageResult.Bytes, oldRequest.Headers.ContentType, true);
+                        Uri thumbnailUri = null;
+                        if (thumbNailImageResult.IsImage)
+                        {
+                            thumbnailUri = await UploadAsync(folderId, newFileId, thumbNailImageResult.Bytes, oldRequest.Headers.ContentType, true);
+                        }
 
-                        return new CreateImageFromImageResult
+                        return new CreateAssetFromExistingResult
                         {
                             ImageProcessResult = imageResult,
                             Uri = uri,
@@ -354,11 +358,11 @@ namespace Arragro.Providers.S3StorageProvider
             }
         }
 
-        public async Task<Uri> Upload(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType, bool thumbnail = false)
+        public async Task<Uri> UploadAsync(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType, bool thumbnail = false)
         {
             if (thumbnail)
-                return await UploadThumbnail(folderId, fileId, data, mimeType);
-            return await Upload(folderId, fileId, data, mimeType);
+                return await UploadThumbnailAsync(folderId, fileId, data, mimeType);
+            return await UploadAsync(folderId, fileId, data, mimeType);
         }
 
         private async Task CopyObjectAsync(GetObjectMetadataRequest oldGetRequest, GetObjectMetadataRequest newGetRequest, string oldFileName)
@@ -381,7 +385,7 @@ namespace Arragro.Providers.S3StorageProvider
             await _client.DeleteObjectAsync(deleteRequest);
         }
 
-        public async Task<Uri> Rename(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, bool thumbnail = false)
+        public async Task<Uri> RenameAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, bool thumbnail = false)
         {
             var fileName = thumbnail ? $"{_prefix}/{folderId}/thumbnails/{fileId}" : $"{_prefix}/{folderId}/{fileId}";
             var newFileName = thumbnail ? $"{_prefix}/{folderId}/thumbnails/{newFileId}" : $"{_prefix}/{folderId}/{newFileId}";
