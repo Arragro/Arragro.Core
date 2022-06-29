@@ -56,7 +56,7 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             var imageService = _serviceProvider.GetRequiredService<IImageProvider>();
             var assembly = typeof(ImageServiceTests).GetTypeInfo().Assembly;
             var bytes = ReadFully(assembly.GetManifestResourceStream("Arragro.Providers.ImageServiceProvider.IntegrationTests.Resources.bear-hands.jpg"));
-            var result = await imageService.GetImage(bytes);
+            var result = await imageService.ProcessImageAsync(bytes);
             Assert.True(result.Size < bytes.Length);
             Assert.Equal("image/jpeg", result.MimeType);
             Assert.Equal(1201, result.Width);
@@ -69,11 +69,25 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             var imageService = _serviceProvider.GetRequiredService<IImageProvider>();
             var assembly = typeof(ImageServiceTests).GetTypeInfo().Assembly;
             var bytes = ReadFully(assembly.GetManifestResourceStream("Arragro.Providers.ImageServiceProvider.IntegrationTests.Resources.bear-hands.jpg"));
-            var result = await imageService.GetImage(bytes, 600, 80, true);
+            var result = await imageService.ResizeAndProcessImageAsync(bytes, 600, 80, true);
             Assert.True(result.Size < bytes.Length);
             Assert.Equal("image/jpeg", result.MimeType);
             Assert.Equal(600, result.Width);
             Assert.Equal(400, result.Height);
+        }
+
+        [Fact]
+        public async Task image_details_jpg_returns_successfully()
+        {
+            var imageService = _serviceProvider.GetRequiredService<IImageProvider>();
+            var assembly = typeof(ImageServiceTests).GetTypeInfo().Assembly;
+            var bytes = ReadFully(assembly.GetManifestResourceStream("Arragro.Providers.ImageServiceProvider.IntegrationTests.Resources.bear-hands.jpg"));
+            var result = await imageService.GetImageDetailsAsync(bytes);
+            Assert.Equal(88230, result.Size);
+            Assert.Equal("image/jpeg", result.MimeType);
+            Assert.Equal(1201, result.Width);
+            Assert.Equal(800, result.Height);
+            Assert.True(result.IsImage);
         }
 
         [Fact]
@@ -82,7 +96,7 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             var imageService = _serviceProvider.GetRequiredService<IImageProvider>();
             var assembly = typeof(ImageServiceTests).GetTypeInfo().Assembly;
             var bytes = ReadFully(assembly.GetManifestResourceStream("Arragro.Providers.ImageServiceProvider.IntegrationTests.Resources.gold.gif"));
-            var result = await imageService.GetImage(bytes);
+            var result = await imageService.ProcessImageAsync(bytes);
             Assert.True(result.Size < bytes.Length);
             Assert.Equal("image/gif", result.MimeType);
             Assert.Equal(360, result.Width);
@@ -95,11 +109,25 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             var imageService = _serviceProvider.GetRequiredService<IImageProvider>();
             var assembly = typeof(ImageServiceTests).GetTypeInfo().Assembly;
             var bytes = ReadFully(assembly.GetManifestResourceStream("Arragro.Providers.ImageServiceProvider.IntegrationTests.Resources.gold.gif"));
-            var result = await imageService.GetImage(bytes, 300, 80, true);
+            var result = await imageService.ResizeAndProcessImageAsync(bytes, 300, 80, true);
             Assert.True(result.Size < bytes.Length);
             Assert.Equal("image/gif", result.MimeType);
             Assert.Equal(300, result.Width);
             Assert.Equal(168, result.Height);
+        }
+
+        [Fact]
+        public async Task image_details_gif_returns_successfully()
+        {
+            var imageService = _serviceProvider.GetRequiredService<IImageProvider>();
+            var assembly = typeof(ImageServiceTests).GetTypeInfo().Assembly;
+            var bytes = ReadFully(assembly.GetManifestResourceStream("Arragro.Providers.ImageServiceProvider.IntegrationTests.Resources.gold.gif"));
+            var result = await imageService.GetImageDetailsAsync(bytes);
+            Assert.Equal(604963, result.Size);
+            Assert.Equal("image/gif", result.MimeType);
+            Assert.Equal(360, result.Width);
+            Assert.Equal(202, result.Height);
+            Assert.True(result.IsImage);
         }
 
         [Fact]
@@ -108,9 +136,23 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             var imageService = _serviceProvider.GetRequiredService<IImageProvider>();
             var assembly = typeof(ImageServiceTests).GetTypeInfo().Assembly;
             var bytes = ReadFully(assembly.GetManifestResourceStream("Arragro.Providers.ImageServiceProvider.IntegrationTests.Resources.ArragroCMSLogo.svg"));
-            var result = await imageService.GetImage(bytes, 300, 80, true);
+            var result = await imageService.ResizeAndProcessImageAsync(bytes, 300, 80, true);
             Assert.False(result.IsImage);
             Assert.Equal(bytes.Length, result.Size);
+        }
+
+        [Fact]
+        public async Task image_details_svg_returns_successfully()
+        {
+            var imageService = _serviceProvider.GetRequiredService<IImageProvider>();
+            var assembly = typeof(ImageServiceTests).GetTypeInfo().Assembly;
+            var bytes = ReadFully(assembly.GetManifestResourceStream("Arragro.Providers.ImageServiceProvider.IntegrationTests.Resources.ArragroCMSLogo.svg"));
+            var result = await imageService.GetImageDetailsAsync(bytes);
+            Assert.Equal(6359, result.Size);
+            Assert.Equal("image/svg+xml", result.MimeType);
+            Assert.False(result.IsImage);
+            Assert.Equal(498, result.Width);
+            Assert.Equal(167, result.Height);
         }
     }
 }

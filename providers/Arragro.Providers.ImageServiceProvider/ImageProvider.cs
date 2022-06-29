@@ -1,6 +1,7 @@
 ﻿using Arragro.Core.Common.Interfaces.Providers;
 using Arragro.Core.Common.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Polly;
 using Polly.Extensions.Http;
 using System;
@@ -74,7 +75,27 @@ namespace Arragro.Providers.ImageServiceProvider
             return new ImageProcessResult { Bytes = output, IsImage = isImage, Width = responseWidth, Height = responseHeight, Size = output.Length, MimeType = mimeType };
         }
 
-        public async Task<ImageProcessResult> GetImage(byte[] bytes, int quality = 80, bool asProgressiveJpeg = false)
+        public async Task<ImageProcessDetailsResult> GetImageDetailsAsync(byte[] bytes)
+        {
+            using (var content = new MultipartFormDataContent())
+            {
+                content.Add(new StreamContent(new MemoryStream(bytes)), "image", "image");
+
+                using (var response = await _httpClient.PostAsync("/image/details", content))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return JsonConvert.DeserializeObject<ImageProcessDetailsResult>(await response.Content.ReadAsStringAsync());
+                    }
+                    else
+                    {
+                        return new ImageProcessDetailsResult { IsImage = false, Size = bytes.Length };
+                    }
+                }
+            }
+        }
+
+        public async Task<ImageProcessResult> ProcessImageAsync(byte[] bytes, int quality = 80, bool asProgressiveJpeg = false)
         {
             using (var content = new MultipartFormDataContent())
             {
@@ -96,7 +117,7 @@ namespace Arragro.Providers.ImageServiceProvider
             }
         }
 
-        public async Task<ImageProcessResult> GetImage(byte[] bytes, int width, int quality = 80, bool asProgressiveJpeg = false)
+        public async Task<ImageProcessResult> ResizeAndProcessImageAsync(byte[] bytes, int width, int quality = 80, bool asProgressiveJpeg = false)
         {
             using (var content = new MultipartFormDataContent())
             {

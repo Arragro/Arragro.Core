@@ -37,7 +37,10 @@ namespace Arragro.Providers.ImageMagickProvider
                         processImageResult.MimeType = "image/pjpeg";
                     }
                     else
+                    {
                         image.Write(ms);
+                        processImageResult.MimeType = HeyRed.Mime.MimeTypesMap.GetMimeType($"xxx.{image.Format.ToString().ToLower()}");
+                    }
                     ms.Position = 0;
                     processImageResult.Bytes = ms.ToArray();
                 }
@@ -70,7 +73,25 @@ namespace Arragro.Providers.ImageMagickProvider
             return output;
         }
 
-        public async Task<ImageProcessResult> GetImage(byte[] bytes, int width, int quality = 80, bool asProgressiveJpeg = false)
+        public async Task<ImageProcessDetailsResult> GetImageDetailsAsync(byte[] bytes)
+        {
+            byte[] output;
+            string mimeType = string.Empty;
+            MagickImageInfo magickImageInfo;
+            try
+            {
+                magickImageInfo = new MagickImageInfo(bytes);
+            }
+            catch (MagickException)
+            {
+                return new ImageProcessResult { Bytes = bytes, IsImage = false, Size = bytes.Length };
+            }
+
+            var task = Task.Run(() => new ImageProcessResult { Bytes = bytes, IsImage = true, Width = magickImageInfo.Width, Height = magickImageInfo.Height, Size = bytes.Length, MimeType = mimeType });
+            return await task;
+        }
+
+        public async Task<ImageProcessResult> ResizeAndProcessImageAsync(byte[] bytes, int width, int quality = 80, bool asProgressiveJpeg = false)
         {
             byte[] output;
             string mimeType = string.Empty;
@@ -107,7 +128,7 @@ namespace Arragro.Providers.ImageMagickProvider
             return await task;
         }
 
-        public async Task<ImageProcessResult> GetImage(byte[] bytes, int quality, bool asProgressiveJpeg = false)
+        public async Task<ImageProcessResult> ProcessImageAsync(byte[] bytes, int quality = 80, bool asProgressiveJpeg = false)
         {
             byte[] output;
             string mimeType = string.Empty;

@@ -157,15 +157,24 @@ namespace Arragro.Providers.InMemoryStorageProvider
             return await Get(folderId, fileId);
         }
 
-        public async Task<CreateImageFromImageResult> CreateImageFromExistingImage(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, int quality, int width, bool asProgressive)
+        public async Task<CreateImageFromImageResult> CreateImageFromExistingImage(FolderIdType folderId, FileIdType fileId, FileIdType newFileId)
         {
             var fileName = $"{folderId}/{fileId}";
             var fileInfo = _provider.GetFileInfo(fileName);
             var bytes = await GetImageBytes(fileInfo);
 
-            var imageResult = await _imageService.GetImage(bytes, width, quality, asProgressive);
-            var uri = await Upload(folderId, newFileId, imageResult.Bytes, "");
-            imageResult = await _imageService.GetImage(bytes, 250, 60, true);
+            var imageProcessDetailsResult = await _imageService.GetImageDetailsAsync(bytes);
+            var imageResult = new ImageProcessResult
+            {
+                Height = imageProcessDetailsResult.Height,
+                Width = imageProcessDetailsResult.Width,
+                IsImage = imageProcessDetailsResult.IsImage,
+                MimeType = imageProcessDetailsResult.MimeType,
+                Size = imageProcessDetailsResult.Size,
+                Bytes = bytes
+            };
+            var uri = await Upload(folderId, newFileId, bytes, "");
+            imageResult = await _imageService.ResizeAndProcessImageAsync(bytes, 250, 60, true);
             var thumbnailUri = await Upload(folderId, newFileId, imageResult.Bytes, "", true);
 
             return new CreateImageFromImageResult

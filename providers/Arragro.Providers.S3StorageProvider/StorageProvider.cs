@@ -282,7 +282,7 @@ namespace Arragro.Providers.S3StorageProvider
             return await Get(folderId, fileId);
         }
 
-        public async Task<CreateImageFromImageResult> CreateImageFromExistingImage(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, int quality, int width, bool asProgressive = true)
+        public async Task<CreateImageFromImageResult> CreateImageFromExistingImage(FolderIdType folderId, FileIdType fileId, FileIdType newFileId)
         {
             var fileName = $"{_prefix}/{folderId}/{fileId}";
             var newFileName = $"{_prefix}/{folderId}/{newFileId}";
@@ -323,9 +323,18 @@ namespace Arragro.Providers.S3StorageProvider
                             bytes = ms.ToArray();
                         }
 
-                        var imageResult = await _imageService.GetImage(bytes, width, quality, asProgressive);
-                        var uri = await Upload(folderId, newFileId, imageResult.Bytes, oldRequest.Headers.ContentType);
-                        var thumbNailImageResult = await _imageService.GetImage(bytes, 250, 60, true);
+                        var imageProcessDetailsResult = await _imageService.GetImageDetailsAsync(bytes);
+                        var imageResult = new ImageProcessResult
+                        {
+                            Height = imageProcessDetailsResult.Height,
+                            Width = imageProcessDetailsResult.Width,
+                            IsImage = imageProcessDetailsResult.IsImage,
+                            MimeType = imageProcessDetailsResult.MimeType,
+                            Size = imageProcessDetailsResult.Size,
+                            Bytes = bytes
+                        };
+                        var uri = await Upload(folderId, newFileId, bytes, oldRequest.Headers.ContentType);
+                        var thumbNailImageResult = await _imageService.ResizeAndProcessImageAsync(bytes, 250, 60, true);
                         var thumbnailUri = await Upload(folderId, newFileId, thumbNailImageResult.Bytes, oldRequest.Headers.ContentType, true);
 
                         return new CreateImageFromImageResult

@@ -177,7 +177,7 @@ namespace Arragro.Providers.AzureStorageProvider
             return await Get(folderId, fileId);
         }
 
-        public async Task<CreateImageFromImageResult> CreateImageFromExistingImage(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, int quality, int width, bool asProgressive = true)
+        public async Task<CreateImageFromImageResult> CreateImageFromExistingImage(FolderIdType folderId, FileIdType fileId, FileIdType newFileId)
         {
             var fileName =$"{folderId}/{fileId}";
             var newFileName =$"{folderId}/{newFileId}";
@@ -199,9 +199,18 @@ namespace Arragro.Providers.AzureStorageProvider
                     }
 
                     var properties = await blob.GetPropertiesAsync();
-                    var imageResult = await _imageService.GetImage(bytes, width, quality, asProgressive);
-                    var uri = await Upload(folderId, newFileId, imageResult.Bytes, properties.Value.ContentType);
-                    var thumbNailImageResult = await _imageService.GetImage(bytes, 250, 60, true);
+                    var imageProcessDetailsResult = await _imageService.GetImageDetailsAsync(bytes);
+                    var imageResult = new ImageProcessResult
+                    {
+                        Height = imageProcessDetailsResult.Height,
+                        Width = imageProcessDetailsResult.Width,
+                        IsImage = imageProcessDetailsResult.IsImage,
+                        MimeType = imageProcessDetailsResult.MimeType,
+                        Size = imageProcessDetailsResult.Size,
+                        Bytes = bytes
+                    };
+                    var uri = await Upload(folderId, newFileId, bytes, properties.Value.ContentType);
+                    var thumbNailImageResult = await _imageService.ResizeAndProcessImageAsync(bytes, 250, 60, true);
                     var thumbnailUri = await Upload(folderId, newFileId, thumbNailImageResult.Bytes, properties.Value.ContentType, true);
 
                     return new CreateImageFromImageResult
