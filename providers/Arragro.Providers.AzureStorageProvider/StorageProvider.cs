@@ -235,6 +235,55 @@ namespace Arragro.Providers.AzureStorageProvider
             }
         }
 
+        public async Task<CreateAssetFromExistingResult> CreateAssetFromExistingAndResizeAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, int width, int quality = 80, bool asProgressiveJpeg = false)
+        {
+            var fileName = $"{folderId}/{fileId}";
+            var newFileName = $"{folderId}/{newFileId}";
+
+            var blobCopy = _assetContainerClient.GetBlobClient(newFileName);
+            if (!await blobCopy.ExistsAsync())
+            {
+                var blob = _assetContainerClient.GetBlobClient(fileName);
+
+                if (await blob.ExistsAsync())
+                {
+                    byte[] bytes;
+
+                    using (var ms = new MemoryStream())
+                    {
+                        var download = await blob.DownloadAsync();
+                        await download.Value.Content.CopyToAsync(ms);
+                        bytes = ms.ToArray();
+                    }
+
+                    var properties = await blob.GetPropertiesAsync();
+                    var imageProcessResult = await _imageService.ResizeAndProcessImageAsync(bytes, width, quality, asProgressiveJpeg);
+                    var uri = await UploadAsync(folderId, newFileId, imageProcessResult.Bytes, properties.Value.ContentType);
+                    var thumbNailImageResult = await _imageService.ResizeAndProcessImageAsync(imageProcessResult.Bytes, 250, 60, true);
+                    Uri thumbnailUri = null;
+                    if (imageProcessResult.IsImage)
+                    {
+                        thumbnailUri = await UploadAsync(folderId, newFileId, thumbNailImageResult.Bytes, properties.Value.ContentType, true);
+                    }
+
+                    return new CreateAssetFromExistingResult
+                    {
+                        ImageProcessResult = imageProcessResult,
+                        Uri = uri,
+                        ThumbnailUri = thumbnailUri
+                    };
+                }
+                else
+                {
+                    throw new Exception($"The blob you want to copy doesn't exists - {blob.Uri}!");
+                }
+            }
+            else
+            {
+                throw new Exception($"The blob you want to create already exists - {blobCopy.Uri}!");
+            }
+        }
+
         public async Task<Uri> UploadAsync(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType, bool thumbnail = false)
         {
             if (thumbnail)

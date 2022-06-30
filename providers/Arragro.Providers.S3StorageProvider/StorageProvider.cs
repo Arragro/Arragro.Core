@@ -358,6 +358,73 @@ namespace Arragro.Providers.S3StorageProvider
             }
         }
 
+        public async Task<CreateAssetFromExistingResult> CreateAssetFromExistingAndResizeAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, int width, int quality = 80, bool asProgressiveJpeg = false)
+        {
+            var fileName = $"{_prefix}/{folderId}/{fileId}";
+            var newFileName = $"{_prefix}/{folderId}/{newFileId}";
+
+            var newGetRequest = new GetObjectMetadataRequest
+            {
+                BucketName = _bucketName,
+                Key = newFileName
+            };
+
+            try
+            {
+                var newGetResponse = await _client.GetObjectMetadataAsync(newGetRequest);
+                var newUri = GetUri(fileName);
+                throw new Exception($"The blob you want to create already exists - {newUri}!");
+            }
+            catch (AmazonS3Exception ex)
+            {
+                if (ex.ErrorCode == "NotFound")
+                {
+                    var oldGetRequest = new GetObjectRequest
+                    {
+                        BucketName = _bucketName,
+                        Key = fileName
+                    };
+
+                    var oldRequest = await _client.GetObjectAsync(oldGetRequest);
+                    var oldUri = GetUri(fileName);
+
+                    if (oldRequest.HttpStatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        byte[] bytes;
+
+                        using (var ms = new MemoryStream())
+                        {
+                            await oldRequest.ResponseStream.CopyToAsync(ms);
+                            ms.Position = 0;
+                            bytes = ms.ToArray();
+                        }
+
+                        var imageProcessResult = await _imageService.ResizeAndProcessImageAsync(bytes, width, quality, asProgressiveJpeg);
+                        var uri = await UploadAsync(folderId, newFileId, imageProcessResult.Bytes, oldRequest.Headers.ContentType);
+                        var thumbNailImageResult = await _imageService.ResizeAndProcessImageAsync(imageProcessResult.Bytes, 250, 60, true);
+                        Uri thumbnailUri = null;
+                        if (thumbNailImageResult.IsImage)
+                        {
+                            thumbnailUri = await UploadAsync(folderId, newFileId, thumbNailImageResult.Bytes, oldRequest.Headers.ContentType, true);
+                        }
+
+                        return new CreateAssetFromExistingResult
+                        {
+                            ImageProcessResult = imageProcessResult,
+                            Uri = uri,
+                            ThumbnailUri = thumbnailUri
+                        };
+                    }
+                    else
+                    {
+                        throw new Exception($"The blob you want to copy doesn't exists - {oldUri}!");
+                    }
+                }
+                else
+                    throw;
+            }
+        }
+
         public async Task<Uri> UploadAsync(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType, bool thumbnail = false)
         {
             if (thumbnail)

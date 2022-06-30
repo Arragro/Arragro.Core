@@ -173,7 +173,7 @@ namespace Arragro.Providers.InMemoryStorageProvider
                 Size = imageProcessDetailsResult.Size,
                 Bytes = bytes
             };
-            var uri = await UploadAsync(folderId, newFileId, bytes, "");
+            var uri = await UploadAsync(folderId, newFileId, bytes, imageProcessDetailsResult.MimeType);
             imageResult = await _imageService.ResizeAndProcessImageAsync(bytes, 250, 60, true);
             Uri thumbnailUri = null;
             if (imageResult.IsImage)
@@ -184,6 +184,29 @@ namespace Arragro.Providers.InMemoryStorageProvider
             return new CreateAssetFromExistingResult
             {
                 ImageProcessResult = imageResult,
+                Uri = uri,
+                ThumbnailUri = thumbnailUri
+            };
+        }
+
+        public async Task<CreateAssetFromExistingResult> CreateAssetFromExistingAndResizeAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, int width, int quality = 80, bool asProgressiveJpeg = false)
+        {
+            var fileName = $"{folderId}/{fileId}";
+            var fileInfo = _provider.GetFileInfo(fileName);
+            var bytes = await GetImageBytesAsync(fileInfo);
+
+            var imageProcessResult = await _imageService.ResizeAndProcessImageAsync(bytes, width, quality, asProgressiveJpeg);
+            var uri = await UploadAsync(folderId, newFileId, imageProcessResult.Bytes, imageProcessResult.MimeType);
+            var thumbnailResult = await _imageService.ResizeAndProcessImageAsync(bytes, 250, 60, true);
+            Uri thumbnailUri = null;
+            if (thumbnailResult.IsImage)
+            {
+                thumbnailUri = await UploadAsync(folderId, newFileId, thumbnailResult.Bytes, "", true);
+            }
+
+            return new CreateAssetFromExistingResult
+            {
+                ImageProcessResult = imageProcessResult,
                 Uri = uri,
                 ThumbnailUri = thumbnailUri
             };
