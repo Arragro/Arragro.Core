@@ -42,8 +42,9 @@ namespace Arragro.Core.Fastly
             }
         }
 
-        public async Task PurgeKeysAsync(string[] keys)
+        public async Task<bool> PurgeKeysAsync(string[] keys)
         {
+            var result = true;
             if (!string.IsNullOrEmpty(_serviceId) &&
                 _apiTokens.Any())
             {
@@ -72,7 +73,7 @@ namespace Arragro.Core.Fastly
                     }
                     catch (Exception ex)
                     {
-                        var x = ex;
+                        result = false;
                     }
                     finally
                     {
@@ -80,6 +81,8 @@ namespace Arragro.Core.Fastly
                     }
                 });
             }
+
+            return result;
         }
     }
 }

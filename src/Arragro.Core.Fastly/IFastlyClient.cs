@@ -4,6 +4,6 @@ namespace Arragro.Core.Fastly
 {
     public interface IFastlyClient
     {
-        Task PurgeKeysAsync(string[] keys);
+        Task<bool> PurgeKeysAsync(string[] keys);
     }
 }

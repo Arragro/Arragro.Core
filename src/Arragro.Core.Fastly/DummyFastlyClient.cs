@@ -11,9 +11,10 @@ namespace Arragro.Core.Fastly
 
         }
 
-        public async Task PurgeKeysAsync(string[] keys)
+        public async Task<bool> PurgeKeysAsync(string[] keys)
         {
             await Task.Yield();
+            return true;
         }
     }
 }

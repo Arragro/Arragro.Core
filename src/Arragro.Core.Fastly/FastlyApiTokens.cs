@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Arragro.Core.Fastly
@@ -19,6 +20,14 @@ namespace Arragro.Core.Fastly
                 }
             }
             return ApiTokens;
+        }
+
+        public bool Enabled
+        {
+            get
+            {
+                return !String.IsNullOrEmpty(ServiceId) && !String.IsNullOrEmpty(ApiTokensString);
+            }
         }
     }
 }
