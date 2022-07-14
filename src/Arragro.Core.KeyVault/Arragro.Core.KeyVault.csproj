@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>netstandard2.1</TargetFramework>
+	  <AssemblyName>Arragro.Core.KeyVault</AssemblyName>
+	  <PackageId>Arragro.Core.KeyVault</PackageId>
+	  <Title>Arragro Core KeyVault Library</Title>
+	  <Copyright>Arragro 2017 (c) Arragro Ltd.</Copyright>
+	  <Description>Core library for Arragro to interact with Fastly.</Description>
+	  <PackageTags>dotnet core netstandard keyvault</PackageTags>
+	  <Authors>Mike Jewell,Reece Beardsall</Authors>
+	  <PackageIcon>arragro-icon.png</PackageIcon>
+	  <PackageLicenseUrl>&gt;http://opensource.org/licenses/MIT</PackageLicenseUrl>
+	  <RepositoryType>git</RepositoryType>
+	  <RepositoryUrl>https://github.com/Arragro/Arragro.Core</RepositoryUrl>
+	  <PackageProjectUrl>https://github.com/Arragro/Arragro.Core</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../arragro-icon.png" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.6.0" />
+    <PackageReference Include="Azure.Security.KeyVault.Certificates" Version="4.3.0" />
+    <PackageReference Include="Azure.Security.KeyVault.Secrets" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>

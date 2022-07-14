@@ -7,7 +7,7 @@
       <Title>Arragro Core Fastly Library</Title>
       <Copyright>Arragro 2017 (c) Arragro Ltd.</Copyright>
       <Description>Core library for Arragro to interact with Fastly.</Description>
-      <PackageTags>dotnet core netstandard ef</PackageTags>
+      <PackageTags>dotnet core netstandard fastly</PackageTags>
       <Authors>Mike Jewell,Reece Beardsall</Authors>
       <PackageIcon>arragro-icon.png</PackageIcon>
       <PackageLicenseUrl>&gt;http://opensource.org/licenses/MIT</PackageLicenseUrl>
