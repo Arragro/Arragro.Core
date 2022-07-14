@@ -1,4 +1,5 @@
-﻿using Arragro.Core.Common.Enums;
+﻿using Arragro.Core.Common.Certificates;
+using Arragro.Core.Common.Enums;
 using Arragro.Core.Common.Interfaces;
 using System;
 
@@ -28,13 +29,13 @@ namespace Arragro.Core.Common.Models
         /// </summary>
         public bool UseX509 { get; set; } = false;
         /// <summary>
-        /// Certificate path (cert should be pfx with password)
+        /// Certificate Config for Path or KeyVault
         /// </summary>
-        public string CertificatePath { get; set; } = null;
+        public CertificateConfig CertificateConfig { get; set; } = null;
         /// <summary>
-        /// Password to the CertBase64 cert
+        /// If the CertificateConfig Store is set to KeyVault use the certificate name
         /// </summary>
-        public string Password { get; set; } = null;
+        public string KeyVaultCertificateName { get; set; }
         /// <summary>
         /// Storage provider
         /// </summary>

@@ -40,14 +40,19 @@ namespace Arragro.Core.Web.Extensions
                 }
 
                 if (baseSettings.DataProtectionSettings.UseX509 &&
-                    (string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.CertificatePath)))
+                    baseSettings.DataProtectionSettings.CertificateConfig == null)
                 {
-                    throw new Exception("If UseX509 is true you must supply a CertificatePath");
+                    throw new Exception("If UseX509 is true you must supply a CertificateConfig");
                 }
 
                 if (baseSettings.DataProtectionSettings.UseX509 &&
-                    !string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.CertificatePath) &&
-                    !string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.Password))
+                    baseSettings.DataProtectionSettings.CertificateConfig.CertificateStore == CertificateStore.KeyVault &&
+                    string.IsNullOrEmpty(baseSettings.DataProtectionSettings.KeyVaultCertificateName))
+                {
+                    throw new Exception("If UseX509 is true and your Certificate Config is for KeyVaule, you must supply a KeyVaultCertificateName");
+                }
+
+                if (baseSettings.DataProtectionSettings.UseX509)
                 {
                     /*
                      * https://docs.microsoft.com/en-us/aspnet/core/security/data-protection/?view=aspnetcore-2.1
@@ -64,9 +69,7 @@ namespace Arragro.Core.Web.Extensions
                      * 
                      */
 
-                    var bytes = File.ReadAllBytes(baseSettings.DataProtectionSettings.CertificatePath);
-                    X509Certificate2 x509Cert = new X509Certificate2(bytes, baseSettings.DataProtectionSettings.Password);
-
+                    X509Certificate2 x509Cert = baseSettings.DataProtectionSettings.CertificateConfig.GetX509Certificate(baseSettings.DataProtectionSettings.KeyVaultCertificateName);
                     dataProtection.ProtectKeysWithCertificate(x509Cert);
                 }
             }
