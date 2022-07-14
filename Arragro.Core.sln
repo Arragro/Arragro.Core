@@ -79,7 +79,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Fastly", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Openiddict.EntityFrameworkCore", "src\Arragro.Core.Openiddict.EntityFrameworkCore\Arragro.Core.Openiddict.EntityFrameworkCore.csproj", "{EA8D22CE-C2EF-479A-8591-F06DDBEBE4F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arragro.Core.KeyVault", "src\Arragro.Core.KeyVault\Arragro.Core.KeyVault.csproj", "{040F55CC-0B13-4938-B512-7B90FC55A5EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arragro.Core.Certificates", "src\Arragro.Core.Certificates\Arragro.Core.Certificates.csproj", "{040F55CC-0B13-4938-B512-7B90FC55A5EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

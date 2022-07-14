@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Arragro.Core.KeyVault
+namespace Arragro.Core.Certificates
 {
-	public class KeyVaultSecretConfig
+	internal class KeyVaultSecretConfig
 	{
 		public Uri KeyVaultUri { get; set; }
 		public string TenantId { get; set; }

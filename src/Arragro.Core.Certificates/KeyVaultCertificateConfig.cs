@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Arragro.Core.KeyVault
+namespace Arragro.Core.Certificates
 {
 	public class KeyVaultCertificateConfig
 	{

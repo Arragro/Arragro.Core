@@ -1,4 +1,4 @@
-﻿namespace Arragro.Core.KeyVault.Enums
+﻿namespace Arragro.Core.Certificates.Enums
 {
 	public enum CertificateStore
 	{

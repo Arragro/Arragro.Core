@@ -2,12 +2,12 @@
 
   <PropertyGroup>
 	  <TargetFramework>netstandard2.1</TargetFramework>
-	  <AssemblyName>Arragro.Core.KeyVault</AssemblyName>
-	  <PackageId>Arragro.Core.KeyVault</PackageId>
+	  <AssemblyName>Arragro.Core.Certificates</AssemblyName>
+	  <PackageId>Arragro.Core.Certificates</PackageId>
 	  <Title>Arragro Core KeyVault Library</Title>
 	  <Copyright>Arragro 2017 (c) Arragro Ltd.</Copyright>
-	  <Description>Core library for Arragro to interact with Fastly.</Description>
-	  <PackageTags>dotnet core netstandard keyvault</PackageTags>
+	  <Description>Core library for Arragro to interact with Certificates.</Description>
+	  <PackageTags>dotnet core netstandard certificates</PackageTags>
 	  <Authors>Mike Jewell,Reece Beardsall</Authors>
 	  <PackageIcon>arragro-icon.png</PackageIcon>
 	  <PackageLicenseUrl>&gt;http://opensource.org/licenses/MIT</PackageLicenseUrl>

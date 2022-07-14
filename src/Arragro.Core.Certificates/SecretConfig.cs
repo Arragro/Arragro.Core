@@ -1,4 +1,4 @@
-﻿using Arragro.Core.KeyVault.Enums;
+﻿using Arragro.Core.Certificates.Enums;
 using Azure;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Arragro.Core.KeyVault
+namespace Arragro.Core.Certificates
 {
-	public class SecretConfig
+	internal class SecretConfig
 	{
 		public CertificateStore CertificateStore { get; set; }
 		public KeyVaultSecretConfig KeyVaultSecretConfig { get; set; }

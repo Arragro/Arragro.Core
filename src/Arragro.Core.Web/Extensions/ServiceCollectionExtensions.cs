@@ -40,10 +40,9 @@ namespace Arragro.Core.Web.Extensions
                 }
 
                 if (baseSettings.DataProtectionSettings.UseX509 &&
-                    (string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.CertificatePath) ||
-                     string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.Password)))
+                    (string.IsNullOrWhiteSpace(baseSettings.DataProtectionSettings.CertificatePath)))
                 {
-                    throw new Exception("If UseX509 is true you must supply a CertificatePath and Password");
+                    throw new Exception("If UseX509 is true you must supply a CertificatePath");
                 }
 
                 if (baseSettings.DataProtectionSettings.UseX509 &&
