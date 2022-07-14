@@ -75,7 +75,6 @@ namespace Arragro.Providers.ImageMagickProvider
 
         public async Task<ImageProcessDetailsResult> GetImageDetailsAsync(byte[] bytes)
         {
-            byte[] output;
             string mimeType = string.Empty;
             MagickImageInfo magickImageInfo;
             try
@@ -87,8 +86,8 @@ namespace Arragro.Providers.ImageMagickProvider
                 return new ImageProcessResult { Bytes = bytes, IsImage = false, Size = bytes.Length };
             }
 
-            var task = Task.Run(() => new ImageProcessResult { Bytes = bytes, IsImage = true, Width = magickImageInfo.Width, Height = magickImageInfo.Height, Size = bytes.Length, MimeType = mimeType });
-            return await task;
+            await Task.Yield();
+            return new ImageProcessResult { Bytes = bytes, IsImage = true, Width = magickImageInfo.Width, Height = magickImageInfo.Height, Size = bytes.Length, MimeType = mimeType };
         }
 
         public async Task<ImageProcessResult> ResizeAndProcessImageAsync(byte[] bytes, int width, int quality = 80, bool asProgressiveJpeg = false)

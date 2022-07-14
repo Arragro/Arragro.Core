@@ -5,12 +5,11 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using System;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Arragro.Providers.AzureStorageProvider
 {
-    public static class StorageProviderExtentions
+	public static class StorageProviderExtentions
     {
         public static async Task ConfigureAzureStorageProvider( 
             string storageConnectionString,

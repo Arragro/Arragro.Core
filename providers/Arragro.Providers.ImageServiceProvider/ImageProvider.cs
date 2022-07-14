@@ -18,12 +18,20 @@ namespace Arragro.Providers.ImageServiceProvider
         public static void ConfigureImageProvider(
             this IServiceCollection services,
             string imageServiceUrl,
+            string secreyKey,
             int timout = 3000)
         {
+            if (string.IsNullOrEmpty(secreyKey) ||
+                secreyKey.Length < 10)
+			{
+                throw new ArgumentException("secreyKey", "The secretKey must be provided and must be at least 10 characters long.");
+			}
+
             services.AddHttpClient(nameof(ImageProvider), config =>
             {
                 config.BaseAddress = new Uri(imageServiceUrl);
                 config.DefaultRequestHeaders.Accept.Clear();
+                config.DefaultRequestHeaders.Add("secret-key", secreyKey);
                 config.Timeout = TimeSpan.FromMilliseconds(timout);
             }).AddPolicyHandler(GetRetryPolicy());
 
@@ -89,6 +97,7 @@ namespace Arragro.Providers.ImageServiceProvider
                     }
                     else
                     {
+                        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) throw new HttpRequestException("You have provided an invalid securityKey");
                         return new ImageProcessDetailsResult { IsImage = false, Size = bytes.Length };
                     }
                 }
@@ -111,6 +120,7 @@ namespace Arragro.Providers.ImageServiceProvider
                     }
                     else
                     {
+                        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) throw new HttpRequestException("You have provided an invalid securityKey");
                         return new ImageProcessResult { Bytes = bytes, IsImage = false, Size = bytes.Length };
                     }
                 }
@@ -134,6 +144,7 @@ namespace Arragro.Providers.ImageServiceProvider
                     }
                     else
                     {
+                        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) throw new HttpRequestException("You have provided an invalid securityKey");
                         return new ImageProcessResult { Bytes = bytes, IsImage = false, Size = bytes.Length };
                     }
                 }
