@@ -27,7 +27,7 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             }).Wait();
 
             var serviceCollection = new ServiceCollection();
-            serviceCollection.ConfigureImageProvider(_server, 5000);
+            serviceCollection.ConfigureImageProvider(_server, "ThisIsASecretKey1", 5000);
             _serviceProvider = serviceCollection.BuildServiceProvider();
         }
 

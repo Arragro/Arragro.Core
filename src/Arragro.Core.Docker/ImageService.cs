@@ -34,7 +34,8 @@ namespace Arragro.Core.Docker
                 ExposedPorts = new Dictionary<string, object>() {
                     { "3000/tcp", new { HostPort = 3000.ToString() } }
                 } as IDictionary<string, EmptyStruct>,
-                HostConfig = hostConfig
+                HostConfig = hostConfig,
+                Env = new List<string> { "secretKey=ThisIsASecretKey" }
             });
 
             var container = await DockerExtentions.GetContainerAsync(client, ContainerName);
