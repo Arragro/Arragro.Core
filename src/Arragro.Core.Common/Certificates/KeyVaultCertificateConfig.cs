@@ -2,6 +2,7 @@
 using Azure.Identity;
 using Azure.Security.KeyVault.Certificates;
 using System;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -53,23 +54,23 @@ namespace Arragro.Core.Common.Certificates
 			return client;
 		}
 
-		internal async Task<Response<KeyVaultCertificateWithPolicy>> GetCertificateAsync(string certificateName, CancellationToken cancellationToken = default)
+		internal async Task<Response<X509Certificate2>> GetCertificateAsync(string certificateName, string version = null, CancellationToken cancellationToken = default)
 		{
 			if (string.IsNullOrEmpty(certificateName))
 				throw new ArgumentNullException(nameof(certificateName), "You must supply a certificate name.");
 
 			var client = GetCertificateClient();
-			var certificate = await client.GetCertificateAsync(certificateName, cancellationToken);
+			var certificate = await client.DownloadCertificateAsync(certificateName, version, cancellationToken);
 			return certificate;
 		}
 
-		internal Response<KeyVaultCertificateWithPolicy> GetCertificate(string certificateName)
+		internal Response<X509Certificate2> GetCertificate(string certificateName, string version = null)
 		{
 			if (string.IsNullOrEmpty(certificateName))
 				throw new ArgumentNullException(nameof(certificateName), "You must supply a certificate name.");
 
 			var client = GetCertificateClient();
-			var certificate = client.GetCertificate(certificateName);
+			var certificate = client.DownloadCertificate(certificateName, version);
 			return certificate;
 		}
 	}
