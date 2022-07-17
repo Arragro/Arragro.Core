@@ -37,7 +37,7 @@ namespace Arragro.Core.Common.Certificates
 				var cert = KeyVaultCertificateConfig.GetCertificate(certificateName);
 				if (cert.GetRawResponse().Status != (int)HttpStatusCode.OK)
 					throw new ArgumentException("KeyVault didn't return a 200.");
-				return new X509Certificate2(cert.Value.Cer);
+				return cert.Value;
 			}
 			else
 			{
