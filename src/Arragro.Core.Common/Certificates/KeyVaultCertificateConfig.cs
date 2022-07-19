@@ -43,7 +43,7 @@ namespace Arragro.Core.Common.Certificates
 			if (sb.Length > 0) throw new ArgumentException($"There are issues with the KeyVaultCertificateConfig:\r\n\r\n{sb}");
 
 			CertificateClient client;
-			if (!string.IsNullOrEmpty(TenantId) && !string.IsNullOrEmpty(ClientId) & !string.IsNullOrEmpty(ClientSecret))
+			if (string.IsNullOrEmpty(TenantId) && string.IsNullOrEmpty(ClientId) & string.IsNullOrEmpty(ClientSecret))
 			{
 				client = new CertificateClient(KeyVaultUri, new DefaultAzureCredential());
 			}

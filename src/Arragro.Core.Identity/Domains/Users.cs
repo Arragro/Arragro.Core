@@ -93,7 +93,7 @@ namespace Arragro.Core.Identity.Domains
             return await _userManager.GeneratePasswordResetTokenAsync(user);
         }
 
-        public async Task<IdentityResult> ConfirmEmailAsyncAsync(TUser user, string code)
+        public async Task<IdentityResult> ConfirmEmailAsync(TUser user, string code)
         {
             return await _userManager.ConfirmEmailAsync(user, code);
         }

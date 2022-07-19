@@ -11,7 +11,7 @@ namespace Arragro.Core.Identity.Interfaces
     {
         Task<IdentityResult> AddAsync(TUser user, Guid userId, string password = null);
         Task<IdentityResult> AddLogin(TUser user, UserLoginInfo userLoginInfo);
-        Task<IdentityResult> ConfirmEmailAsyncAsync(TUser user, string code);
+        Task<IdentityResult> ConfirmEmailAsync(TUser user, string code);
         Task<IdentityResult> DeleteAsync(TUser user);
         Task<string> GenerateEmailConfirmationTokenAsync(TUser user);
         Task<string> GeneratePasswordResetTokenAsync(TUser user);
