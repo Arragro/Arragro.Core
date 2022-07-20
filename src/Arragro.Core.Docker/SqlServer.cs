@@ -56,6 +56,8 @@ namespace Arragro.Core.Docker
             var isContainerReady = false;
             var isReadyCounter = 0;
 
+            Exception exception = null;
+
             while (!isContainerReady)
             {
                 isReadyCounter++;
@@ -83,14 +85,14 @@ namespace Arragro.Core.Docker
                 }
                 catch (Exception ex)
                 {
-                    var x = ex;
+                    exception = ex;
                 }
 
-                if (isReadyCounter == 5)
-                    throw new Exception("SqlServer container never ready.");
+                if (isReadyCounter == 10)
+                    throw new Exception("SqlServer container never ready.", exception);
 
                 if (!isContainerReady)
-                    Thread.Sleep(1000);
+                    Thread.Sleep(2000);
             }
 
             return container;
