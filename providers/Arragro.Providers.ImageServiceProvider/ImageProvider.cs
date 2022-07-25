@@ -18,11 +18,11 @@ namespace Arragro.Providers.ImageServiceProvider
         public static void ConfigureImageProvider(
             this IServiceCollection services,
             string imageServiceUrl,
-            string secreyKey,
+            string secretKey,
             int timout = 3000)
         {
-            if (string.IsNullOrEmpty(secreyKey) ||
-                secreyKey.Length < 10)
+            if (string.IsNullOrEmpty(secretKey) ||
+                secretKey.Length < 10)
 			{
                 throw new ArgumentException("secreyKey", "The secretKey must be provided and must be at least 10 characters long.");
 			}
@@ -31,7 +31,7 @@ namespace Arragro.Providers.ImageServiceProvider
             {
                 config.BaseAddress = new Uri(imageServiceUrl);
                 config.DefaultRequestHeaders.Accept.Clear();
-                config.DefaultRequestHeaders.Add("security-key", secreyKey);
+                config.DefaultRequestHeaders.Add("security-key", secretKey);
                 config.Timeout = TimeSpan.FromMilliseconds(timout);
             }).AddPolicyHandler(GetRetryPolicy());
 
