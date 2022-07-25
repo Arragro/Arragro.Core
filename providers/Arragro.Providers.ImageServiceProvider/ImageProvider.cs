@@ -31,7 +31,7 @@ namespace Arragro.Providers.ImageServiceProvider
             {
                 config.BaseAddress = new Uri(imageServiceUrl);
                 config.DefaultRequestHeaders.Accept.Clear();
-                config.DefaultRequestHeaders.Add("secret-key", secreyKey);
+                config.DefaultRequestHeaders.Add("security-key", secreyKey);
                 config.Timeout = TimeSpan.FromMilliseconds(timout);
             }).AddPolicyHandler(GetRetryPolicy());
 
