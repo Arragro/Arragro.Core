@@ -18,9 +18,9 @@ namespace Arragro.Core.Common.Certificates
 			if (CertificateStore == CertificateStore.FilePath)
 			{
 				if (String.IsNullOrEmpty(PfxCertificatePath))
-					throw new ArgumentException("The CertificateStore is set to FilePath but has no CertificatePathValue.");
+					throw new ArgumentException("The CertificateStore is set to FilePath but has no PfxCertificatePath.");
 				if (!File.Exists(PfxCertificatePath))
-					throw new ArgumentException("The CertificateStore is set to FilePath but the CertificatePathValue has no associated file.");
+					throw new ArgumentException("The CertificateStore is set to FilePath but the PfxCertificatePath supplied doesn't exist.");
 			}
 			else if (CertificateStore == CertificateStore.KeyVault)
 			{

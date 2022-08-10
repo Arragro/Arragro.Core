@@ -64,25 +64,12 @@ namespace Arragro.Core.Web.Controllers
                 _baseSettings.WebInfoSettings.Secret != Guid.Empty &&
                 _baseSettings.WebInfoSettings.Secret == secret)
             {
-                if (_baseSettings.AllDbContextMigrationsApplied != null && !_migrationsAppliedNoMoreTests)
-                {
-                    var results = _baseSettings.AllDbContextMigrationsApplied.TestDbContextsMigrated();
-                    if (results.Any(x => !x.Migrated))
-                    {
-                        return new ConflictResult();
-                    }
-                    else
-                    {
-                        _migrationsAppliedNoMoreTests = true;
-                    }
-                }
-
                 return Json(
-                new {
-                    AssemblyVersion = typeof(RuntimeEnvironment).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version,
-                    IPAddressInformation = GetIpAddress(),
-                    UpTime = DateTimeOffset.UtcNow - _startupTime
-                });
+                    new {
+                        AssemblyVersion = typeof(RuntimeEnvironment).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version,
+                        IPAddressInformation = GetIpAddress(),
+                        UpTime = DateTimeOffset.UtcNow - _startupTime
+                    });
             }
             return new NotFoundResult();
         }
