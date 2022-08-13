@@ -8,9 +8,9 @@ namespace Arragro.Core.Fastly
     {
         public string ServiceId { get; set; }
         public string ApiTokensString { get; set; } = null;
-        public List<string> ApiTokens { get; set; } = new List<string>();
+        internal List<string> ApiTokens { get; set; } = new List<string>();
 
-        public List<string> GetApiTokens()
+        internal List<string> GetApiTokens()
         {
             if (ApiTokens.Count == 0)
             {

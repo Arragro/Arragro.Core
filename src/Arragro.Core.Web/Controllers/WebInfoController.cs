@@ -17,12 +17,15 @@ namespace Arragro.Core.Web.Controllers
     {
         private static DateTimeOffset _startupTime = DateTime.UtcNow;
         private readonly BaseSettings _baseSettings;
-        private bool _migrationsAppliedNoMoreTests = false;
+        private readonly IEnumerable<dynamic> _ipAddressDetails;
+        private readonly string _assemblyVersion;
 
         public WebInfoController(
             BaseSettings baseSettings)
         {
             _baseSettings = baseSettings;
+            _ipAddressDetails = GetIpAddress();
+            _assemblyVersion = typeof(RuntimeEnvironment).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
         }
 
         private IEnumerable<dynamic> GetIpAddress()
@@ -66,8 +69,8 @@ namespace Arragro.Core.Web.Controllers
             {
                 return Json(
                     new {
-                        AssemblyVersion = typeof(RuntimeEnvironment).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version,
-                        IPAddressInformation = GetIpAddress(),
+                        AssemblyVersion = _assemblyVersion,
+                        IPAddressInformation = _ipAddressDetails,
                         UpTime = DateTimeOffset.UtcNow - _startupTime
                     });
             }
