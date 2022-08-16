@@ -6,7 +6,6 @@ namespace Arragro.Core.Fastly
 {
     public class FastlyApiTokens
     {
-        public string ServiceId { get; set; }
         public string ApiTokensString { get; set; } = null;
         internal List<string> ApiTokens { get; set; } = new List<string>();
 
@@ -26,7 +25,7 @@ namespace Arragro.Core.Fastly
         {
             get
             {
-                return !String.IsNullOrEmpty(ServiceId) && !String.IsNullOrEmpty(ApiTokensString);
+                return !String.IsNullOrEmpty(ApiTokensString);
             }
         }
     }

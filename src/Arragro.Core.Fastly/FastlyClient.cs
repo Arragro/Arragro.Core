@@ -13,7 +13,6 @@ namespace Arragro.Core.Fastly
     {
         private readonly ILogger<FastlyClient> _logger;
         private readonly HttpClient _httpClient;
-        private readonly string _serviceId;
         private readonly List<string> _apiTokens;
         private static long _currentIndex = 0;
 
@@ -24,7 +23,6 @@ namespace Arragro.Core.Fastly
         {
             _logger = logger;
             _httpClient = httpClient;
-            _serviceId = fastlyApiTokens.ServiceId;
             _apiTokens = fastlyApiTokens.GetApiTokens();
             _httpClient.BaseAddress = new Uri("https://api.fastly.com");
         }
@@ -42,10 +40,10 @@ namespace Arragro.Core.Fastly
             }
         }
 
-        public async Task<bool> PurgeKeysAsync(string[] keys)
+        public async Task<bool> PurgeKeysAsync(string serviceId, string[] keys)
         {
             var result = true;
-            if (!string.IsNullOrEmpty(_serviceId) &&
+            if (!string.IsNullOrEmpty(serviceId) &&
                 _apiTokens.Any())
             {
                 await keys.ForEachAsync(4, async key =>
@@ -57,7 +55,7 @@ namespace Arragro.Core.Fastly
 
                         _logger.LogDebug("Purging {@Key} with {@ApiToken}", key, apiToken);
 
-                        var request = new HttpRequestMessage(HttpMethod.Post, $"/service/{_serviceId}/purge/{key}");
+                        var request = new HttpRequestMessage(HttpMethod.Post, $"/service/{serviceId}/purge/{key}");
                         request.Headers.Add("Fastly-Key", apiToken);
                         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
