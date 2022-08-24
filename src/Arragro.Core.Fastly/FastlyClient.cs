@@ -13,6 +13,7 @@ namespace Arragro.Core.Fastly
     {
         private readonly ILogger<FastlyClient> _logger;
         private readonly HttpClient _httpClient;
+        private readonly List<string> _serviceIds;
         private readonly List<string> _apiTokens;
         private static long _currentIndex = 0;
 
@@ -23,6 +24,7 @@ namespace Arragro.Core.Fastly
         {
             _logger = logger;
             _httpClient = httpClient;
+            _serviceIds = fastlyApiTokens.GetServiceIds();
             _apiTokens = fastlyApiTokens.GetApiTokens();
             _httpClient.BaseAddress = new Uri("https://api.fastly.com");
         }
@@ -40,47 +42,73 @@ namespace Arragro.Core.Fastly
             }
         }
 
-        public async Task<bool> PurgeKeysAsync(string serviceId, string[] keys)
+        private async Task<bool> PurgeKeysBatchAsync(string serviceId, string[] keys)
         {
             var result = true;
+            var currentIndex = Interlocked.Read(ref _currentIndex);
+            var apiToken = _apiTokens[(int)currentIndex];
+            try
+            {
+                _logger.LogDebug("Purging {@Key} with {@ApiToken}", string.Join(",", keys), apiToken);
+
+                var request = new HttpRequestMessage(HttpMethod.Post, $"/service/{serviceId}/purge");
+                request.Headers.Add("Fastly-Key", apiToken);
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                request.Headers.Add("surrogate-key", string.Join(" ", keys));
+
+                var httpResponseMessage = await _httpClient.SendAsync(request);
+
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var body = await httpResponseMessage.Content.ReadAsStringAsync();
+                    var fastlyException = new FastlyException("Something has gone wrong when purging against fastly.", httpResponseMessage, body);
+                    _logger.LogError("Failed to purge key '{@Key}' with {@ApiToken} {@Exception}.", string.Join(",", keys), apiToken, fastlyException);
+                    throw fastlyException;
+                }
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            }
+            finally
+            {
+                SetCurrentIndex();
+            }
+            return result;
+        }
+
+        private async Task<bool> PurgeKeysAsync(string serviceId, string[] keys)
+        {
             if (!string.IsNullOrEmpty(serviceId) &&
                 _apiTokens.Any())
             {
-                await keys.ForEachAsync(4, async key =>
+                var keyLength = keys.Length / 256;
+                var remainder = keys.Length % 256;
+
+                for (var i = 0; i < keyLength; i++)
                 {
-                    var currentIndex = Interlocked.Read(ref _currentIndex);
-                    var apiToken = _apiTokens[(int)currentIndex];
-                    try
-                    {
-
-                        _logger.LogDebug("Purging {@Key} with {@ApiToken}", key, apiToken);
-
-                        var request = new HttpRequestMessage(HttpMethod.Post, $"/service/{serviceId}/purge/{key}");
-                        request.Headers.Add("Fastly-Key", apiToken);
-                        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                        var httpResponseMessage = await _httpClient.SendAsync(request);
-
-                        if (!httpResponseMessage.IsSuccessStatusCode)
-                        {
-                            var body = await httpResponseMessage.Content.ReadAsStringAsync();
-                            var fastlyException = new FastlyException("Something has gone wrong when purging against fastly.", httpResponseMessage, body);
-                            _logger.LogError("Failed to purge key '{@Key}' with {@ApiToken} {@Exception}.", key, apiToken, fastlyException);
-                            throw fastlyException;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        result = false;
-                    }
-                    finally
-                    {
-                        SetCurrentIndex();
-                    }
-                });
+                    var keysToPurge = keys.Skip(i * 256).Take(256).ToArray();
+                    var result = await PurgeKeysBatchAsync(serviceId, keysToPurge);
+                    if (!result) return false;
+                }
+                if (remainder > 0)
+                {
+                    var keysToPurge = keys.Skip(keyLength * 256).Take(256).ToArray();
+                    var result = await PurgeKeysBatchAsync(serviceId, keysToPurge);
+                    if (!result) return false;
+                }
             }
+            return true;
+        }
 
-            return result;
+        public async Task<bool> PurgeKeysAsync(string[] keys)
+        {
+            foreach (var serviceId in _serviceIds)
+            {
+                var result = await PurgeKeysAsync(serviceId, keys);
+                if (!result) return result;
+            }
+            return true;
         }
     }
 }
