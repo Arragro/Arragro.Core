@@ -47,6 +47,7 @@ namespace Arragro.Core.Fastly
             var result = true;
             var currentIndex = Interlocked.Read(ref _currentIndex);
             var apiToken = _apiTokens[(int)currentIndex];
+            if (apiToken == "testing") return true;
             try
             {
                 _logger.LogDebug("Purging {@Key} with {@ApiToken}", string.Join(",", keys), apiToken);
@@ -105,8 +106,11 @@ namespace Arragro.Core.Fastly
         {
             foreach (var serviceId in _serviceIds)
             {
-                var result = await PurgeKeysAsync(serviceId, keys);
-                if (!result) return result;
+                if (serviceId != "testing")
+                {
+                    var result = await PurgeKeysAsync(serviceId, keys);
+                    if (!result) return result;
+                }
             }
             return true;
         }
