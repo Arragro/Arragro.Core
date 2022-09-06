@@ -69,6 +69,10 @@ namespace Arragro.Core.Fastly
             }
             catch (Exception ex)
             {
+                if (!(ex is FastlyException))
+                {
+                    _logger.LogError("Fastly issue.", ex);
+                }
                 result = false;
             }
             finally
@@ -109,6 +113,56 @@ namespace Arragro.Core.Fastly
                 if (serviceId != "testing")
                 {
                     var result = await PurgeKeysAsync(serviceId, keys);
+                    if (!result) return result;
+                }
+            }
+            return true;
+        }
+
+        public async Task<bool> PurgeAllAsync(string serviceId)
+        {
+            var result = true;
+            var currentIndex = Interlocked.Read(ref _currentIndex);
+            var apiToken = _apiTokens[(int)currentIndex];
+            if (apiToken == "testing") return true;
+
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Post, $"/service/{serviceId}/purge_all");
+                request.Headers.Add("Fastly-Key", apiToken);
+
+                var httpResponseMessage = await _httpClient.SendAsync(request);
+
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var body = await httpResponseMessage.Content.ReadAsStringAsync();
+                    var fastlyException = new FastlyException("Something has gone wrong when purging against fastly.", httpResponseMessage, body);
+                    _logger.LogError("Failed to purge all {@ApiToken} {@Exception}.", apiToken, fastlyException);
+                    throw fastlyException;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (!(ex is FastlyException))
+                {
+                    _logger.LogError("Fastly issue.", ex);
+                }
+                result = false;
+            }
+            finally
+            {
+                SetCurrentIndex();
+            }
+            return result;
+        }
+
+        public async Task<bool> PurgeAllAsync()
+        {
+            foreach (var serviceId in _serviceIds)
+            {
+                if (serviceId != "testing")
+                {
+                    var result = await PurgeAllAsync(serviceId);
                     if (!result) return result;
                 }
             }
