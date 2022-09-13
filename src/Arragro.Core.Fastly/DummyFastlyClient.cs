@@ -17,13 +17,13 @@ namespace Arragro.Core.Fastly
             return true;
         }
 
-        public async Task<bool> PurgeAllAsync()
+        public async Task<bool> PurgeAllAsync(int? waitMilliseconds = null)
         {
             await Task.Yield();
             return true;
         }
 
-        public async Task<bool> PurgeKeysAsync(string[] keys)
+        public async Task<bool> PurgeKeysAsync(string[] keys, int? waitMilliseconds = null)
         {
             await Task.Yield();
             return true;

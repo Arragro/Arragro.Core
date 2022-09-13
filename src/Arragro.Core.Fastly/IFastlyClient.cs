@@ -4,8 +4,8 @@ namespace Arragro.Core.Fastly
 {
     public interface IFastlyClient
     {
-        Task<bool> PurgeKeysAsync(string[] keys);
+        Task<bool> PurgeKeysAsync(string[] keys, int? waitMilliseconds = null);
         Task<bool> PurgeAllAsync(string serviceId);
-        Task<bool> PurgeAllAsync();
+        Task<bool> PurgeAllAsync(int? waitMilliseconds = null);
     }
 }

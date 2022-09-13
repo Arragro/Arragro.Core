@@ -106,7 +106,7 @@ namespace Arragro.Core.Fastly
             return true;
         }
 
-        public async Task<bool> PurgeKeysAsync(string[] keys)
+        public async Task<bool> PurgeKeysAsync(string[] keys, int? waitMilliseconds = null)
         {
             foreach (var serviceId in _serviceIds)
             {
@@ -114,6 +114,10 @@ namespace Arragro.Core.Fastly
                 {
                     var result = await PurgeKeysAsync(serviceId, keys);
                     if (!result) return result;
+                }
+                if (waitMilliseconds.HasValue)
+                {
+                    Thread.Sleep(waitMilliseconds.Value);
                 }
             }
             return true;
@@ -156,7 +160,7 @@ namespace Arragro.Core.Fastly
             return result;
         }
 
-        public async Task<bool> PurgeAllAsync()
+        public async Task<bool> PurgeAllAsync(int? waitMilliseconds = null)
         {
             foreach (var serviceId in _serviceIds)
             {
@@ -164,6 +168,10 @@ namespace Arragro.Core.Fastly
                 {
                     var result = await PurgeAllAsync(serviceId);
                     if (!result) return result;
+                }
+                if (waitMilliseconds.HasValue)
+                {
+                    Thread.Sleep(waitMilliseconds.Value);
                 }
             }
             return true;
