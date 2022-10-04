@@ -50,7 +50,7 @@ namespace Arragro.Core.Fastly
             if (apiToken == "testing") return true;
             try
             {
-                _logger.LogDebug("Purging {@Key} with {@ApiToken}", string.Join(",", keys), apiToken);
+                _logger.LogInformation("Purging {@Key} with {@ApiToken}", string.Join(",", keys), apiToken);
 
                 var request = new HttpRequestMessage(HttpMethod.Post, $"/service/{serviceId}/purge");
                 request.Headers.Add("Fastly-Key", apiToken);
@@ -132,6 +132,7 @@ namespace Arragro.Core.Fastly
 
             try
             {
+                _logger.LogInformation("Purging All with {@ApiToken}", apiToken);
                 var request = new HttpRequestMessage(HttpMethod.Post, $"/service/{serviceId}/purge_all");
                 request.Headers.Add("Fastly-Key", apiToken);
 
