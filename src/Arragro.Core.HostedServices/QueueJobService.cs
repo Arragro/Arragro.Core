@@ -39,10 +39,10 @@ namespace Arragro.Core.HostedServices
         protected override async Task ScheduleJob(CancellationToken cancellationToken)
         {
             _logger.LogDebug($"{_queueName} QueueJobService Scheduled Job running for {_queueName}");
-            var next = _expression.GetNextOccurrence(DateTimeOffset.Now, _timeZoneInfo);
+            var next = _expression.GetNextOccurrence(DateTimeOffset.UtcNow, _timeZoneInfo);
             if (next.HasValue)
             {
-                var delay = next.Value - DateTimeOffset.Now;
+                var delay = next.Value - DateTimeOffset.UtcNow;
                 _timer = new System.Timers.Timer(delay.TotalMilliseconds);
                 _timer.Elapsed += async (sender, args) =>
                 {
