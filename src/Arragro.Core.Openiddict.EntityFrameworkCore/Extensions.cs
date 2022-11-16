@@ -19,21 +19,13 @@ namespace Arragro.Core.Openiddict.EntityFrameworkCore
             {
                 case DatabaseType.Postgres:
                     services.AddDbContext<OpenIddictPGContext>(
-                        options => options.UseNpgsql(connectionString, sqlOptions =>
-                        {
-                            sqlOptions.EnableRetryOnFailure(3);
-                            sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                        })
+                        options => options.UseNpgsql()
                     );
                     services.AddScoped<OpenIddictBaseContext, OpenIddictPGContext>();
                     break;
                 case DatabaseType.SqlServer:
                     services.AddDbContext<OpenIddictContext>(
-                        options => options.UseSqlServer(connectionString, sqlOptions =>
-                        {
-                            sqlOptions.EnableRetryOnFailure(3);
-                            sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                        })
+                        options => options.UseSqlServer(connectionString)
                     );
                     services.AddScoped<OpenIddictBaseContext, OpenIddictContext>();
                     break;
@@ -49,10 +41,7 @@ namespace Arragro.Core.Openiddict.EntityFrameworkCore
 
                     services.AddDbContext<OpenIddictSqliteContext>(options =>
                     {
-                        options.UseSqlite(sqliteCconnectionString, sqlOptions =>
-                        {
-                            sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                        });
+                        options.UseSqlite(sqliteCconnectionString);
                     });
 
                     services.AddScoped<OpenIddictBaseContext, OpenIddictSqliteContext>();

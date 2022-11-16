@@ -8,8 +8,6 @@ namespace Arragro.Core.Openiddict.EntityFrameworkCore
         public OpenIddictBaseContext(DbContextOptions options)
             : base(options)
         {
-            ChangeTracker.CascadeDeleteTiming = CascadeTiming.Never;
-            ChangeTracker.DeleteOrphansTiming = CascadeTiming.Never;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -51,11 +49,7 @@ namespace Arragro.Core.Openiddict.EntityFrameworkCore
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=ArragroCMS;Trusted_Connection=True;", sqlOptions =>
-                {
-                    sqlOptions.EnableRetryOnFailure(3);
-                    sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                });
+                optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=ArragroCMS;Trusted_Connection=True;");
             }
         }
     }
@@ -72,11 +66,7 @@ namespace Arragro.Core.Openiddict.EntityFrameworkCore
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql(@"host=192.168.69.254;port=5469;database=arragro-cms-examples;user id=postgres;password=password1;", sqlOptions =>
-                {
-                    sqlOptions.EnableRetryOnFailure(3);
-                    sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                });
+                optionsBuilder.UseNpgsql(@"host=192.168.69.254;port=5469;database=arragro-cms-examples;user id=postgres;password=password1;");
             }
         }
     }
@@ -93,10 +83,7 @@ namespace Arragro.Core.Openiddict.EntityFrameworkCore
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite(@"DataSource=:memory:", sqlOptions =>
-                {
-                    sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                });
+                optionsBuilder.UseSqlite(@"DataSource=:memory:");
             }
         }
     }
