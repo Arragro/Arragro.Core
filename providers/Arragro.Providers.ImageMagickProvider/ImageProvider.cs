@@ -134,7 +134,9 @@ namespace Arragro.Providers.ImageMagickProvider
 
             try
             {
-                var info = new MagickImageInfo(bytes); switch (info.Format)
+                var info = new MagickImageInfo(bytes); 
+                
+                switch (info.Format)
                 {
                     case MagickFormat.Svg:
                     case MagickFormat.Gif:
