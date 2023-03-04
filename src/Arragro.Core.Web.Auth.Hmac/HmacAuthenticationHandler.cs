@@ -105,17 +105,17 @@ namespace Arragro.Core.Web.Auth.Hmac
         private async Task<bool> IsValidRequestAsync(HttpRequest req, byte[] body, string appId, string incomingBase64Signature, string nonce, string requestTimeStamp)
         {
             var requestContentBase64String = string.Empty;
-            var absoluteUri = string.Concat(
-                        req.Scheme,
-                        "://",
-                        req.Host.ToUriComponent(),
-                        req.PathBase.ToUriComponent(),
-                        req.Path.ToUriComponent(),
-                        req.QueryString.ToUriComponent());
+            //var absoluteUri = string.Concat(
+            //            req.Scheme,
+            //            "://",
+            //            req.Host.ToUriComponent(),
+            //            req.PathBase.ToUriComponent(),
+            //            req.Path.ToUriComponent(),
+            //            req.QueryString.ToUriComponent());
 
-            _logger.LogInformation("IsValidRequestAsync:absoluteUri", absoluteUri);
+            //_logger.LogInformation("IsValidRequestAsync:absoluteUri", absoluteUri);
 
-            var requestUri = WebUtility.UrlEncode(absoluteUri.ToLower());
+            //var requestUri = WebUtility.UrlEncode(absoluteUri.ToLower());
             var requestHttpMethod = req.Method;
 
             var authorizationProviderResult = await Options.AuthorizationProvider.TryGetApiKeyAsync(appId);
@@ -137,7 +137,7 @@ namespace Arragro.Core.Web.Auth.Hmac
                 requestContentBase64String = Convert.ToBase64String(hash);
             }
 
-            var data = $"{appId}{requestHttpMethod}{requestUri}{requestTimeStamp}{nonce}{requestContentBase64String}";
+            var data = $"{appId}{requestHttpMethod}{requestTimeStamp}{nonce}{requestContentBase64String}";
             _logger.LogInformation("IsValidRequestAsync:data", data);
 
             var apiKeyBytes = Convert.FromBase64String(authorizationProviderResult.ValidationKey);
