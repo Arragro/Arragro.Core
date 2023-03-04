@@ -20,14 +20,17 @@ namespace Arragro.Core.Web.Auth.Hmac
 {
     public class HmacAuthenticationHandler : AuthenticationHandler<HmacAuthenticationSchemeOptions>
     {
+        private readonly ILogger<HmacAuthenticationHandler> _logger;
         private readonly IDistributedCacheManager _distributedCacheManager;
 
         public HmacAuthenticationHandler(
+            ILogger<HmacAuthenticationHandler> loggerHmacAuthenticationHandler,
             IDistributedCacheManager distributedCacheManager,
             IOptionsMonitor<HmacAuthenticationSchemeOptions> options,
             ILoggerFactory logger, 
             UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
         {
+            _logger = loggerHmacAuthenticationHandler;
             _distributedCacheManager = distributedCacheManager;
         }
 
@@ -109,6 +112,9 @@ namespace Arragro.Core.Web.Auth.Hmac
                         req.PathBase.ToUriComponent(),
                         req.Path.ToUriComponent(),
                         req.QueryString.ToUriComponent());
+
+            _logger.LogInformation("IsValidRequestAsync:absoluteUri", absoluteUri);
+
             var requestUri = WebUtility.UrlEncode(absoluteUri.ToLower());
             var requestHttpMethod = req.Method;
 
@@ -132,6 +138,7 @@ namespace Arragro.Core.Web.Auth.Hmac
             }
 
             var data = $"{appId}{requestHttpMethod}{requestUri}{requestTimeStamp}{nonce}{requestContentBase64String}";
+            _logger.LogInformation("IsValidRequestAsync:data", data);
 
             var apiKeyBytes = Convert.FromBase64String(authorizationProviderResult.ValidationKey);
 
