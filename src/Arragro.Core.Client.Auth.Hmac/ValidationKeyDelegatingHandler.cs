@@ -40,7 +40,7 @@ namespace Arragro.Core.Client.Auth.Hmac
         {
             var requestContentBase64String = string.Empty;
 
-            var requestUri = WebUtility.UrlEncode(request.RequestUri.AbsoluteUri.ToLower());
+            //var requestUri = WebUtility.UrlEncode(request.RequestUri.AbsoluteUri.ToLower());
 
             var requestHttpMethod = request.Method.Method;
 
@@ -64,7 +64,8 @@ namespace Arragro.Core.Client.Auth.Hmac
             }
 
             // Creating the raw signature string
-            var signatureRawData = $"{_appId}{requestHttpMethod}{requestUri}{requestTimeStamp}{nonce}{requestContentBase64String}";
+            var signatureRawData = $"{_appId}{requestHttpMethod}{requestTimeStamp}{nonce}{requestContentBase64String}";
+            //var signatureRawData = $"{_appId}{requestHttpMethod}{requestUri}{requestTimeStamp}{nonce}{requestContentBase64String}";
 
             var apiKeyBytes = Convert.FromBase64String(_validationKey);
             var signature = Encoding.UTF8.GetBytes(signatureRawData);
