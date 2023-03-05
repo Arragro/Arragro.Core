@@ -138,7 +138,7 @@ namespace Arragro.Core.Web.Auth.Hmac
             }
 
             var data = $"{appId}{requestHttpMethod}{requestTimeStamp}{nonce}{requestContentBase64String}";
-            _logger.LogInformation("IsValidRequestAsync:data", data);
+            _logger.LogDebug("IsValidRequestAsync:data - @data", data);
 
             var apiKeyBytes = Convert.FromBase64String(authorizationProviderResult.ValidationKey);
 
