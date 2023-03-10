@@ -23,7 +23,7 @@ namespace Arragro.Core.HostedServices
             string connectionString,
             string cronExpression,
             bool includeSeconds,
-            TimeZoneInfo timeZoneInfo
+            TimeZoneInfo timeZoneInfo,
             ILogger<QueueJobService> logger,
             bool logInfo = true,
             bool logNextOccurance = true) : base (cronExpression, includeSeconds, timeZoneInfo, logger, queueName, logInfo, logNextOccurance)
