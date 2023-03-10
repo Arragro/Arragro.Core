@@ -19,7 +19,7 @@ namespace Arragro.Core.Openiddict.EntityFrameworkCore
             {
                 case DatabaseType.Postgres:
                     services.AddDbContext<OpenIddictPGContext>(
-                        options => options.UseNpgsql()
+                        options => options.UseNpgsql(connectionString)
                     );
                     services.AddScoped<OpenIddictBaseContext, OpenIddictPGContext>();
                     break;
