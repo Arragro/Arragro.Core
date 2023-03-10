@@ -31,10 +31,14 @@ namespace Arragro.Core.HostedServices
             _logger = logger;
             _jobName = jobName;
             _logNextOccurance = logNextOccurance;
+            var nextOccurrences = _expression.GetOccurrences(DateTime.UtcNow, DateTime.UtcNow.AddDays(3));
             if (logInfo)
             {
-                var nextOccurrences = _expression.GetOccurrences(DateTime.UtcNow, DateTime.UtcNow.AddDays(3));
                 logger.LogInformation($"Configured Cron Job for: {_jobName}, next occurrences: {string.Join(", ", nextOccurrences.Take(5).Select(x => x.ToString("yyyy-MM-ddTHH:mm:ss")))}");
+            }
+            else
+            {
+                logger.LogDebug($"Configured Cron Job for: {_jobName}, next occurrences: {string.Join(", ", nextOccurrences.Take(5).Select(x => x.ToString("yyyy-MM-ddTHH:mm:ss")))}");
             }
         }
 
