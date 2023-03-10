@@ -4,6 +4,7 @@ using Azure.Storage.Queues.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,7 +24,9 @@ namespace Arragro.Core.HostedServices
             string cronExpression,
             bool includeSeconds,
             TimeZoneInfo timeZoneInfo,
-            ILogger<QueueJobService> logger) : base (cronExpression, includeSeconds, timeZoneInfo, logger, queueName)
+            ILogger<QueueJobService> logger,
+            bool logInfo = true,
+            bool logNextOccurance = true) : base(cronExpression, includeSeconds, timeZoneInfo, logger, queueName, logInfo, logNextOccurance)
         {
             _queueClient = new QueueClient(connectionString, queueName);
             _queueClientFailure = new QueueClient(connectionString, $"{queueName}-failures");
@@ -32,8 +35,15 @@ namespace Arragro.Core.HostedServices
             _queueClientFailure.CreateIfNotExists();
 
             _queueName = queueName;
-
-            logger.LogInformation($"Configured Queue Job for: {queueName}");
+            var nextOccurrences = _expression.GetOccurrences(DateTime.UtcNow, DateTime.UtcNow.AddDays(3));
+            if (logInfo)
+            {
+                logger.LogInformation($"Configured Queue Job for: {queueName}, next occurrences: {string.Join(", ", nextOccurrences.Take(5).Select(x => x.ToString("yyyy-MM-ddTHH:mm:ss")))}");
+            }
+            else
+            {
+                logger.LogDebug($"Configured Queue Job for: {queueName}, next occurrences: {string.Join(", ", nextOccurrences.Take(5).Select(x => x.ToString("yyyy-MM-ddTHH:mm:ss")))}");
+            }
         }
 
         protected override async Task ScheduleJob(CancellationToken cancellationToken)
