@@ -69,7 +69,7 @@ namespace Arragro.Core.HostedServices
                         await ScheduleJob(cancellationToken);    // reschedule next
                     }
                 };
-                
+
                 if (_logNextOccurance)
                     _logger.LogInformation($"Timer for: {_jobName}, next occurrance: {next.Value.ToString("yyyy-MM-ddTHH:mm:ss")}");
                 else

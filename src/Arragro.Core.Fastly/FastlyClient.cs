@@ -42,7 +42,7 @@ namespace Arragro.Core.Fastly
             }
         }
 
-        private async Task<bool> PurgeKeysBatchAsync(string serviceId, string[] keys)
+        private async Task<bool> PurgeKeysBatchAsync(string serviceId, string[] keys, bool softPurge)
         {
             var result = true;
             var currentIndex = Interlocked.Read(ref _currentIndex);
@@ -54,6 +54,10 @@ namespace Arragro.Core.Fastly
 
                 var request = new HttpRequestMessage(HttpMethod.Post, $"/service/{serviceId}/purge");
                 request.Headers.Add("Fastly-Key", apiToken);
+                if (softPurge)
+                {
+                    request.Headers.Add("Fastly-Soft-Purge", "1");
+                }
                 request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 request.Headers.Add("surrogate-key", string.Join(" ", keys));
 
@@ -82,7 +86,7 @@ namespace Arragro.Core.Fastly
             return result;
         }
 
-        private async Task<bool> PurgeKeysAsync(string serviceId, string[] keys)
+        private async Task<bool> PurgeKeysAsync(string serviceId, string[] keys, bool softPurge)
         {
             if (!string.IsNullOrEmpty(serviceId) &&
                 _apiTokens.Any())
@@ -93,26 +97,26 @@ namespace Arragro.Core.Fastly
                 for (var i = 0; i < keyLength; i++)
                 {
                     var keysToPurge = keys.Skip(i * 256).Take(256).ToArray();
-                    var result = await PurgeKeysBatchAsync(serviceId, keysToPurge);
+                    var result = await PurgeKeysBatchAsync(serviceId, keysToPurge, softPurge);
                     if (!result) return false;
                 }
                 if (remainder > 0)
                 {
                     var keysToPurge = keys.Skip(keyLength * 256).Take(256).ToArray();
-                    var result = await PurgeKeysBatchAsync(serviceId, keysToPurge);
+                    var result = await PurgeKeysBatchAsync(serviceId, keysToPurge, softPurge);
                     if (!result) return false;
                 }
             }
             return true;
         }
 
-        public async Task<bool> PurgeKeysAsync(string[] keys, int? waitMilliseconds = null)
+        public async Task<bool> PurgeKeysAsync(string[] keys, int? waitMilliseconds = null, bool softPurge = true)
         {
             foreach (var serviceId in _serviceIds)
             {
                 if (serviceId != "testing")
                 {
-                    var result = await PurgeKeysAsync(serviceId, keys);
+                    var result = await PurgeKeysAsync(serviceId, keys, softPurge);
                     if (!result) return result;
                 }
                 if (waitMilliseconds.HasValue)
@@ -123,7 +127,7 @@ namespace Arragro.Core.Fastly
             return true;
         }
 
-        public async Task<bool> PurgeAllAsync(string serviceId)
+        public async Task<bool> PurgeAllAsync(string serviceId, bool softPurge = true)
         {
             var result = true;
             var currentIndex = Interlocked.Read(ref _currentIndex);
@@ -133,17 +137,24 @@ namespace Arragro.Core.Fastly
             try
             {
                 _logger.LogInformation("Purging All with {@ApiToken} for ServiceId {@ServiceId}", apiToken, serviceId);
-                var request = new HttpRequestMessage(HttpMethod.Post, $"/service/{serviceId}/purge_all");
-                request.Headers.Add("Fastly-Key", apiToken);
-
-                var httpResponseMessage = await _httpClient.SendAsync(request);
-
-                if (!httpResponseMessage.IsSuccessStatusCode)
+                if (softPurge)
                 {
-                    var body = await httpResponseMessage.Content.ReadAsStringAsync();
-                    var fastlyException = new FastlyException("Something has gone wrong when purging against fastly.", httpResponseMessage, body);
-                    _logger.LogError("Failed to purge all {@ApiToken} {@Exception}.", apiToken, fastlyException);
-                    throw fastlyException;
+                    await PurgeKeysAsync(serviceId, new[] { "all" }, softPurge);
+                }
+                else
+                {
+                    var request = new HttpRequestMessage(HttpMethod.Post, $"/service/{serviceId}/purge_all");
+                    request.Headers.Add("Fastly-Key", apiToken);
+
+                    var httpResponseMessage = await _httpClient.SendAsync(request);
+
+                    if (!httpResponseMessage.IsSuccessStatusCode)
+                    {
+                        var body = await httpResponseMessage.Content.ReadAsStringAsync();
+                        var fastlyException = new FastlyException("Something has gone wrong when purging against fastly.", httpResponseMessage, body);
+                        _logger.LogError("Failed to purge all {@ApiToken} {@Exception}.", apiToken, fastlyException);
+                        throw fastlyException;
+                    }
                 }
             }
             catch (Exception ex)
@@ -161,7 +172,7 @@ namespace Arragro.Core.Fastly
             return result;
         }
 
-        public async Task<bool> PurgeAllAsync(int? waitMilliseconds = null)
+        public async Task<bool> PurgeAllAsync(int? waitMilliseconds = null, bool softPurge = true)
         {
             foreach (var serviceId in _serviceIds)
             {
