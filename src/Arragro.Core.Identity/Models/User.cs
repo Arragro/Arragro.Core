@@ -10,8 +10,8 @@ namespace Arragro.Core.Identity.Models
         public string FirstName { get; set; } = "";
         [MaxLength(255)]
         public string LastName { get; set; } = "";
-        public bool IsEnabled { get; set; } = true;
-        public bool External { get; set; } = false;
+        public bool IsEnabled { get; set; }
+        public bool External { get; set; }
         public Guid ModifiedBy { get; set; }
         public DateTimeOffset ModifiedDate { get; set; }
     }
