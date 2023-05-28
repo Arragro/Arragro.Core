@@ -14,6 +14,8 @@ namespace Arragro.Core.Fastly
         public void AddFastlySurrogateKeyToHeader(HttpResponse response, IEnumerable<string> keys)
         {
             var responseHeaders = response.GetTypedHeaders();
+            var all = new List<string> { "all" };
+            all.AddRange(keys);
             responseHeaders.Append("Surrogate-Key", String.Join(" ", keys));
         }
         
