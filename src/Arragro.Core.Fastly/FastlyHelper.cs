@@ -23,7 +23,7 @@ namespace Arragro.Core.Fastly
         {
             var sb = new StringBuilder($"max-age={maxAge}");
             if (staleWhileRevalidating.HasValue) sb.Append($", stale-while-revalidate={staleWhileRevalidating}");
-            if (staleIfError.HasValue) sb.Append($", stale-if-error={staleWhileRevalidating}");
+            if (staleIfError.HasValue) sb.Append($", stale-if-error={staleIfError}");
                 
                 
             var responseHeaders = response.GetTypedHeaders();
