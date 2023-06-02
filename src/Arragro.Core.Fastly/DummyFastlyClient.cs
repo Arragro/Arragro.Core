@@ -11,19 +11,19 @@ namespace Arragro.Core.Fastly
 
         }
 
-        public async Task<bool> PurgeAllAsync(string serviceId, bool? softPurge = true)
+        public async Task<bool> PurgeAllAsync(string serviceId, bool softPurge = true)
         {
             await Task.Yield();
             return true;
         }
 
-        public async Task<bool> PurgeAllAsync(int? waitMilliseconds = null, bool? softPurge = true)
+        public async Task<bool> PurgeAllAsync(int? waitMilliseconds = null, bool softPurge = true)
         {
             await Task.Yield();
             return true;
         }
 
-        public async Task<bool> PurgeKeysAsync(string[] keys, int? waitMilliseconds = null, bool? softPurge = true)
+        public async Task<bool> PurgeKeysAsync(string[] keys, int? waitMilliseconds = null, bool softPurge = true)
         {
             await Task.Yield();
             return true;
