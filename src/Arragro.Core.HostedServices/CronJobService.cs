@@ -15,6 +15,7 @@ namespace Arragro.Core.HostedServices
         protected readonly TimeZoneInfo _timeZoneInfo;
         protected readonly ILogger _logger;
         private readonly string _jobName;
+        private readonly bool _runOnStartup;
         private readonly bool _logNextOccurance;
 
         protected CronJobService(
@@ -23,6 +24,7 @@ namespace Arragro.Core.HostedServices
             TimeZoneInfo timeZoneInfo,
             ILogger logger,
             string jobName,
+            bool runOnStartup = false,
             bool logInfo = true,
             bool logNextOccurance = true)
         {
@@ -30,6 +32,7 @@ namespace Arragro.Core.HostedServices
             _timeZoneInfo = timeZoneInfo;
             _logger = logger;
             _jobName = jobName;
+            _runOnStartup = runOnStartup;
             _logNextOccurance = logNextOccurance;
             var nextOccurrences = _expression.GetOccurrences(DateTime.UtcNow, DateTime.UtcNow.AddDays(3));
             if (logInfo)
@@ -44,6 +47,10 @@ namespace Arragro.Core.HostedServices
 
         public virtual async Task StartAsync(CancellationToken cancellationToken)
         {
+            if (_runOnStartup && !cancellationToken.IsCancellationRequested)
+            {
+                await DoWork(cancellationToken);
+            }
             await ScheduleJob(cancellationToken);
         }
 
