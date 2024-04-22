@@ -26,7 +26,7 @@ namespace Arragro.Core.HostedServices
             TimeZoneInfo timeZoneInfo,
             ILogger<QueueJobService> logger,
             bool logInfo = true,
-            bool logNextOccurance = true) : base (cronExpression, includeSeconds, timeZoneInfo, logger, queueName, logInfo, logNextOccurance)
+            bool logNextOccurance = true) : base (cronExpression, includeSeconds, timeZoneInfo, logger, queueName, false, logInfo, logNextOccurance)
         {
             _queueClient = new QueueClient(connectionString, queueName);
             _queueClientFailure = new QueueClient(connectionString, $"{queueName}-failures");
