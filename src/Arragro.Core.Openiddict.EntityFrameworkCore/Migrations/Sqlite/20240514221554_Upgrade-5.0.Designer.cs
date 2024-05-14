@@ -3,6 +3,7 @@ using System;
 using Arragro.Core.Openiddict.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Arragro.Core.Openiddict.EntityFrameworkCore.Migrations.Sqlite
 {
     [DbContext(typeof(OpenIddictSqliteContext))]
-    partial class OpenIddictSqliteContextModelSnapshot : ModelSnapshot
+    [Migration("20240514221554_Upgrade-5.0")]
+    partial class Upgrade50
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
