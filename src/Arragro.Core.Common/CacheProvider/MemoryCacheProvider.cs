@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -52,9 +53,19 @@ namespace Arragro.Core.Common.CacheProvider
 
             if (item != null)
             {
-                cacheItemList = (T)item;
-                if (CheckAndClearExpiredData(cacheItemList))
+                try
+                {
+                    var typedItem = (T)item;
+                    cacheItemList = typedItem;
+                    if (CheckAndClearExpiredData(cacheItemList))
+                        item = null;
+                }
+                catch (InvalidCastException)
+                {
+                    Dictionary.Remove(key, out item);
                     item = null;
+                }
+
             }
             return item == null ? default(T) : cacheItemList;
         }

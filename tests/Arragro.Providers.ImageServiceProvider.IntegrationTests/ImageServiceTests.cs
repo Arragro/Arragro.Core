@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Threading.Tasks;
 using Xunit;
@@ -13,21 +15,37 @@ using Xunit;
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
 {
+
     public class ImageServiceTests : IDisposable
     {
-        // const string _server = "http://192.168.69.89:3000";
-        const string _server = "http://localhost:3000";
+        //const string _server = "http://192.168.69.135:3000";
+        //const string _server = "http://localhost:3000";
         private readonly IServiceProvider _serviceProvider;
+        private string _server;
+
+        public string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return $"http://{ip}:3000";
+                }
+            }
+            throw new Exception("No network adapters with an IPv4 address in the system!");
+        }
 
         public ImageServiceTests()
         {
+            _server = GetLocalIPAddress();
             DockerExtentions.StartDockerServicesAsync(new List<Func<DockerClient, Task<ContainerListResponse>>>
             {
                 ImageService.StartImageService
             }).Wait();
 
             var serviceCollection = new ServiceCollection();
-            serviceCollection.ConfigureImageProvider(_server, "ThisIsASecretKey", 5000);
+            serviceCollection.ConfigureImageProvider(_server, "ThisIsASecretKey", 10000);
             _serviceProvider = serviceCollection.BuildServiceProvider();
         }
 
@@ -56,11 +74,19 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             var imageService = _serviceProvider.GetRequiredService<IImageProvider>();
             var assembly = typeof(ImageServiceTests).GetTypeInfo().Assembly;
             var bytes = ReadFully(assembly.GetManifestResourceStream("Arragro.Providers.ImageServiceProvider.IntegrationTests.Resources.bear-hands.jpg"));
-            var result = await imageService.ProcessImageAsync(bytes);
-            Assert.True(result.Size < bytes.Length);
-            Assert.Equal("image/jpeg", result.MimeType);
-            Assert.Equal(1201, result.Width);
-            Assert.Equal(800, result.Height);
+            try
+            {
+                var result = await imageService.ProcessImageAsync(bytes);
+                Assert.True(result.Size < bytes.Length);
+                Assert.Equal("image/jpeg", result.MimeType);
+                Assert.Equal(1201, result.Width);
+                Assert.Equal(800, result.Height);
+            }
+            catch (Exception ex)
+            {
+                var x = ex;
+                throw;
+            }
         }
 
         [Fact]

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>Arragro.Core.Openiddict.EntityFrameworkCore</AssemblyName>
     <PackageId>Arragro.Core.Openiddict.EntityFrameworkCore</PackageId>
     <Title>Arragro Core Openiddict EntityFrameworkCore</Title>
@@ -23,11 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.13">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-	<PackageReference Include="OpenIddict.EntityFrameworkCore" Version="4.9.0" />
+	<PackageReference Include="OpenIddict.EntityFrameworkCore" Version="5.5.0" />
   </ItemGroup>
 	
   <ItemGroup>
