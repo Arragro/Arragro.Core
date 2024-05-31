@@ -28,7 +28,10 @@ namespace Arragro.Core.Identity
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.HasDefaultSchema("identity");
+            if (Database.ProviderName != "Microsoft.EntityFrameworkCore.Sqlite")
+            {
+                modelBuilder.HasDefaultSchema("identity");
+            }
 
             if (useSnakeCasing)
                 modelBuilder.SnakeCaseTablesAndProperties();
