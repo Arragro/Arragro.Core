@@ -10,13 +10,12 @@ namespace Arragro.Core.Docker
 {
     public static class SqlServer
     {
-        public static async Task<ContainerListResponse> StartSqlServer(DockerClient client)
+        public static async Task<ContainerListResponse> StartSqlServer(DockerClient client, string imageTag = "2022-latest")
         {
             const string ContainerName = "sqlserver-integration-tests";
             const string ImageName = "mcr.microsoft.com/mssql/server";
-            const string ImageTag = "2019-latest";
 
-            await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, ImageTag, ContainerName);
+            await DockerExtentions.EnsureImageExistsAndCleanupAsync(client, ImageName, imageTag, ContainerName);
 
             var config = new Config();
 
@@ -31,7 +30,7 @@ namespace Arragro.Core.Docker
 
             await client.Containers.CreateContainerAsync(new CreateContainerParameters(config)
             {
-                Image = ImageName + ":" + ImageTag,
+                Image = ImageName + ":" + imageTag,
                 Name = ContainerName,
                 Tty = false,
                 HostConfig = hostConfig,
