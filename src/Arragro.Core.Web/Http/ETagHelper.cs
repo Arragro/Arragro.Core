@@ -6,6 +6,7 @@ using System.Net;
 using Microsoft.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Arragro.Core.Web.Http
 {
@@ -46,6 +47,25 @@ namespace Arragro.Core.Web.Http
                 responseHeaders.LastModified = lastModified;
             }
             return controller.Ok(data);
+        }
+
+        public static async Task<IActionResult> HandleETagAsync<T>(this Controller controller, DateTimeOffset? lastModified, Func<Task<T>> buildData)
+        {
+            if (lastModified.HasValue)
+            {
+                var etag = GetEntityTagHeaderValue(controller.Request.Path, lastModified);
+                var requestHeaders = controller.Request.GetTypedHeaders();
+
+                if (requestHeaders.IfNoneMatch != null && requestHeaders.IfNoneMatch.Any() && requestHeaders.IfNoneMatch.First().Tag == etag.Tag)
+                {
+                    return controller.StatusCode((int)HttpStatusCode.NotModified);
+                }
+
+                var responseHeaders = controller.Response.GetTypedHeaders();
+                responseHeaders.ETag = etag;
+                responseHeaders.LastModified = lastModified;
+            }
+            return controller.Ok(await buildData());
         }
     }
 }

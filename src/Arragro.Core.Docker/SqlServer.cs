@@ -37,7 +37,7 @@ namespace Arragro.Core.Docker
                 Env = new List<string>
                 {
                     "ACCEPT_EULA=Y",
-                    "SA_PASSWORD=P@ssword123",
+                    "SA_PASSWORD=P@ssword123"
                 }
             });
 
