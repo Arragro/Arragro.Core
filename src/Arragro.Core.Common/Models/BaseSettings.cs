@@ -25,17 +25,17 @@ namespace Arragro.Core.Common.Models
         /// </summary>
         public string ApplicationName { get; set; }
         /// <summary>
-        /// Determines if X509 cert is to be used, required for multi instance apps, replaces machine key
+        /// CertificateStore to use, FilePath or KeyVault
         /// </summary>
-        public bool UseX509 { get; set; } = false;
+        public CertificateStore CertificateStore { get; set; } = CertificateStore.None;
         /// <summary>
-        /// Certificate Config for Path or KeyVault
+        /// File Path Certificate Config for Path certificate
         /// </summary>
-        public CertificateConfig CertificateConfig { get; set; } = null;
+        public FilePathCertificateConfig FilePathCertificateConfig { get; set; } = null;
         /// <summary>
-        /// If the CertificateConfig Store is set to KeyVault use the certificate name
+        /// KeyVault Certificate Config for KeyVault
         /// </summary>
-        public string KeyVaultCertificateName { get; set; }
+        public KeyVaultCertificateConfig KeyVaultCertificateConfig { get; set; } = null;
         /// <summary>
         /// Storage provider
         /// </summary>

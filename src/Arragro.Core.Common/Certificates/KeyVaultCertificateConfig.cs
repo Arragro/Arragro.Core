@@ -10,31 +10,28 @@ using System.Threading.Tasks;
 namespace Arragro.Core.Common.Certificates
 {
 	public class KeyVaultCertificateConfig
-	{
+    {
+        /// <summary>
+        /// The uri of the KeyVault service
+        /// </summary>
 		public Uri KeyVaultUri { get; set; }
-		public string TenantId { get; set; }
+        /// <summary>
+        /// KeyVault certificate name
+        /// </summary>
+        public string CertificateName { get; set; }
+        public string TenantId { get; set; }
 		public string ClientId { get; set; }
 		public string ClientSecret { get; set; }
 
-		//public SecretClient GetSecretClient()
-		//{
-		//	var sb = new StringBuilder();
-		//	if (KeyVaultUri == null)
-		//		sb.AppendLine("You must supply a KeyVaultUri.");
-		//	if (string.IsNullOrEmpty(CertificateName))
-		//		sb.AppendLine("You must supply a certificate name.");
+        private void Validate()
+        {
+            if (KeyVaultUri == null)
+                throw new ArgumentException("The KeyVaultUri must be supplied.");
+			if (!string.IsNullOrEmpty(CertificateName))
+                throw new ArgumentException("The KeyVaultCertificateName must be supplied.");
+        }
 
-		//	if (!string.IsNullOrEmpty(TenantId) && !string.IsNullOrEmpty(ClientId) & !string.IsNullOrEmpty(ClientSecret))
-		//	{
-		//		return new SecretClient(KeyVaultUri, new DefaultAzureCredential());
-		//	}
-		//	else
-		//	{
-		//		return new SecretClient(KeyVaultUri, new ClientSecretCredential(TenantId, ClientId, ClientSecret));
-		//	}
-		//}
-
-		private CertificateClient GetCertificateClient()
+        private CertificateClient GetCertificateClient()
 		{
 			var sb = new StringBuilder();
 			if (KeyVaultUri == null)
@@ -43,7 +40,7 @@ namespace Arragro.Core.Common.Certificates
 			if (sb.Length > 0) throw new ArgumentException($"There are issues with the KeyVaultCertificateConfig:\r\n\r\n{sb}");
 
 			CertificateClient client;
-			if (string.IsNullOrEmpty(TenantId) && string.IsNullOrEmpty(ClientId) & string.IsNullOrEmpty(ClientSecret))
+			if (string.IsNullOrEmpty(TenantId) || string.IsNullOrEmpty(ClientId) || string.IsNullOrEmpty(ClientSecret))
 			{
 				client = new CertificateClient(KeyVaultUri, new DefaultAzureCredential());
 			}
@@ -54,23 +51,21 @@ namespace Arragro.Core.Common.Certificates
 			return client;
 		}
 
-		internal async Task<Response<X509Certificate2>> GetCertificateAsync(string certificateName, string version = null, CancellationToken cancellationToken = default)
-		{
-			if (string.IsNullOrEmpty(certificateName))
-				throw new ArgumentNullException(nameof(certificateName), "You must supply a certificate name.");
+        public async Task<Response<X509Certificate2>> GetX509CertificateAsync(string version = null, CancellationToken cancellationToken = default)
+        {
+            Validate();
 
 			var client = GetCertificateClient();
-			var certificate = await client.DownloadCertificateAsync(certificateName, version, cancellationToken);
+			var certificate = await client.DownloadCertificateAsync(CertificateName, version, cancellationToken);
 			return certificate;
 		}
 
-		internal Response<X509Certificate2> GetCertificate(string certificateName, string version = null)
-		{
-			if (string.IsNullOrEmpty(certificateName))
-				throw new ArgumentNullException(nameof(certificateName), "You must supply a certificate name.");
+		public Response<X509Certificate2> GetX509Certificate(string version = null)
+        {
+            Validate();
 
 			var client = GetCertificateClient();
-			var certificate = client.DownloadCertificate(certificateName, version);
+			var certificate = client.DownloadCertificate(CertificateName, version);
 			return certificate;
 		}
 	}

@@ -2,6 +2,7 @@
 {
 	public enum CertificateStore
 	{
+		None,
 		FilePath,
 		KeyVault
 	}

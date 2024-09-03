@@ -39,20 +39,7 @@ namespace Arragro.Core.Web.Extensions
                     dataProtection.PersistKeysToFileSystem(new DirectoryInfo(baseSettings.DataProtectionSettings.DataProtectionStoragePath));
                 }
 
-                if (baseSettings.DataProtectionSettings.UseX509 &&
-                    baseSettings.DataProtectionSettings.CertificateConfig == null)
-                {
-                    throw new Exception("If UseX509 is true you must supply a CertificateConfig");
-                }
-
-                if (baseSettings.DataProtectionSettings.UseX509 &&
-                    baseSettings.DataProtectionSettings.CertificateConfig.CertificateStore == CertificateStore.KeyVault &&
-                    string.IsNullOrEmpty(baseSettings.DataProtectionSettings.KeyVaultCertificateName))
-                {
-                    throw new Exception("If UseX509 is true and your Certificate Config is for KeyVaule, you must supply a KeyVaultCertificateName");
-                }
-
-                if (baseSettings.DataProtectionSettings.UseX509)
+                if (baseSettings.DataProtectionSettings.CertificateStore == CertificateStore.FilePath)
                 {
                     /*
                      * https://docs.microsoft.com/en-us/aspnet/core/security/data-protection/?view=aspnetcore-2.1
@@ -69,7 +56,13 @@ namespace Arragro.Core.Web.Extensions
                      * 
                      */
 
-                    X509Certificate2 x509Cert = baseSettings.DataProtectionSettings.CertificateConfig.GetX509Certificate(baseSettings.DataProtectionSettings.KeyVaultCertificateName);
+                    X509Certificate2 x509Cert = baseSettings.DataProtectionSettings.FilePathCertificateConfig.GetX509Certificate();
+                    dataProtection.ProtectKeysWithCertificate(x509Cert);
+                }
+
+                if (baseSettings.DataProtectionSettings.CertificateStore == CertificateStore.KeyVault)
+                {
+                    X509Certificate2 x509Cert = baseSettings.DataProtectionSettings.KeyVaultCertificateConfig.GetX509Certificate();
                     dataProtection.ProtectKeysWithCertificate(x509Cert);
                 }
             }
