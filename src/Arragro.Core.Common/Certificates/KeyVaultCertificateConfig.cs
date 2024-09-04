@@ -27,7 +27,7 @@ namespace Arragro.Core.Common.Certificates
         {
             if (KeyVaultUri == null)
                 throw new ArgumentException("The KeyVaultUri must be supplied.");
-			if (!string.IsNullOrEmpty(CertificateName))
+			if (string.IsNullOrEmpty(CertificateName))
                 throw new ArgumentException("The KeyVaultCertificateName must be supplied.");
         }
 
