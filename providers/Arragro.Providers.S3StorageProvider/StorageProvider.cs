@@ -358,7 +358,7 @@ namespace Arragro.Providers.S3StorageProvider
             }
         }
 
-        public async Task<CreateAssetFromExistingResult> CreateAssetFromExistingAndResizeAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, int width, int quality = 80, bool asProgressiveJpeg = false)
+        public async Task<CreateAssetFromExistingResult> CreateAssetFromExistingAndResizeAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, uint width, uint quality = 80, bool asProgressiveJpeg = false)
         {
             var fileName = $"{_prefix}/{folderId}/{fileId}";
             var newFileName = $"{_prefix}/{folderId}/{newFileId}";

@@ -10,7 +10,7 @@ namespace Arragro.Core.Common.Interfaces.Providers
         Task DeleteAsync(FolderIdType folderId);
         Task<Uri> GetAsync(FolderIdType folderId, FileIdType fileId, bool thumbnail = false);
         Task<CreateAssetFromExistingResult> CreateAssetFromExistingAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId);
-        Task<CreateAssetFromExistingResult> CreateAssetFromExistingAndResizeAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, int width, int quality = 80, bool asProgressiveJpeg = false);
+        Task<CreateAssetFromExistingResult> CreateAssetFromExistingAndResizeAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, uint width, uint quality = 80, bool asProgressiveJpeg = false);
         Task<Uri> UploadAsync(FolderIdType folderId, FileIdType fileId, byte[] data, string mimeType, bool thumbnail = false);
         Task<Uri> RenameAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, bool thumbnail = false);
         Task ResetCacheControlAsync();

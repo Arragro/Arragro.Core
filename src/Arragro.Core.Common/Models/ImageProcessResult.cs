@@ -4,8 +4,8 @@
     {
         public bool IsImage { get; set; }
         public long Size { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public uint Width { get; set; }
+        public uint Height { get; set; }
         public string MimeType { get; set; }
     }
 

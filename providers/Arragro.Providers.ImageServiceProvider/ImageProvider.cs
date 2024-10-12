@@ -77,8 +77,8 @@ namespace Arragro.Providers.ImageServiceProvider
         {
             var output = await response.Content.ReadAsByteArrayAsync();
             var mimeType = response.Content.Headers.ContentType.MediaType;
-            var responseWidth = int.Parse(GetHeaderValue(response, "Image-Width"));
-            var responseHeight = int.Parse(GetHeaderValue(response, "Image-Height"));
+            var responseWidth = uint.Parse(GetHeaderValue(response, "Image-Width"));
+            var responseHeight = uint.Parse(GetHeaderValue(response, "Image-Height"));
             var isImage = bool.Parse(GetHeaderValue(response, "IsImage"));
             return new ImageProcessResult { Bytes = output, IsImage = isImage, Width = responseWidth, Height = responseHeight, Size = output.Length, MimeType = mimeType };
         }
@@ -104,7 +104,7 @@ namespace Arragro.Providers.ImageServiceProvider
             }
         }
 
-        public async Task<ImageProcessResult> ProcessImageAsync(byte[] bytes, int quality = 80, bool asProgressiveJpeg = false)
+        public async Task<ImageProcessResult> ProcessImageAsync(byte[] bytes, uint quality = 80, bool asProgressiveJpeg = false)
         {
             using (var content = new MultipartFormDataContent())
             {
@@ -127,7 +127,7 @@ namespace Arragro.Providers.ImageServiceProvider
             }
         }
 
-        public async Task<ImageProcessResult> ResizeAndProcessImageAsync(byte[] bytes, int width, int quality = 80, bool asProgressiveJpeg = false)
+        public async Task<ImageProcessResult> ResizeAndProcessImageAsync(byte[] bytes, uint width, uint quality = 80, bool asProgressiveJpeg = false)
         {
             using (var content = new MultipartFormDataContent())
             {

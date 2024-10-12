@@ -189,7 +189,7 @@ namespace Arragro.Providers.InMemoryStorageProvider
             };
         }
 
-        public async Task<CreateAssetFromExistingResult> CreateAssetFromExistingAndResizeAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, int width, int quality = 80, bool asProgressiveJpeg = false)
+        public async Task<CreateAssetFromExistingResult> CreateAssetFromExistingAndResizeAsync(FolderIdType folderId, FileIdType fileId, FileIdType newFileId, uint width, uint quality = 80, bool asProgressiveJpeg = false)
         {
             var fileName = $"{folderId}/{fileId}";
             var fileInfo = _provider.GetFileInfo(fileName);

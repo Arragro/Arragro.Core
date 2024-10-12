@@ -19,7 +19,7 @@ namespace Arragro.Providers.ImageMagickProvider
             }
         }
         
-        private ProcessImageResult ProcessImage(byte[] bytes, int? width = null, int quality = 80, bool asProgressiveJpeg = false)
+        private ProcessImageResult ProcessImage(byte[] bytes, uint? width = null, uint quality = 80, bool asProgressiveJpeg = false)
         {
             var processImageResult = new ProcessImageResult();
             using (var image = new MagickImage(bytes))
@@ -48,7 +48,7 @@ namespace Arragro.Providers.ImageMagickProvider
             return processImageResult;
         }
 
-        private byte[] ProcessGif(byte[] bytes, int? width = null, int quality = 80)
+        private byte[] ProcessGif(byte[] bytes, uint? width = null, uint quality = 80)
         {
             byte[] output;
             using (MagickImageCollection collection = new MagickImageCollection(bytes))
@@ -90,7 +90,7 @@ namespace Arragro.Providers.ImageMagickProvider
             return new ImageProcessResult { Bytes = bytes, IsImage = true, Width = magickImageInfo.Width, Height = magickImageInfo.Height, Size = bytes.Length, MimeType = mimeType };
         }
 
-        public async Task<ImageProcessResult> ResizeAndProcessImageAsync(byte[] bytes, int width, int quality = 80, bool asProgressiveJpeg = false)
+        public async Task<ImageProcessResult> ResizeAndProcessImageAsync(byte[] bytes, uint width, uint quality = 80, bool asProgressiveJpeg = false)
         {
             byte[] output;
             string mimeType = string.Empty;
@@ -127,7 +127,7 @@ namespace Arragro.Providers.ImageMagickProvider
             return await task;
         }
 
-        public async Task<ImageProcessResult> ProcessImageAsync(byte[] bytes, int quality = 80, bool asProgressiveJpeg = false)
+        public async Task<ImageProcessResult> ProcessImageAsync(byte[] bytes, uint quality = 80, bool asProgressiveJpeg = false)
         {
             byte[] output;
             string mimeType = string.Empty;

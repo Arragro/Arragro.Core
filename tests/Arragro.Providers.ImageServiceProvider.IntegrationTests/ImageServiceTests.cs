@@ -79,8 +79,8 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
                 var result = await imageService.ProcessImageAsync(bytes);
                 Assert.True(result.Size < bytes.Length);
                 Assert.Equal("image/jpeg", result.MimeType);
-                Assert.Equal(1201, result.Width);
-                Assert.Equal(800, result.Height);
+                Assert.Equal((uint)1201, result.Width);
+                Assert.Equal((uint)800, result.Height);
             }
             catch (Exception ex)
             {
@@ -98,8 +98,8 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             var result = await imageService.ResizeAndProcessImageAsync(bytes, 600, 80, true);
             Assert.True(result.Size < bytes.Length);
             Assert.Equal("image/jpeg", result.MimeType);
-            Assert.Equal(600, result.Width);
-            Assert.Equal(400, result.Height);
+            Assert.Equal((uint)600, result.Width);
+            Assert.Equal((uint)400, result.Height);
         }
 
         [Fact]
@@ -111,8 +111,8 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             var result = await imageService.GetImageDetailsAsync(bytes);
             Assert.Equal(88230, result.Size);
             Assert.Equal("image/jpeg", result.MimeType);
-            Assert.Equal(1201, result.Width);
-            Assert.Equal(800, result.Height);
+            Assert.Equal((uint)1201, result.Width);
+            Assert.Equal((uint)800, result.Height);
             Assert.True(result.IsImage);
         }
 
@@ -125,8 +125,8 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             var result = await imageService.ProcessImageAsync(bytes);
             Assert.True(result.Size < bytes.Length);
             Assert.Equal("image/gif", result.MimeType);
-            Assert.Equal(360, result.Width);
-            Assert.Equal(202, result.Height);
+            Assert.Equal((uint)360, result.Width);
+            Assert.Equal((uint)202, result.Height);
         }
 
         [Fact]
@@ -138,8 +138,8 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             var result = await imageService.ResizeAndProcessImageAsync(bytes, 300, 80, true);
             Assert.True(result.Size < bytes.Length);
             Assert.Equal("image/gif", result.MimeType);
-            Assert.Equal(300, result.Width);
-            Assert.Equal(168, result.Height);
+            Assert.Equal((uint)300, result.Width);
+            Assert.Equal((uint)168, result.Height);
         }
 
         [Fact]
@@ -151,8 +151,8 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             var result = await imageService.GetImageDetailsAsync(bytes);
             Assert.Equal(604963, result.Size);
             Assert.Equal("image/gif", result.MimeType);
-            Assert.Equal(360, result.Width);
-            Assert.Equal(202, result.Height);
+            Assert.Equal((uint)360, result.Width);
+            Assert.Equal((uint)202, result.Height);
             Assert.True(result.IsImage);
         }
 
@@ -177,8 +177,8 @@ namespace Arragro.Providers.ImageServiceProvider.IntegrationTests
             Assert.Equal(6359, result.Size);
             Assert.Equal("image/svg+xml", result.MimeType);
             Assert.False(result.IsImage);
-            Assert.Equal(498, result.Width);
-            Assert.Equal(167, result.Height);
+            Assert.Equal((uint)498, result.Width);
+            Assert.Equal((uint)167, result.Height);
         }
     }
 }
