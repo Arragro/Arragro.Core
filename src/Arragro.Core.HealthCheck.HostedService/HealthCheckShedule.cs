@@ -1,6 +1,10 @@
 ﻿using Arragro.Core.HostedServices;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Arragro.Core.HealthCheck.HostedService
 {
