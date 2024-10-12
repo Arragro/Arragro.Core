@@ -97,6 +97,7 @@ stages:
             ".\src\Arragro.Core.Web.Auth.Hmac",
             ".\src\Arragro.Core.Fastly",
             ".\src\Arragro.Core.Openiddict.EntityFrameworkCore",
+            ".\src\Arragro.Core.HealthCheck.HostedService",
             ".\providers\Arragro.Providers.AzureStorageProvider",
             ".\providers\Arragro.Providers.ImageMagickProvider",
             ".\providers\Arragro.Providers.ImageServiceProvider",

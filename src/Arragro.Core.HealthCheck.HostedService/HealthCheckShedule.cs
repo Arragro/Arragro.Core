@@ -1,20 +1,44 @@
 ﻿using Arragro.Core.HostedServices;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Arragro.Core.HealthCheck.HostedService
 {
-    public class HealthCheckShedule : CronJobService
+    public class HealthCheckSchedule : CronJobService
     {
-        public HealthCheckShedule(
-            string cronExpression,
-            bool includeSeconds,
-            TimeZoneInfo timeZoneInfo,
-            ILogger logger,
-            string jobName,
-            bool runOnStartup = false,
-            bool logInfo = true,
-            bool logNextOccurance = true) : base(cronExpression, includeSeconds, timeZoneInfo, logger, jobName, runOnStartup, logInfo, logNextOccurance)
+        private readonly HealthCheckService _healthCheckService;
+        private readonly IMemoryCache _memoryCache;
+        private static bool IsRunning = false;
+
+        public HealthCheckSchedule(
+            IScheduleConfig<HealthCheckSchedule> config,
+            ILogger<HealthCheckSchedule> logger,
+            HealthCheckService healthCheckService,
+            IMemoryCache memoryCache) : base(config.CronExpression, config.IncludeSeconds, config.TimeZoneInfo, logger, nameof(HealthCheckSchedule))
         {
+            _healthCheckService = healthCheckService;
+            _memoryCache = memoryCache;
+        }
+
+        public override async Task DoWork(CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (!IsRunning)
+                {
+                    IsRunning = true;
+                    var report = await _healthCheckService.CheckHealthAsync(cancellationToken);
+                    _memoryCache.Set("health-check", new HealthCheckResult(report));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Something went wrong with Uploading analytics data");
+            }
+            finally
+            {
+                IsRunning = false;
+            }
         }
     }
 }
