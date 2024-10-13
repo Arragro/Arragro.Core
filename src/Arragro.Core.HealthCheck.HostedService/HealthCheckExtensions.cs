@@ -13,8 +13,9 @@ namespace Arragro.Core.HealthCheck.HostedService
     {
         public static WebApplication ConfigureHealthCheckEndpoint(this WebApplication application, IDictionary<HealthStatus, int> resultStatusCodes, string pattern = "/hc")
         {
-            application.MapGet("/hc", async (IMemoryCache memoryCache, HealthCheckService healthCheckService) =>
+            application.MapGet("/hc", async (IMemoryCache memoryCache, HealthCheckService healthCheckService, HttpContext http) =>
             {
+                http.Response.Headers.CacheControl = $"public,max-age=0";
                 var data = memoryCache.Get<HealthCheckResult>("health-check");
                 if (data == null)
                 {
@@ -32,8 +33,9 @@ namespace Arragro.Core.HealthCheck.HostedService
                 return Results.Ok();
             });
 
-            application.MapGet("/hc-detailed", async (IMemoryCache memoryCache, HealthCheckService healthCheckService) =>
+            application.MapGet("/hc-detailed", async (IMemoryCache memoryCache, HealthCheckService healthCheckService, HttpContext http) =>
             {
+                http.Response.Headers.CacheControl = $"public,max-age=0";
                 var data = memoryCache.Get<HealthCheckResult>("health-check");
                 if (data == null)
                 {
@@ -42,6 +44,7 @@ namespace Arragro.Core.HealthCheck.HostedService
                 }
                 return Results.Ok(data);
             });
+
             return application;
         }
 
