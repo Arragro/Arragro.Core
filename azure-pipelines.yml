@@ -29,7 +29,7 @@ variables:
     MyRunNumber: '7.0-alpha-$(Build.BuildNumber)'
   ${{ if eq(variables['Build.SourceBranchName'], 'net_core_8') }}:
     MyRunNumber: '8.0-alpha-$(Build.BuildNumber)'
-  ${{ if eq(variables['Build.SourceBranchName'], 'net_core_8') }}:
+  ${{ if eq(variables['Build.SourceBranchName'], 'net_core_9') }}:
     MyRunNumber: '9.0-alpha-$(Build.BuildNumber)'
     DotnetVersion: '9.0.x'
 
