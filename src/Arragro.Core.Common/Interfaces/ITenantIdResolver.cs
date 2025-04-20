@@ -7,5 +7,6 @@ namespace Arragro.Core.Common.Interfaces
     {
         Task<Guid> ResolveTenantIdAsync();
         Guid ResolveTenantId();
+        Task<bool> ValidateTenandIdAccess(Guid tenantId);
     }
 }

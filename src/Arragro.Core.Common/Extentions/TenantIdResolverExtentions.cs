@@ -16,6 +16,11 @@ namespace Arragro.Core.Common.Extentions
         {
             return Task.FromResult(Guid.Empty);
         }
+
+        public Task<bool> ValidateTenandIdAccess(Guid tenantId)
+        {
+            return Task.FromResult(true);
+        }
     }
 
     public static class TenantIdResolverExtentions
