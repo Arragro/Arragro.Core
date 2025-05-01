@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Arragro.Core.Fastly
 {
@@ -6,8 +7,8 @@ namespace Arragro.Core.Fastly
     {
         public static IServiceCollection ConfigureFastlyClient(this IServiceCollection serviceCollection, FastlyApiTokens fastlyApiTokens, bool enabled = true)
         {
-            serviceCollection.AddSingleton(fastlyApiTokens);
-            serviceCollection.AddSingleton<FastlyHelper>();
+            serviceCollection.TryAddSingleton(fastlyApiTokens);
+            serviceCollection.TryAddSingleton<FastlyHelper>();
             if (fastlyApiTokens.Enabled && enabled)
             {
                 serviceCollection.AddHttpClient<IFastlyClient, FastlyClient>();   

@@ -1,5 +1,6 @@
 ﻿using Arragro.Core.Common.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Threading.Tasks;
 
@@ -27,13 +28,15 @@ namespace Arragro.Core.Common.Extentions
     {
         public static IServiceCollection ConfigureNoTenantIdResolver(this IServiceCollection serviceCollection)
         {
-            return serviceCollection.AddScoped<ITenantIdResolver, NoTenantIdResolver>();
+            serviceCollection.TryAddScoped<ITenantIdResolver, NoTenantIdResolver>();
+            return serviceCollection;
         }
 
         public static IServiceCollection ConfigureTenantIdResolver<T>(this IServiceCollection serviceCollection)
             where T : class, ITenantIdResolver
         {
-            return serviceCollection.AddScoped<ITenantIdResolver, T>();
+            serviceCollection.TryAddScoped<ITenantIdResolver, T>();
+            return serviceCollection;
         }
     }
 }
