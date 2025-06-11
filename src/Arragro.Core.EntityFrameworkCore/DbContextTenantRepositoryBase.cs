@@ -36,14 +36,18 @@ namespace Arragro.Core.EntityFrameworkCore
         {
             // Turn the HashTable of models into a Queryable
             var tenantId = TenantIdResolver.GetTenantId();
-            return DbSet.Find(tenantId, ids);
+            var entity = DbSet.Find(ids);
+            if (entity.TenantId != tenantId) return null;
+            return entity;
         }
 
         public async Task<TEntity> FindAsync(params object[] ids)
         {
             // Turn the HashTable of models into a 
             var tenantId = TenantIdResolver.GetTenantId();
-            return await DbSet.FindAsync(tenantId, ids);
+            var entity = await DbSet.FindAsync(ids);
+            if (entity.TenantId != tenantId) return null;
+            return entity;
         }
 
         public TEntity Delete(object[] ids)
