@@ -1,20 +1,19 @@
 ﻿using Arragro.Core.DistributedCache;
+using Arragro.Core.Web.Auth.Hmac.Configuration;
+using Arragro.Core.Web.Auth.Hmac.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.IO;
-using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Caching.Distributed;
-using Arragro.Core.Web.Auth.Hmac.Models;
-using Arragro.Core.Web.Auth.Hmac.Configuration;
 
 namespace Arragro.Core.Web.Auth.Hmac
 {
