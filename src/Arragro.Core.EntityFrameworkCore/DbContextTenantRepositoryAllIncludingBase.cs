@@ -30,12 +30,12 @@ namespace Arragro.Core.EntityFrameworkCore
 
         public virtual IQueryable<TEntity> AllIncludingNoTracking(Expression<Func<TEntity, bool>> whereClause, params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            return AllIncluding(whereClause, includeProperties);
+            return AllIncluding(whereClause, includeProperties).AsNoTracking();
         }
 
         public virtual IQueryable<TEntity> AllIncludingNoTracking(params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            return AllIncluding(includeProperties);
+            return AllIncluding(includeProperties).AsNoTracking();
         }
 
         public virtual IQueryable<TEntity> AllIncluding(Expression<Func<TEntity, bool>> whereClause, params Expression<Func<TEntity, object>>[] includeProperties)
