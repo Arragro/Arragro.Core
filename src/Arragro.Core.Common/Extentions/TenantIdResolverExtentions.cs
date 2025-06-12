@@ -6,9 +6,9 @@ namespace Arragro.Core.Common.Extentions
 {
     public class TenantIdResolver
     {
-        private Guid _tenantId {  get; set; }
+        private Guid? _tenantId { get; set; } = null;
 
-        public Guid GetTenantId()
+        public Guid? GetTenantId()
         {
             return _tenantId;
         }
