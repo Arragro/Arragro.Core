@@ -37,7 +37,7 @@ namespace Arragro.Core.EntityFrameworkCore
             // Turn the HashTable of models into a Queryable
             var tenantId = TenantIdResolver.GetTenantId();
             var entity = DbSet.Find(ids);
-            if (entity.TenantId != tenantId) return null;
+            if (entity != null && entity.TenantId != tenantId) return null;
             return entity;
         }
 
@@ -46,7 +46,7 @@ namespace Arragro.Core.EntityFrameworkCore
             // Turn the HashTable of models into a 
             var tenantId = TenantIdResolver.GetTenantId();
             var entity = await DbSet.FindAsync(ids);
-            if (entity.TenantId != tenantId) return null;
+            if (entity != null && entity.TenantId != tenantId) return null;
             return entity;
         }
 
