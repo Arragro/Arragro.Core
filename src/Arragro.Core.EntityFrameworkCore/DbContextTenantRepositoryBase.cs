@@ -17,11 +17,11 @@ namespace Arragro.Core.EntityFrameworkCore
         IRepository<TEntity> where TEntity : class, ITenantId
     {
         public IBaseContext BaseContext { get; private set; }
-        protected TenantIdResolver TenantIdResolver { get; }
+        protected ITenantIdResolver TenantIdResolver { get; }
 
         public DbContextTenantRepositoryBase(
             IBaseContext baseContext,
-            TenantIdResolver tenantIdResolver)
+            ITenantIdResolver tenantIdResolver)
         {
             BaseContext = baseContext;
             TenantIdResolver = tenantIdResolver;
@@ -35,7 +35,7 @@ namespace Arragro.Core.EntityFrameworkCore
         public TEntity Find(params object[] ids)
         {
             // Turn the HashTable of models into a Queryable
-            var tenantId = TenantIdResolver.GetTenantId();
+            var tenantId = TenantIdResolver.TenantId;
             var entity = DbSet.Find(ids);
             if (entity != null && entity.TenantId != tenantId) return null;
             return entity;
@@ -44,7 +44,7 @@ namespace Arragro.Core.EntityFrameworkCore
         public async Task<TEntity> FindAsync(params object[] ids)
         {
             // Turn the HashTable of models into a 
-            var tenantId = TenantIdResolver.GetTenantId();
+            var tenantId = TenantIdResolver.TenantId;
             var entity = await DbSet.FindAsync(ids);
             if (entity != null && entity.TenantId != tenantId) return null;
             return entity;
@@ -64,22 +64,22 @@ namespace Arragro.Core.EntityFrameworkCore
 
         public virtual IQueryable<TEntity> All()
         {
-            return DbSet.Where(x => x.TenantId == TenantIdResolver.GetTenantId());
+            return DbSet.Where(x => x.TenantId == TenantIdResolver.TenantId);
         }
 
         public virtual IQueryable<TEntity> AllNoTracking()
         {
-            return DbSet.AsNoTracking().Where(x => x.TenantId == TenantIdResolver.GetTenantId());
+            return DbSet.AsNoTracking().Where(x => x.TenantId == TenantIdResolver.TenantId);
         }
 
         public virtual IQueryable<TEntity> AllNoTracking(Expression<Func<TEntity, bool>> whereClause)
         {
-            return DbSet.Where(x => x.TenantId == TenantIdResolver.GetTenantId()).Where(whereClause).AsNoTracking();
+            return DbSet.Where(x => x.TenantId == TenantIdResolver.TenantId).Where(whereClause).AsNoTracking();
         }
 
         public TEntity InsertOrUpdate(TEntity model, bool add)
         {
-            if (model.TenantId != TenantIdResolver.GetTenantId())
+            if (model.TenantId != TenantIdResolver.TenantId)
                 throw new Exception("The entity you are trying to save has a different TenantId to the scope.");
             if (add)
             {

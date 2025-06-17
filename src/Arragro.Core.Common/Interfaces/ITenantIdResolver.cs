@@ -4,6 +4,7 @@ namespace Arragro.Core.Common.Interfaces
 {
     public interface ITenantIdResolver
     {
-        Guid? TenantId { get; set; }
+        Guid? TenantId { get; }
+        void SetTenantId(Guid tenantId);
     }
 }
