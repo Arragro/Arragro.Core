@@ -1,5 +1,4 @@
-﻿using Arragro.Core.Common.Extentions;
-using Arragro.Core.Common.Interfaces;
+﻿using Arragro.Core.Common.Interfaces;
 using Arragro.Core.Common.Repository;
 using Arragro.Core.EntityFrameworkCore.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +15,7 @@ namespace Arragro.Core.EntityFrameworkCore
     {
         public DbContextTenantRepositoryAllIncludingBase(
             IBaseContext baseContext,
-            TenantIdResolver tenantIdResolver) : base(baseContext, tenantIdResolver) { }
+            ITenantIdResolver tenantIdResolver) : base(baseContext, tenantIdResolver) { }
 
         public virtual IQueryable<TEntity> AllIncluding(params Expression<Func<TEntity, object>>[] includeProperties)
         {
@@ -25,7 +24,7 @@ namespace Arragro.Core.EntityFrameworkCore
             {
                 query = query.Include(includeProperty);
             }
-            return query.Where(x => x.TenantId == TenantIdResolver.GetTenantId());
+            return query.Where(x => x.TenantId == TenantIdResolver.TenantId);
         }
 
         public virtual IQueryable<TEntity> AllIncludingNoTracking(Expression<Func<TEntity, bool>> whereClause, params Expression<Func<TEntity, object>>[] includeProperties)
@@ -40,7 +39,7 @@ namespace Arragro.Core.EntityFrameworkCore
 
         public virtual IQueryable<TEntity> AllIncluding(Expression<Func<TEntity, bool>> whereClause, params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            IQueryable<TEntity> query = DbSet.Where(x => x.TenantId == TenantIdResolver.GetTenantId()).Where(whereClause);
+            IQueryable<TEntity> query = DbSet.Where(x => x.TenantId == TenantIdResolver.TenantId).Where(whereClause);
             foreach (var includeProperty in includeProperties)
             {
                 query = query.Include(includeProperty);
@@ -51,7 +50,7 @@ namespace Arragro.Core.EntityFrameworkCore
 
         public new TEntity InsertOrUpdate(TEntity model, bool add)
         {
-            if (model.TenantId != TenantIdResolver.GetTenantId())
+            if (model.TenantId != TenantIdResolver.TenantId)
                 throw new Exception("The entity you are trying to save has a different TenantId to the scope.");
             if (add)
             {
