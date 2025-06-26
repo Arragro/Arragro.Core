@@ -1,4 +1,4 @@
-﻿using Arragro.Core.Common.Extentions;
+﻿using Arragro.Core.Common.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 

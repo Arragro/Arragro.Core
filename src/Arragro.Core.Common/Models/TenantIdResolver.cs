@@ -1,5 +1,4 @@
-﻿using Arragro.Core.Common.Extentions;
-using Arragro.Core.Common.Interfaces;
+﻿using Arragro.Core.Common.Interfaces;
 using System;
 
 namespace Arragro.Core.Common.Models

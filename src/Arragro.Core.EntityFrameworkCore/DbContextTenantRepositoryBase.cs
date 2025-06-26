@@ -1,5 +1,4 @@
-﻿using Arragro.Core.Common.Extentions;
-using Arragro.Core.Common.Interfaces;
+﻿using Arragro.Core.Common.Interfaces;
 using Arragro.Core.Common.Repository;
 using Arragro.Core.EntityFrameworkCore.Interfaces;
 using Microsoft.EntityFrameworkCore;

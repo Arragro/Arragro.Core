@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 
-namespace Arragro.Core.Common.Extentions
+namespace Arragro.Core.Common.Extensions
 {
-    public static class ServiceProviderExtentions
+    public static class ServiceProviderExtensions
     {
         public static IServiceCollection Remove<T>(this IServiceCollection services)
         {
