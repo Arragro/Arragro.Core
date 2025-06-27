@@ -46,27 +46,10 @@ namespace Arragro.Core.Common.RulesExceptions
         }
     }
 
-    public class RulesHttpException<T> : Exception where T : class
+    public class RulesHttpException<T> : RulesHttpException where T : class
     {
-        public int Code { get; set; }
-        public RulesExceptionDto<T> RulesExceptionDto { get; set; }
-
-        // other fields
-        protected RulesHttpException(int code)
+        public RulesHttpException(int code, RulesExceptionWithDataDto<T> rulesExceptionDto) : base(code, rulesExceptionDto)
         {
-            Code = code;
-        }
-
-        public RulesHttpException(int code, string message) : base(message)
-        {
-            RulesExceptionDto = null;
-            Code = code;
-        }
-
-        public RulesHttpException(int code, RulesExceptionDto<T> rulesExceptionDto)
-        {
-            Code = code;
-            RulesExceptionDto = rulesExceptionDto;
         }
 
         public override string ToString()
@@ -82,7 +65,7 @@ namespace Arragro.Core.Common.RulesExceptions
                         Message = RulesExceptionDto.ToString(),
                         RulesExceptionDto.ErrorMessages,
                         RulesExceptionDto.Errors,
-                        RulesExceptionDto.OtherData,
+                        (RulesExceptionDto as RulesExceptionWithDataDto<T>).OtherData,
                         RulesExceptionDto.Data,
                     }, jsonSerializerSettings);
         }

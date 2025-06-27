@@ -1,12 +1,12 @@
 ﻿namespace Arragro.Core.Common.RulesExceptions
 {
-    public class RulesExceptionDto<T> : RulesExceptionDto where T : class
+    public class RulesExceptionWithDataDto<T> : RulesExceptionDto where T : class
     {
         public T OtherData { get; set; }
 
-        public RulesExceptionDto() { }
+        public RulesExceptionWithDataDto() { }
 
-        public RulesExceptionDto(RulesExceptionDto rulesExceptionDto)
+        public RulesExceptionWithDataDto(RulesExceptionDto rulesExceptionDto)
         {
             this.Data = rulesExceptionDto.Data;
             this.ErrorMessages = rulesExceptionDto.ErrorMessages;
