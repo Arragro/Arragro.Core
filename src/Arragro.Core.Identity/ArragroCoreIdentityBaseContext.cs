@@ -20,7 +20,9 @@ namespace Arragro.Core.Identity
         }
     }
 
-    public class ArragroCoreIdentityBaseContext : IdentityDbContext<User, Role, Guid>
+    public class ArragroCoreIdentityBaseContext<TUser, TRole> : IdentityDbContext<TUser, TRole, Guid> 
+        where TUser : User, new()
+        where TRole : Role, new()
     {
         public ArragroCoreIdentityBaseContext(DbContextOptions options) : base(options) { }
 
@@ -63,9 +65,15 @@ namespace Arragro.Core.Identity
         }
     }
 
-    public class ArragroCoreIdentityContext : ArragroCoreIdentityBaseContext
+    //public class ArragroCoreIdentityBaseContext : ArragroCoreIdentityBaseContext<User, Role, Guid>
+    //{
+    //}
+
+    public class ArragroCoreIdentityContext<TUser, TRole> : ArragroCoreIdentityBaseContext<TUser, TRole>
+        where TUser : User, new()
+        where TRole : Role, new()
     {
-        public ArragroCoreIdentityContext(DbContextOptions<ArragroCoreIdentityContext> options)
+        public ArragroCoreIdentityContext(DbContextOptions<ArragroCoreIdentityContext<TUser, TRole>> options)
             : base(options)
         {
         }
@@ -79,9 +87,11 @@ namespace Arragro.Core.Identity
         }
     }
 
-    public class ArragroCoreIdentityPGContext : ArragroCoreIdentityBaseContext
+    public class ArragroCoreIdentityPGContext<TUser, TRole> : ArragroCoreIdentityBaseContext<TUser, TRole>
+        where TUser : User, new()
+        where TRole : Role, new()
     {
-        public ArragroCoreIdentityPGContext(DbContextOptions<ArragroCoreIdentityPGContext> options)
+        public ArragroCoreIdentityPGContext(DbContextOptions<ArragroCoreIdentityPGContext<TUser, TRole>> options)
             : base(options)
         {
         }
@@ -96,9 +106,11 @@ namespace Arragro.Core.Identity
 
     }
 
-    public class ArragroCoreIdentitySqliteContext : ArragroCoreIdentityBaseContext
+    public class ArragroCoreIdentitySqliteContext<TUser, TRole> : ArragroCoreIdentityBaseContext<TUser, TRole>
+        where TUser : User, new()
+        where TRole : Role, new()
     {
-        public ArragroCoreIdentitySqliteContext(DbContextOptions<ArragroCoreIdentitySqliteContext> options)
+        public ArragroCoreIdentitySqliteContext(DbContextOptions<ArragroCoreIdentitySqliteContext<TUser, TRole>> options)
             : base(options)
         {
         }
