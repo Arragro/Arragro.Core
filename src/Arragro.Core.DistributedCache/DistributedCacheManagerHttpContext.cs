@@ -65,46 +65,46 @@ namespace Arragro.Core.DistributedCache
             RemoveHttpContextItem(PrefixKey(key));
         }
 
-        public override async Task RemoveAsync(string key, CancellationToken token = default(CancellationToken))
+        public override async Task RemoveAsync(string key, CancellationToken token = default)
         {
             await base.RemoveAsync(key, token);
             RemoveHttpContextItem(PrefixKey(key));
         }
 
-        public override void Set<T>(string key, T value, DistributedCacheEntryOptions options)
+        public override void Set<T>(string key, T value, DistributedCacheEntryOptions options, Serializer serializer = Serializer.ProtoBuf)
         {
-            base.Set(key, value, options);
+            base.Set(key, value, options, serializer);
             SetHttpContextItem(PrefixKey(key), value);
         }
 
-        public override async Task SetAsync<T>(string key, T value, DistributedCacheEntryOptions options, CancellationToken token = default(CancellationToken))
+        public override async Task SetAsync<T>(string key, T value, DistributedCacheEntryOptions options, Serializer serializer = Serializer.ProtoBuf, CancellationToken token = default)
         {
-            await base.SetAsync(key, value, options, token);
+            await base.SetAsync(key, value, options, serializer, token);
             SetHttpContextItem(PrefixKey(key), value);
         }
 
-        public override void Set<T>(string key, T value)
+        public override void Set<T>(string key, T value, Serializer serializer = Serializer.ProtoBuf)
         {
-            base.Set(key, value);
+            base.Set(key, value, serializer);
             SetHttpContextItem(PrefixKey(key), value);
         }
 
-        public override async Task SetAsync<T>(string key, T value, CancellationToken token = default(CancellationToken))
+        public override async Task SetAsync<T>(string key, T value, Serializer serializer = Serializer.ProtoBuf, CancellationToken token = default)
         {
-            await base.SetAsync(key, value, token);
+            await base.SetAsync(key, value, serializer, token);
             SetHttpContextItem(PrefixKey(key), value);
         }
 
-        public override T Get<T>(string key)
+        public override T Get<T>(string key, Serializer serializer = Serializer.ProtoBuf)
         {
             var httpContextData = GetHttpContextItem<T>(key);
             if (httpContextData != null)
                 return httpContextData;
 
-            return ProcessByteArray<T>(_distributedCache.Get(PrefixKey(key)));
+            return ProcessByteArray<T>(_distributedCache.Get(PrefixKey(key)), serializer);
         }
 
-        public override async Task<T> GetAsync<T>(string key, CancellationToken token = default(CancellationToken))
+        public override async Task<T> GetAsync<T>(string key, Serializer serializer = Serializer.ProtoBuf, CancellationToken token = default)
         {
             var httpContextData = GetHttpContextItem<T>(key);
             if (httpContextData != null)
@@ -113,7 +113,7 @@ namespace Arragro.Core.DistributedCache
             try
             {
                 var bytes = await _distributedCache.GetAsync(PrefixKey(key), token);
-                return ProcessByteArray<T>(bytes);
+                return ProcessByteArray<T>(bytes, serializer);
             }
             catch (Exception ex)
             {
@@ -122,31 +122,31 @@ namespace Arragro.Core.DistributedCache
             }
         }
 
-        public override T Get<T>(string key, Func<T> func, DistributedCacheEntryOptions options)
+        public override T Get<T>(string key, Func<T> func, DistributedCacheEntryOptions options, Serializer serializer = Serializer.ProtoBuf)
         {
             var httpContextData = GetHttpContextItem<T>(key);
             if (httpContextData != null)
                 return httpContextData;
 
-            return base.Get(key, func, options);
+            return base.Get(key, func, options, serializer);
         }
 
-        public override async Task<T> GetAsync<T>(string key, Func<T> func, DistributedCacheEntryOptions options, CancellationToken token = default(CancellationToken))
+        public override async Task<T> GetAsync<T>(string key, Func<T> func, DistributedCacheEntryOptions options, Serializer serializer = Serializer.ProtoBuf, CancellationToken token = default)
         {
             var httpContextData = GetHttpContextItem<T>(key);
             if (httpContextData != null)
                 return httpContextData;
 
-            return await base.GetAsync(key, func, options, token);
+            return await base.GetAsync(key, func, options, serializer, token);
         }
 
-        public override async Task<T> GetAsync<T>(string key, Func<Task<T>> func, DistributedCacheEntryOptions options, CancellationToken token = default(CancellationToken))
+        public override async Task<T> GetAsync<T>(string key, Func<Task<T>> func, DistributedCacheEntryOptions options, Serializer serializer = Serializer.ProtoBuf, CancellationToken token = default)
         {
             var httpContextData = GetHttpContextItem<T>(key);
             if (httpContextData != null)
                 return httpContextData;
 
-            return await base.GetAsync(key, func, options, token);
+            return await base.GetAsync(key, func, options, serializer, token);
         }
     }
 }

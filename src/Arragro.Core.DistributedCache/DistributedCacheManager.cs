@@ -1,12 +1,20 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Arragro.Core.DistributedCache
 {
+    public enum Serializer
+    {
+        ProtoBuf,
+        Json
+    }
+
     public class DistributedCacheManager : IDistributedCacheManager
     {
         protected readonly IDistributedCache _distributedCache;
@@ -26,22 +34,31 @@ namespace Arragro.Core.DistributedCache
                 _distributedCacheKeyPrefix = distributedCacheKeyPrefix;
         }
 
-        protected T ProcessByteArray<T>(byte[] bytes)
+        protected T ProcessByteArray<T>(byte[] bytes, Serializer serializer = Serializer.ProtoBuf)
         {
             if (bytes == null || bytes.Length == 0)
                 return default(T);
             T output;
-            using (var ms = new MemoryStream(bytes))
+            switch (serializer)
             {
-                try
-                {
-                    output = ProtoBuf.Serializer.Deserialize<T>(ms);
-                }
-                catch (Exception ex)
-                {
-                    var x = ex;
-                    throw;
-                }
+                case Serializer.Json:
+                    var json = Encoding.ASCII.GetString(bytes);
+                    output = JsonConvert.DeserializeObject<T>(json);
+                    break;
+                default:
+                    using (var ms = new MemoryStream(bytes))
+                    {
+                        try
+                        {
+                            output = ProtoBuf.Serializer.Deserialize<T>(ms);
+                        }
+                        catch (Exception ex)
+                        {
+                            var x = ex;
+                            throw;
+                        }
+                    }
+                    break;
             }
             return output;
         }
@@ -54,17 +71,17 @@ namespace Arragro.Core.DistributedCache
             return key;
         }
 
-        public virtual T Get<T>(string key)
+        public virtual T Get<T>(string key, Serializer serializer = Serializer.ProtoBuf)
         {
-            return ProcessByteArray<T>(_distributedCache.Get(PrefixKey(key)));
+            return ProcessByteArray<T>(_distributedCache.Get(PrefixKey(key)), serializer);
         }
 
-        public virtual async Task<T> GetAsync<T>(string key, CancellationToken token = default(CancellationToken))
+        public virtual async Task<T> GetAsync<T>(string key, Serializer serializer = Serializer.ProtoBuf, CancellationToken token = default)
         {
             try
             {
                 var bytes = await _distributedCache.GetAsync(PrefixKey(key), token);
-                return ProcessByteArray<T>(bytes);
+                return ProcessByteArray<T>(bytes, serializer);
             }
             catch (Exception ex)
             {
@@ -73,36 +90,45 @@ namespace Arragro.Core.DistributedCache
             }
         }
 
-        private byte[] ToProtoBufByteArray<T>(T value)
+        private byte[] ToByteArray<T>(T value, Serializer serializer = Serializer.ProtoBuf)
         {
             byte[] output;
 
-            using (var ms = new MemoryStream())
+            switch (serializer)
             {
-                ProtoBuf.Serializer.Serialize(ms, value);
-                output = ms.ToArray();
+                case Serializer.Json:
+                    output = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(value));
+                    break;
+                default:
+                    using (var ms = new MemoryStream())
+                    {
+                        ProtoBuf.Serializer.Serialize(ms, value);
+                        output = ms.ToArray();
+                    }
+                    break;
             }
+
             return output;
         }
 
-        public virtual void Set<T>(string key, T value, DistributedCacheEntryOptions options)
+        public virtual void Set<T>(string key, T value, DistributedCacheEntryOptions options, Serializer serializer = Serializer.ProtoBuf)
         {
-            _distributedCache.Set(PrefixKey(key), ToProtoBufByteArray<T>(value), options);
+            _distributedCache.Set(PrefixKey(key), ToByteArray<T>(value, serializer), options);
         }
 
-        public virtual async Task SetAsync<T>(string key, T value, DistributedCacheEntryOptions options, CancellationToken token = default(CancellationToken))
+        public virtual async Task SetAsync<T>(string key, T value, DistributedCacheEntryOptions options, Serializer serializer = Serializer.ProtoBuf, CancellationToken token = default)
         {
-            await _distributedCache.SetAsync(PrefixKey(key), ToProtoBufByteArray<T>(value), options, token);
+            await _distributedCache.SetAsync(PrefixKey(key), ToByteArray<T>(value, serializer), options, token);
         }
 
-        public virtual void Set<T>(string key, T value)
+        public virtual void Set<T>(string key, T value, Serializer serializer = Serializer.ProtoBuf)
         {
-            _distributedCache.Set(PrefixKey(key), ToProtoBufByteArray<T>(value), _distributedCacheEntryOptions);
+            _distributedCache.Set(PrefixKey(key), ToByteArray<T>(value, serializer), _distributedCacheEntryOptions);
         }
 
-        public virtual async Task SetAsync<T>(string key, T value, CancellationToken token = default(CancellationToken))
+        public virtual async Task SetAsync<T>(string key, T value, Serializer serializer = Serializer.ProtoBuf, CancellationToken token = default)
         {
-            await _distributedCache.SetAsync(PrefixKey(key), ToProtoBufByteArray<T>(value), _distributedCacheEntryOptions);
+            await _distributedCache.SetAsync(PrefixKey(key), ToByteArray<T>(value, serializer), _distributedCacheEntryOptions);
         }
 
         public virtual void Remove(string key)
@@ -115,48 +141,48 @@ namespace Arragro.Core.DistributedCache
             await _distributedCache.RemoveAsync(PrefixKey(key), token);
         }
 
-        public T Get<T>(string key, Func<T> func)
+        public T Get<T>(string key, Func<T> func, Serializer serializer = Serializer.ProtoBuf)
         {
-            return Get(PrefixKey(key), func, _distributedCacheEntryOptions);
+            return Get(PrefixKey(key), func, _distributedCacheEntryOptions, serializer);
         }
 
-        public virtual T Get<T>(string key, Func<T> func, DistributedCacheEntryOptions options)
+        public virtual T Get<T>(string key, Func<T> func, DistributedCacheEntryOptions options, Serializer serializer = Serializer.ProtoBuf)
         {
-            var value = Get<T>(PrefixKey(key));
+            var value = Get<T>(PrefixKey(key), serializer);
             if (value != null)
                 return value;
             value = func();
-            Set<T>(PrefixKey(key), value, options);
+            Set<T>(PrefixKey(key), value, options, serializer);
             return value;
         }
 
-        public async Task<T> GetAsync<T>(string key, Func<Task<T>> func, CancellationToken token = default(CancellationToken))
+        public async Task<T> GetAsync<T>(string key, Func<Task<T>> func, Serializer serializer = Serializer.ProtoBuf, CancellationToken token = default)
         {
-            return await GetAsync(PrefixKey(key), func, _distributedCacheEntryOptions, token);
+            return await GetAsync(PrefixKey(key), func, _distributedCacheEntryOptions, serializer, token);
         }
 
-        public async Task<T> GetAsync<T>(string key, Func<T> func, CancellationToken token = default(CancellationToken))
+        public async Task<T> GetAsync<T>(string key, Func<T> func, Serializer serializer = Serializer.ProtoBuf, CancellationToken token = default)
         {
-            return await GetAsync(PrefixKey(key), func, _distributedCacheEntryOptions, token);
+            return await GetAsync(PrefixKey(key), func, _distributedCacheEntryOptions, serializer, token);
         }
 
-        public virtual async Task<T> GetAsync<T>(string key, Func<T> func, DistributedCacheEntryOptions options, CancellationToken token = default(CancellationToken))
+        public virtual async Task<T> GetAsync<T>(string key, Func<T> func, DistributedCacheEntryOptions options, Serializer serializer = Serializer.ProtoBuf, CancellationToken token = default)
         {
-            var value = await GetAsync<T>(PrefixKey(key), token);
+            var value = await GetAsync<T>(PrefixKey(key), serializer, token);
             if (value != null)
                 return value;
             value = func();
-            await SetAsync<T>(PrefixKey(key), value, options, token);
+            await SetAsync<T>(PrefixKey(key), value, options, serializer, token);
             return value;
         }
 
-        public virtual async Task<T> GetAsync<T>(string key, Func<Task<T>> func, DistributedCacheEntryOptions options, CancellationToken token = default(CancellationToken))
+        public virtual async Task<T> GetAsync<T>(string key, Func<Task<T>> func, DistributedCacheEntryOptions options, Serializer serializer = Serializer.ProtoBuf, CancellationToken token = default(CancellationToken))
         {
-            var value = await GetAsync<T>(PrefixKey(key), token);
+            var value = await GetAsync<T>(PrefixKey(key), serializer, token);
             if (value != null)
                 return value;
             value = await func();
-            await SetAsync<T>(PrefixKey(key), value, options, token);
+            await SetAsync<T>(PrefixKey(key), value, options, serializer, token);
             return value;
         }
     }
