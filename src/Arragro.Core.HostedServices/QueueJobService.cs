@@ -16,6 +16,7 @@ namespace Arragro.Core.HostedServices
         private readonly QueueClient _queueClient;
         private readonly QueueClient _queueClientFailure;
         private readonly string _queueName;
+        private readonly int _maxMessages;
         private static IDictionary<string, int> _failures = new Dictionary<string, int>();
 
         protected QueueJobService(
@@ -26,7 +27,8 @@ namespace Arragro.Core.HostedServices
             TimeZoneInfo timeZoneInfo,
             ILogger<QueueJobService> logger,
             bool logInfo = true,
-            bool logNextOccurance = true) : base (cronExpression, includeSeconds, timeZoneInfo, logger, queueName, false, logInfo, logNextOccurance)
+            bool logNextOccurance = true,
+            int maxMessages = 20) : base (cronExpression, includeSeconds, timeZoneInfo, logger, queueName, false, logInfo, logNextOccurance)
         {
             _queueClient = new QueueClient(connectionString, queueName);
             _queueClientFailure = new QueueClient(connectionString, $"{queueName}-failures");
@@ -35,6 +37,7 @@ namespace Arragro.Core.HostedServices
             _queueClientFailure.CreateIfNotExists();
 
             _queueName = queueName;
+            _maxMessages = maxMessages;
             var nextOccurrences = _expression.GetOccurrences(DateTime.UtcNow, DateTime.UtcNow.AddDays(3));
             if (logInfo)
             {
@@ -56,15 +59,17 @@ namespace Arragro.Core.HostedServices
                 _timer = new System.Timers.Timer(delay.TotalMilliseconds);
                 _timer.Elapsed += async (sender, args) =>
                 {
+                    if (_timer != null) {
                         _timer.Dispose();  // reset and dispose timer
-                    _timer = null;
+                        _timer = null;
+                    }
 
                     if (!cancellationToken.IsCancellationRequested)
                     {
                         if (await _queueClient.ExistsAsync())
                         {
                             // Receive and process 20 messages
-                            QueueMessage[] receivedMessages = await _queueClient.ReceiveMessagesAsync(20, cancellationToken: cancellationToken);
+                            QueueMessage[] receivedMessages = await _queueClient.ReceiveMessagesAsync(_maxMessages, cancellationToken: cancellationToken);
                             if (receivedMessages.Length > 0)
                             {
                                 do
@@ -101,7 +106,7 @@ namespace Arragro.Core.HostedServices
                                         }
                                     }
 
-                                    receivedMessages = await _queueClient.ReceiveMessagesAsync(20, cancellationToken: cancellationToken);
+                                    receivedMessages = await _queueClient.ReceiveMessagesAsync(_maxMessages, cancellationToken: cancellationToken);
                                 } while (receivedMessages.Length > 0);
                             }
                         }

@@ -63,8 +63,11 @@ namespace Arragro.Core.HostedServices
                 _timer = new System.Timers.Timer(delay.TotalMilliseconds);
                 _timer.Elapsed += async (sender, args) =>
                 {
-                    _timer.Dispose();  // reset and dispose timer
-                    _timer = null;
+                    if (_timer != null)
+                    {
+                        _timer.Dispose();  // reset and dispose timer
+                        _timer = null;
+                    }
 
                     if (!cancellationToken.IsCancellationRequested)
                     {
