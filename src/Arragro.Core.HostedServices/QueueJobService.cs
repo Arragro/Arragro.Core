@@ -24,11 +24,11 @@ namespace Arragro.Core.HostedServices
             string connectionString,
             string cronExpression,
             bool includeSeconds,
+            int? maxMessages,
             TimeZoneInfo timeZoneInfo,
             ILogger<QueueJobService> logger,
             bool logInfo = true,
-            bool logNextOccurance = true,
-            int maxMessages = 20) : base (cronExpression, includeSeconds, timeZoneInfo, logger, queueName, false, logInfo, logNextOccurance)
+            bool logNextOccurance = true) : base (cronExpression, includeSeconds, timeZoneInfo, logger, queueName, false, logInfo, logNextOccurance)
         {
             _queueClient = new QueueClient(connectionString, queueName);
             _queueClientFailure = new QueueClient(connectionString, $"{queueName}-failures");
@@ -37,7 +37,7 @@ namespace Arragro.Core.HostedServices
             _queueClientFailure.CreateIfNotExists();
 
             _queueName = queueName;
-            _maxMessages = maxMessages;
+            _maxMessages = maxMessages ?? 20;
             var nextOccurrences = _expression.GetOccurrences(DateTime.UtcNow, DateTime.UtcNow.AddDays(3));
             if (logInfo)
             {

@@ -10,7 +10,8 @@ namespace Arragro.Core.HostedServices
             string connectionString,
             string queueName,
             string cronExpression = null, 
-            bool? includeSeconds = null) where T : QueueJobService
+            bool? includeSeconds = null,
+            int maxMessages = 20) where T : QueueJobService
         {
             var config = new QueueConfig<T>
             {
