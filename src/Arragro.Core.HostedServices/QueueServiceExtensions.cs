@@ -30,9 +30,9 @@ namespace Arragro.Core.HostedServices
             this IServiceCollection services,
             string connectionString,
             string queueName,
+            int maxMessages = 20,
             string cronExpression = null,
-            bool? includeSeconds = null,
-            int maxMessages = 20) where T : QueueJobService
+            bool? includeSeconds = null) where T : QueueJobService
         {
             var config = new QueueConfig<T>
             {
