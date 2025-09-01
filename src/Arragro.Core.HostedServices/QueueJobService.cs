@@ -26,7 +26,7 @@ namespace Arragro.Core.HostedServices
             bool includeSeconds,
             TimeZoneInfo timeZoneInfo,
             ILogger<QueueJobService> logger,
-            int? maxMessages,
+            int maxMessages = 20,
             bool logInfo = true,
             bool logNextOccurance = true) : base (cronExpression, includeSeconds, timeZoneInfo, logger, queueName, false, logInfo, logNextOccurance)
         {
@@ -37,7 +37,6 @@ namespace Arragro.Core.HostedServices
             _queueClientFailure.CreateIfNotExists();
 
             _queueName = queueName;
-            _maxMessages = maxMessages ?? 20;
             var nextOccurrences = _expression.GetOccurrences(DateTime.UtcNow, DateTime.UtcNow.AddDays(3));
             if (logInfo)
             {
