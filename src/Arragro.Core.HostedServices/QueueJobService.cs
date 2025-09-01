@@ -37,6 +37,7 @@ namespace Arragro.Core.HostedServices
             _queueClientFailure.CreateIfNotExists();
 
             _queueName = queueName;
+            _maxMessages = maxMessages;
             var nextOccurrences = _expression.GetOccurrences(DateTime.UtcNow, DateTime.UtcNow.AddDays(3));
             if (logInfo)
             {
