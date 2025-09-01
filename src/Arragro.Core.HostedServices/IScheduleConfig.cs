@@ -26,5 +26,6 @@ namespace Arragro.Core.HostedServices
     {
         public string ConnectionString { get; set; }
         public string QueueName { get; set; }
+        public int MaxMessages { get; set; } = 20;
     }
 }
