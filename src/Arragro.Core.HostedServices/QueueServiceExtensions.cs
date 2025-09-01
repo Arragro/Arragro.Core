@@ -10,7 +10,8 @@ namespace Arragro.Core.HostedServices
             string connectionString,
             string queueName,
             string cronExpression = null, 
-            bool? includeSeconds = null) where T : QueueJobService
+            bool? includeSeconds = null,
+            int maxMessages = 20) where T : QueueJobService
         {
             var config = new QueueConfig<T>
             {
@@ -18,7 +19,8 @@ namespace Arragro.Core.HostedServices
                 QueueName = queueName,
                 CronExpression = cronExpression ?? "*/30 * * * * *",
                 IncludeSeconds = includeSeconds ?? true,
-                TimeZoneInfo = TimeZoneInfo.Utc
+                TimeZoneInfo = TimeZoneInfo.Utc,
+                MaxMessages = maxMessages
             };
 
             services.AddSingleton<IQueueConfig<T>>(config);

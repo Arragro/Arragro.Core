@@ -13,6 +13,7 @@ namespace Arragro.Core.HostedServices
     {
         string ConnectionString { get; set; }
         string QueueName { get; set; }
+        int MaxMessages { get; set; }
     }
 
     public class ScheduleConfig<T> : IScheduleConfig<T>
