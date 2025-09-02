@@ -17,6 +17,7 @@ namespace Arragro.Core.HostedServices
         private readonly QueueClient _queueClientFailure;
         private readonly string _queueName;
         private readonly int _maxMessages;
+        private readonly bool _deleteOnCompletion;
         private static IDictionary<string, int> _failures = new Dictionary<string, int>();
 
         protected QueueJobService(
@@ -28,7 +29,8 @@ namespace Arragro.Core.HostedServices
             ILogger<QueueJobService> logger,
             int maxMessages = 20,
             bool logInfo = true,
-            bool logNextOccurance = true) : base (cronExpression, includeSeconds, timeZoneInfo, logger, queueName, false, logInfo, logNextOccurance)
+            bool logNextOccurance = true,
+            bool deleteOnCompletion = true) : base (cronExpression, includeSeconds, timeZoneInfo, logger, queueName, false, logInfo, logNextOccurance)
         {
             _queueClient = new QueueClient(connectionString, queueName);
             _queueClientFailure = new QueueClient(connectionString, $"{queueName}-failures");
@@ -38,6 +40,7 @@ namespace Arragro.Core.HostedServices
 
             _queueName = queueName;
             _maxMessages = maxMessages;
+            _deleteOnCompletion = deleteOnCompletion;
             var nextOccurrences = _expression.GetOccurrences(DateTime.UtcNow, DateTime.UtcNow.AddDays(3));
             if (logInfo)
             {
@@ -84,7 +87,8 @@ namespace Arragro.Core.HostedServices
                                             await DoWork(message, cancellationToken);
 
                                             // Delete the message
-                                            _queueClient.DeleteMessage(message.MessageId, message.PopReceipt);
+                                            if (_deleteOnCompletion)
+                                                _queueClient.DeleteMessage(message.MessageId, message.PopReceipt);
                                         }
                                         catch (Exception ex)
                                         {
