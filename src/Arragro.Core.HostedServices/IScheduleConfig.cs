@@ -14,6 +14,7 @@ namespace Arragro.Core.HostedServices
         string ConnectionString { get; set; }
         string QueueName { get; set; }
         int MaxMessages { get; set; }
+        bool DeleteOnCompletion { get; set; }
     }
 
     public class ScheduleConfig<T> : IScheduleConfig<T>
@@ -28,5 +29,6 @@ namespace Arragro.Core.HostedServices
         public string ConnectionString { get; set; }
         public string QueueName { get; set; }
         public int MaxMessages { get; set; } = 20;
+        public bool DeleteOnCompletion { get; set; }
     }
 }
