@@ -22,7 +22,7 @@ namespace Arragro.Core.HostedServices
                 IncludeSeconds = includeSeconds ?? true,
                 TimeZoneInfo = TimeZoneInfo.Utc,
                 MaxMessages = maxMessages,
-                DeleteOnCompletion = deleteOnCompltion ?? false
+                DeleteOnCompletion = deleteOnCompltion ?? true
             };
 
             services.AddSingleton<IQueueConfig<T>>(config);
