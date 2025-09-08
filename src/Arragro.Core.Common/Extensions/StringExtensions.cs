@@ -12,7 +12,7 @@ namespace Arragro.Core.Common.Extensions
             var startUnderscores = Regex.Match(input, @"^_+");
             return startUnderscores + Regex.Replace(input, @"([a-z0-9])([A-Z])", "$1_$2").ToLower();
         }
-        
+
         public static string ProcessSqlString(this string sql, DatabaseType databaseType)
         {
             if (databaseType == DatabaseType.Sqlite)
@@ -23,7 +23,11 @@ namespace Arragro.Core.Common.Extensions
                             .Replace("LEN(", "length(");
 
             if (databaseType == DatabaseType.Postgres)
-                return sql.Replace("LEN(", "length(");
+            {
+                sql = sql.Replace("LEN(", "length(");
+                var varcharRegex = new Regex("VARCHAR\\(([0-9]+)\\)");
+                sql = varcharRegex.Replace(sql, "TEXT");
+            }
 
             return sql;
         }
