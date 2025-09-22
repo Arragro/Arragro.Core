@@ -63,7 +63,7 @@ namespace Arragro.Core.HealthCheck.HostedService
             {
                 options.TimeZoneInfo = TimeZoneInfo.Utc;
                 options.IncludeSeconds = true;
-                options.CronExpression = @"*/5 * * * * *";
+                options.CronExpression = cronExpression;
             });
             return serviceCollection;
         }
