@@ -60,11 +60,19 @@ namespace Arragro.Core.HostedServices
             if (next.HasValue)
             {
                 var delay = next.Value - DateTimeOffset.UtcNow;
+                while (delay.TotalMilliseconds < 999)
+                {
+                    next = _expression.GetNextOccurrence(DateTimeOffset.UtcNow, _timeZoneInfo);
+                    delay = next.Value - DateTimeOffset.UtcNow;
+                }
                 _timer = new System.Timers.Timer(delay.TotalMilliseconds);
                 _timer.Elapsed += async (sender, args) =>
                 {
-                    _timer.Dispose();  // reset and dispose timer
-                    _timer = null;
+                    if (_timer != null)
+                    {
+                        _timer.Dispose();  // reset and dispose timer
+                        _timer = null;
+                    }
 
                     if (!cancellationToken.IsCancellationRequested)
                     {
