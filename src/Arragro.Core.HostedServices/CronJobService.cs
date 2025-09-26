@@ -90,7 +90,10 @@ namespace Arragro.Core.HostedServices
                 else
                     _logger.LogDebug($"Timer for: {_jobName}, next occurrance: {next.Value.ToString("yyyy-MM-ddTHH:mm:ss")}");
 
-                _timer.Start();
+                if (_timer == null)
+                    await ScheduleJob(cancellationToken);
+                else
+                    _timer.Start();
             }
             await Task.CompletedTask;
         }
