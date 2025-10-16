@@ -1,5 +1,6 @@
 ﻿using Arragro.Core.Common.Interfaces.Providers;
 using Arragro.Core.Common.Models;
+using Microsoft.Extensions.Logging;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
@@ -19,10 +20,14 @@ namespace Arragro.Providers.SendgridEmailProvider
 
     public class EmailProvider : IEmailProvider
     {
+        private readonly ILogger<EmailProvider> _logger;
         private readonly SmtpSettings _smtpSettings;
 
-        public EmailProvider(SmtpSettings smtpSettings)
+        public EmailProvider(
+            ILogger<EmailProvider> logger,
+            SmtpSettings smtpSettings)
         {
+            _logger = logger;
             _smtpSettings = smtpSettings;
         }
 
@@ -62,10 +67,14 @@ namespace Arragro.Providers.SendgridEmailProvider
 
 
             var response = await client.SendEmailAsync(message);
+            var body = await response.Body.ReadAsStringAsync();
             if (response.StatusCode != System.Net.HttpStatusCode.Accepted)
             {
-                var body = await response.Body.ReadAsStringAsync();
                 throw new Exception($"SendGrid responded with a {response.StatusCode} and the following message:\r\n\r\n{body}");
+            }
+            else
+            {
+                _logger.LogDebug($"SendGrid responded with a {response.StatusCode} and the following message:\r\n\r\n{body}");
             }
 
             return Guid.Parse(emailMessage.Headers["arragro-id"]);
